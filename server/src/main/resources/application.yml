@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: Petter
+  data:
+    mongodb:
+      authentication-database: admin
+      database: travel-app
+      host: localhost
+      port: 27017
+      password: admin
+      username: admin
+      auto-index-creation: true
