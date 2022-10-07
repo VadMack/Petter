@@ -1,11 +1,12 @@
-package com.vadmack.petter.user;
+package com.vadmack.petter.user.repository;
 
+import com.vadmack.petter.user.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User, ObjectId> {
+public interface UserRepository extends MongoRepository<User, ObjectId> , UserRepositoryCustom {
 
   Optional<User> findByUsername(String username);
 }

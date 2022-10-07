@@ -1,4 +1,4 @@
-package com.vadmack.petter.user;
+package com.vadmack.petter.user.dto;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.vadmack.petter.config;
+package com.vadmack.petter.app.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package com.vadmack.petter.security;
 
 import com.vadmack.petter.user.User;
-import com.vadmack.petter.user.UserRepository;
+import com.vadmack.petter.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -4,7 +4,7 @@ spring:
   data:
     mongodb:
       authentication-database: admin
-      database: petter
+      database: petterDB
       host: localhost
       port: 27017
       password: admin
@@ -12,4 +12,8 @@ spring:
       auto-index-creation: true
 
 authorization:
+  enabled: true
   secret: TESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRET
+
+photo-storage:
+  path: ./photo-storage
