@@ -3,10 +3,8 @@ package com.vadmack.petter.file;
 import com.vadmack.petter.exception.ServerSideException;
 import com.vadmack.petter.exception.ValidationException;
 import com.vadmack.petter.user.User;
-import com.vadmack.petter.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -20,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -33,7 +32,6 @@ public class ImageService {
   private String photoStorage;
 
   private final FileMetadataService fileMetadataService;
-  private final UserService userService;
 
   @PostConstruct
   public void init() {
@@ -45,9 +43,10 @@ public class ImageService {
   }
 
   @Transactional
-  public void save(MultipartFile image, String userId) {
+  public FileMetadata save(MultipartFile image, String userId) {
     validateContentType(image);
-    Path relativePath = Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId, image.getOriginalFilename());
+    String generatedFilename = generateFilename(FilenameUtils.getExtension(image.getOriginalFilename()));
+    Path relativePath = Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId, generatedFilename);
     fileMetadataService.validatePath(relativePath);
     try {
       Files.createDirectories(Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId));
@@ -58,13 +57,12 @@ public class ImageService {
 
     FileMetadata fileMetadata = FileMetadata.builder()
             .relativePath(relativePath.toString())
-            .originalFilename(image.getOriginalFilename())
+            .originalFilename(generatedFilename)
             .contentType(image.getContentType())
             .size(image.getSize()).build();
 
     fileMetadataService.save(fileMetadata);
-    userService.addImage(fileMetadata, userId);
-
+    return fileMetadata;
   }
 
   public Resource getById(String id) {
@@ -78,7 +76,12 @@ public class ImageService {
     }
   }
 
+  private String generateFilename(String extension) {
+    return UUID.randomUUID() + "." + extension;
+  }
+
   public boolean isOwner(User user, String imageId) {
-    return user.getImages().stream().map(FileMetadata::getId).toList().contains(new ObjectId(imageId));
+    FileMetadata fileMetadata = fileMetadataService.getById(imageId);
+    return fileMetadata.getRelativePath().contains(user.getId().toString());
   }
 }

@@ -1,12 +1,13 @@
 package com.vadmack.petter.user;
 
+import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.file.FileMetadata;
 import lombok.Data;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Data
 @Document(collection = "users")
 public class User implements UserDetails {
-  @Id
+  @MongoId
   private ObjectId id;
   @Indexed(unique = true)
   private String email;
@@ -28,6 +29,10 @@ public class User implements UserDetails {
   private Address address;
   @DBRef
   private Set<FileMetadata> images = new HashSet<>();
+  @DBRef(lazy = true)
+  private Set<Ad> ads;
+  @DBRef(lazy = true)
+  private Set<Ad> favoriteAds;
 
   @Override
   public boolean isAccountNonExpired() {
