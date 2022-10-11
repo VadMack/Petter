@@ -2,6 +2,7 @@ package com.vadmack.petter.user;
 
 import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.file.FileMetadata;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.HashSet;
 import java.util.Set;
 
+@Hidden
 @Data
 @Document(collection = "users")
 public class User implements UserDetails {

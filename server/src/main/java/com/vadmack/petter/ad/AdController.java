@@ -2,9 +2,11 @@ package com.vadmack.petter.ad;
 
 import com.vadmack.petter.ad.dto.AdCreateDdo;
 import com.vadmack.petter.ad.dto.AdGetDto;
+import com.vadmack.petter.app.annotation.SecuredRestController;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/ads")
 @RestController
-public class AdController {
+public class AdController implements SecuredRestController {
 
   private final AdService adService;
 
@@ -40,7 +42,7 @@ public class AdController {
   }
 
   @PreAuthorize("@adService.isOwner(#user, #id)")
-  @PostMapping("{id}/images")
+  @PostMapping(value = "{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> uploadImage(@AuthenticationPrincipal User user,
                                        @RequestParam MultipartFile image,
                                        @PathVariable String id) {

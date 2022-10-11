@@ -34,7 +34,8 @@ public class AdService {
   public List<AdGetDto> findAll() {
     return adRepository.findAll().stream().map(ad -> {
       AdGetDto dto = entityToDto(ad);
-      dto.setImageIds(ad.getImages().stream().map(FileMetadata::getId).collect(Collectors.toSet()));
+      dto.setImageIds(ad.getImages().stream().map(metadata ->
+        metadata.getId().toString()).collect(Collectors.toSet()));
       return dto;
     })
             .toList();

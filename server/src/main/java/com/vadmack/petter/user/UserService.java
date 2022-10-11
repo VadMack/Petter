@@ -48,7 +48,8 @@ public class UserService {
   public List<UserGetDto> findAll() {
     return userRepository.findAll().stream().map(user -> {
       UserGetDto dto = entityToDto(user);
-      dto.setImageIds(user.getImages().stream().map(FileMetadata::getId).collect(Collectors.toSet()));
+      dto.setImageIds(user.getImages().stream().map(metadata -> metadata.getId().toString())
+              .collect(Collectors.toSet()));
       return dto;
     })
             .toList();

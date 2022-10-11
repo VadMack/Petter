@@ -1,6 +1,8 @@
 package com.vadmack.petter.file;
 
+import com.vadmack.petter.app.annotation.SecuredRestController;
 import com.vadmack.petter.user.User;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -16,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("api/files")
 @RestController
-public class ImageController {
+public class ImageController implements SecuredRestController {
 
   private final ImageService imageService;
 
   @PreAuthorize("@imageService.isOwner(#user, #id)")
   @GetMapping(value = "/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
   public ResponseEntity<Resource> downloadImage(@AuthenticationPrincipal User user,
-                                              @PathVariable String id) {
+                                                @PathVariable String id) {
     Resource image = imageService.getById(id);
     return ResponseEntity
             .ok()
