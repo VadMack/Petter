@@ -1,22 +1,21 @@
 package com.vadmack.petter.ad;
 
+import com.vadmack.petter.app.model.MongoModel;
 import com.vadmack.petter.file.FileMetadata;
 import lombok.Data;
-import org.bson.types.ObjectId;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Document("ads")
-public class Ad {
-  @MongoId
-  private ObjectId id;
+public class Ad extends MongoModel {
   private String name;
   private String price;
   private Species species;

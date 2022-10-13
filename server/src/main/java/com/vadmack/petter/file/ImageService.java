@@ -1,7 +1,7 @@
 package com.vadmack.petter.file;
 
-import com.vadmack.petter.exception.ServerSideException;
-import com.vadmack.petter.exception.ValidationException;
+import com.vadmack.petter.app.exception.ServerSideException;
+import com.vadmack.petter.app.exception.ValidationException;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -82,6 +82,6 @@ public class ImageService {
 
   public boolean isOwner(User user, String imageId) {
     FileMetadata fileMetadata = fileMetadataService.getById(imageId);
-    return fileMetadata.getRelativePath().contains(user.getId().toString());
+    return fileMetadata.getRelativePath().contains(user.getId());
   }
 }

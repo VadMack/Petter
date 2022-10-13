@@ -1,6 +1,6 @@
 package com.vadmack.petter.security;
 
-import com.vadmack.petter.exception.UnauthorizedException;
+import com.vadmack.petter.app.exception.UnauthorizedException;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.dto.UserGetDto;
 import lombok.RequiredArgsConstructor;

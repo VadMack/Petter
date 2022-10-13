@@ -1,4 +1,4 @@
-package com.vadmack.petter.exception;
+package com.vadmack.petter.app.exception;
 
 public class NotFoundException extends RuntimeException{
   public NotFoundException(String msg) {

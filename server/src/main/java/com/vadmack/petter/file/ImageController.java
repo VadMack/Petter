@@ -1,8 +1,7 @@
 package com.vadmack.petter.file;
 
-import com.vadmack.petter.app.annotation.SecuredRestController;
+import com.vadmack.petter.app.controller.SecuredRestController;
 import com.vadmack.petter.user.User;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

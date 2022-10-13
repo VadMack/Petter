@@ -1,4 +1,4 @@
-package com.vadmack.petter.app.annotation;
+package com.vadmack.petter.app.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 

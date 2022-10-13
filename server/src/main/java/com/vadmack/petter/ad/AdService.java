@@ -5,7 +5,6 @@ import com.vadmack.petter.ad.dto.AdGetDto;
 import com.vadmack.petter.ad.repository.AdRepository;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.FileMetadata;
-import com.vadmack.petter.file.FileMetadataService;
 import com.vadmack.petter.file.ImageService;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.UserService;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,11 +27,10 @@ public class AdService {
   private final AdRepository adRepository;
   private final UserService userService;
   private final ImageService imageService;
-  private final FileMetadataService fileMetadataService;
 
   private final ModelMapper modelMapper;
 
-  public List<AdGetDto> findAll() {
+  public List<AdGetDto> findAllDto() {
     return adRepository.findAll().stream().map(ad -> {
       AdGetDto dto = entityToDto(ad);
       dto.setImageIds(ad.getImages().stream().map(metadata ->
@@ -49,7 +48,7 @@ public class AdService {
 
   @Transactional
   public void like(String adId, String userId) {
-    Ad ad = AppUtils.checkFound(adRepository.findById(new ObjectId(adId)),
+    Ad ad = AppUtils.checkFound(findById(adId),
             String.format("File metadata with id=%s not found", adId));
     userService.addFavoriteAd(ad, userId);
   }
@@ -60,8 +59,12 @@ public class AdService {
     adRepository.addImage(fileMetadata, adId);
   }
 
+  public Optional<Ad> findById(String id) {
+    return adRepository.findById(new ObjectId(id));
+  }
+
   public @NotNull Ad getById(String id) {
-    return AppUtils.checkFound(adRepository.findById(new ObjectId(id)),
+    return AppUtils.checkFound(findById(id),
             String.format("Ad with id=%s not found", id));
   }
 

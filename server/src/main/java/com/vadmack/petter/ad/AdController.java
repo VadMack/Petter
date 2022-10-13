@@ -2,7 +2,7 @@ package com.vadmack.petter.ad;
 
 import com.vadmack.petter.ad.dto.AdCreateDdo;
 import com.vadmack.petter.ad.dto.AdGetDto;
-import com.vadmack.petter.app.annotation.SecuredRestController;
+import com.vadmack.petter.app.controller.SecuredRestController;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,19 +25,19 @@ public class AdController implements SecuredRestController {
   @PostMapping
   public ResponseEntity<?> create(@AuthenticationPrincipal User user,
                                   @RequestBody AdCreateDdo dto) {
-    adService.create(dto, user.getId().toString());
+    adService.create(dto, user.getId());
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @GetMapping
   public ResponseEntity<List<AdGetDto>> findAll() {
-    return ResponseEntity.ok(adService.findAll());
+    return ResponseEntity.ok(adService.findAllDto());
   }
 
   @PutMapping("/{id}/like")
   public ResponseEntity<?> like(@AuthenticationPrincipal User user,
                                 @PathVariable String id) {
-    adService.like(id, user.getId().toString());
+    adService.like(id, user.getId());
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
@@ -46,7 +46,7 @@ public class AdController implements SecuredRestController {
   public ResponseEntity<?> uploadImage(@AuthenticationPrincipal User user,
                                        @RequestParam MultipartFile image,
                                        @PathVariable String id) {
-    adService.addImage(image, id, user.getId().toString());
+    adService.addImage(image, id, user.getId());
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 

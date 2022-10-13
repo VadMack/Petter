@@ -1,6 +1,6 @@
 package com.vadmack.petter.app.utils;
 
-import com.vadmack.petter.exception.NotFoundException;
+import com.vadmack.petter.app.exception.NotFoundException;
 import lombok.experimental.UtilityClass;
 
 import java.util.Optional;

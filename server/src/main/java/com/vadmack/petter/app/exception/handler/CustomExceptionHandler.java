@@ -1,8 +1,8 @@
-package com.vadmack.petter.exception.handler;
+package com.vadmack.petter.app.exception.handler;
 
-import com.vadmack.petter.exception.NotFoundException;
-import com.vadmack.petter.exception.UnauthorizedException;
-import com.vadmack.petter.exception.ValidationException;
+import com.vadmack.petter.app.exception.NotFoundException;
+import com.vadmack.petter.app.exception.UnauthorizedException;
+import com.vadmack.petter.app.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
