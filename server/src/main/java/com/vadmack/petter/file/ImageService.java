@@ -24,7 +24,7 @@ import java.util.UUID;
 @Service
 public class ImageService {
 
-  private static final String USERS_PHOTO_STORAGE_FOLDER_NAME = "users";
+  static final String USERS_PHOTO_STORAGE_FOLDER_NAME = "users";
 
   private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of("image/png", "image/jpeg", "image/jpg");
 
@@ -47,7 +47,7 @@ public class ImageService {
     validateContentType(image);
     String generatedFilename = generateFilename(FilenameUtils.getExtension(image.getOriginalFilename()));
     Path relativePath = Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId, generatedFilename);
-    fileMetadataService.validatePath(relativePath);
+    fileMetadataService.validatePathForSave(relativePath);
     try {
       Files.createDirectories(Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId));
       image.transferTo(relativePath);
@@ -56,7 +56,7 @@ public class ImageService {
     }
 
     FileMetadata fileMetadata = FileMetadata.builder()
-            .relativePath(relativePath.toString())
+            .relativePath(Paths.get(photoStorage).relativize(relativePath).toString())
             .originalFilename(generatedFilename)
             .contentType(image.getContentType())
             .size(image.getSize()).build();
@@ -65,9 +65,9 @@ public class ImageService {
     return fileMetadata;
   }
 
-  public Resource getById(String id) {
-    FileMetadata metadata = fileMetadataService.getById(id);
-    return new FileSystemResource(metadata.getRelativePath());
+  public Resource getByRelativePath(Path relativePath) {
+    fileMetadataService.validatePathForGet(relativePath);
+    return new FileSystemResource(Paths.get(photoStorage, relativePath.toString()));
   }
 
   private void validateContentType(MultipartFile file) {
@@ -80,8 +80,7 @@ public class ImageService {
     return UUID.randomUUID() + "." + extension;
   }
 
-  public boolean isOwner(User user, String imageId) {
-    FileMetadata fileMetadata = fileMetadataService.getById(imageId);
-    return fileMetadata.getRelativePath().contains(user.getId());
+  public boolean isOwner(User user, String folderName) {
+    return user.getId().equals(folderName);
   }
 }

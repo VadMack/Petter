@@ -1,13 +1,10 @@
 package com.vadmack.petter.user;
 
-import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.app.model.MongoModel;
-import com.vadmack.petter.file.FileMetadata;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,12 +25,13 @@ public class User extends MongoModel implements UserDetails {
   private Set<UserAuthority> authorities = new HashSet<>();
   private String phoneNumber;
   private Address address;
-  @DBRef
-  private FileMetadata avatar;
-  @DBRef(lazy = true)
-  private Set<Ad> ads = new HashSet<>();
-  @DBRef(lazy = true)
-  private Set<Ad> favoriteAds = new HashSet<>();
+  private String avatarPath;
+  private Set<String> adIds = new HashSet<>();
+  private Set<String> favoriteAdsIds = new HashSet<>();
+
+  public void setAvatarPath(String avatarPath) {
+    this.avatarPath = avatarPath;
+  }
 
   @Override
   public boolean isAccountNonExpired() {

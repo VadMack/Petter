@@ -8,6 +8,8 @@ import java.util.Optional;
 @UtilityClass
 public class AppUtils {
 
+  public static final String SECURITY_REQUIREMENT_NAME = "bearerAuth";
+
   public static <T> T checkFound(Optional<T> optional, String msg) {
     if (optional.isEmpty()) {
       throw new NotFoundException(msg);

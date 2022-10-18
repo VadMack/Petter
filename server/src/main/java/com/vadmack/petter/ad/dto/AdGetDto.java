@@ -24,6 +24,6 @@ public class AdGetDto {
   private Map<String, String> achievements;
   private Set<String> vaccinations;
   private String description;
-  private Set<String> imageIds = new HashSet<>();
+  private Set<String> imagePaths = new HashSet<>();
   private AdState state;
 }

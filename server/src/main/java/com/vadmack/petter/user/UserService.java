@@ -36,11 +36,7 @@ public class UserService {
   }
 
   public List<UserGetDto> findAllDto() {
-    return userRepository.findAll().stream().map(user -> {
-      UserGetDto dto = entityToDto(user);
-      dto.setImageId(user.getAvatar().getId().toString());
-      return dto;
-    })
+    return userRepository.findAll().stream().map(this::entityToDto)
             .toList();
   }
 
@@ -60,7 +56,7 @@ public class UserService {
   @Transactional
   public void setAvatar(MultipartFile image, User user) {
     FileMetadata fileMetadata = imageService.save(image, user.getId());
-    user.setAvatar(fileMetadata);
+    user.setAvatarPath(fileMetadata.getRelativePath());
     userRepository.save(user);
   }
 

@@ -1,6 +1,6 @@
 package com.vadmack.petter.user;
 
-import com.vadmack.petter.app.controller.SecuredRestController;
+import com.vadmack.petter.app.annotation.Secured;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/users")
 @RestController
-public class UserController implements SecuredRestController {
+public class UserController {
 
   private final UserService userService;
 
@@ -26,16 +26,19 @@ public class UserController implements SecuredRestController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  @Secured
   @GetMapping
   public ResponseEntity<List<UserGetDto>> getAll() {
     return ResponseEntity.ok(userService.findAllDto());
   }
 
+  @Secured
   @GetMapping("/{id}")
   public ResponseEntity<UserGetDto> getById(@PathVariable String id) {
     return ResponseEntity.ok(userService.findByIdDto(id));
   }
 
+  @Secured
   @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> uploadImage(@AuthenticationPrincipal User user,
                                        @RequestParam MultipartFile image) {

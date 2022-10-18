@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,18 +30,15 @@ public class AdService {
   private final ModelMapper modelMapper;
 
   public List<AdGetDto> findAllDto() {
-    return adRepository.findAll().stream().map(ad -> {
-      AdGetDto dto = entityToDto(ad);
-      dto.setImageIds(ad.getImages().stream().map(metadata ->
-        metadata.getId().toString()).collect(Collectors.toSet()));
-      return dto;
-    })
+    return adRepository.findAll().stream().map(this::entityToDto)
             .toList();
   }
 
   @Transactional
   public void create(AdCreateDdo dto, String userId) {
-    Ad ad = adRepository.save(dtoToEntity(dto));
+    Ad ad = dtoToEntity(dto);
+    ad.setOwnerId(userId);
+    adRepository.save(ad);
     userService.addAd(ad, userId);
   }
 
@@ -56,7 +52,7 @@ public class AdService {
   @Transactional
   public void addImage(MultipartFile image, String adId, String userId) {
     FileMetadata fileMetadata = imageService.save(image, userId);
-    adRepository.addImage(fileMetadata, adId);
+    adRepository.addImage(fileMetadata.getRelativePath(), adId);
   }
 
   public Optional<Ad> findById(String id) {
@@ -78,6 +74,6 @@ public class AdService {
 
   public boolean isOwner(User user, String adId) {
     Ad ad = getById(adId);
-    return user.getAds().contains(ad);
+    return ad.getOwnerId().equals(user.getId());
   }
 }

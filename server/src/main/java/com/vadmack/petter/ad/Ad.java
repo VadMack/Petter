@@ -1,10 +1,8 @@
 package com.vadmack.petter.ad;
 
 import com.vadmack.petter.app.model.MongoModel;
-import com.vadmack.petter.file.FileMetadata;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
@@ -27,8 +25,8 @@ public class Ad extends MongoModel {
   private Map<String, String> achievements;
   private Set<String> vaccinations;
   private String description;
-  @DBRef
-  private Set<FileMetadata> images = new HashSet<>();
+  private Set<String> imagePaths = new HashSet<>();
   private AdState state;
+  private String ownerId;
 
 }
