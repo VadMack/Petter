@@ -1,10 +1,12 @@
 package com.vadmack.petter.ad;
 
 import com.vadmack.petter.ad.dto.AdCreateDdo;
+import com.vadmack.petter.ad.dto.AdFilterDto;
 import com.vadmack.petter.ad.dto.AdGetDto;
 import com.vadmack.petter.app.controller.SecuredRestController;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,9 @@ public class AdController implements SecuredRestController {
   }
 
   @GetMapping
-  public ResponseEntity<List<AdGetDto>> findAll() {
-    return ResponseEntity.ok(adService.findAllDto());
+  public ResponseEntity<List<AdGetDto>> findByProperties(AdFilterDto filter,
+                                                         Pageable pageable) {
+    return ResponseEntity.ok(adService.findByProperties(filter, pageable));
   }
 
   @PutMapping("/{id}/like")

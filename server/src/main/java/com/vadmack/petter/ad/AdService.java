@@ -1,6 +1,7 @@
 package com.vadmack.petter.ad;
 
 import com.vadmack.petter.ad.dto.AdCreateDdo;
+import com.vadmack.petter.ad.dto.AdFilterDto;
 import com.vadmack.petter.ad.dto.AdGetDto;
 import com.vadmack.petter.ad.repository.AdRepository;
 import com.vadmack.petter.app.utils.AppUtils;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +34,16 @@ public class AdService {
   public List<AdGetDto> findAllDto() {
     return adRepository.findAll().stream().map(this::entityToDto)
             .toList();
+  }
+
+  public List<AdGetDto> findByProperties(AdFilterDto filter, Pageable pageable) {
+    return adRepository.findByProperties(filter.getOwnerId(),
+            filter.getState(),
+            filter.getSpecies(),
+            filter.getBreed(),
+            filter.getGender(),
+            pageable)
+            .stream().map(this::entityToDto).toList();
   }
 
   @Transactional
