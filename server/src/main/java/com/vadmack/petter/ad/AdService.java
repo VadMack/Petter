@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,24 +28,23 @@ import java.util.Optional;
 public class AdService {
 
   private final AdRepository adRepository;
-  private final UserService userService;
+  private UserService userService;
   private final ImageService imageService;
 
   private final ModelMapper modelMapper;
 
-  public List<AdGetDto> findAllDto() {
-    return adRepository.findAll().stream().map(this::entityToDto)
-            .toList();
-  }
-
   public List<AdGetDto> findByProperties(AdFilterDto filter, Pageable pageable) {
-    return adRepository.findByProperties(filter.getOwnerId(),
+    return entitiesToDto(adRepository.findByProperties(
+            filter.getOwnerId(),
             filter.getState(),
             filter.getSpecies(),
             filter.getBreed(),
             filter.getGender(),
-            pageable)
-            .stream().map(this::entityToDto).toList();
+            pageable));
+  }
+
+  public List<AdGetDto> findByIdIn(Collection<String> ids) {
+    return entitiesToDto(adRepository.findByIdIn(ids));
   }
 
   @Transactional
@@ -84,8 +85,17 @@ public class AdService {
     return modelMapper.map(entity, AdGetDto.class);
   }
 
+  private List<AdGetDto> entitiesToDto(Collection<Ad> entities) {
+    return entities.stream().map(this::entityToDto).toList();
+  }
+
   public boolean isOwner(User user, String adId) {
     Ad ad = getById(adId);
     return ad.getOwnerId().equals(user.getId());
+  }
+
+  @Autowired
+  public void setUserService(UserService userService) {
+    this.userService = userService;
   }
 }

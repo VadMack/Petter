@@ -1,6 +1,8 @@
 package com.vadmack.petter.user;
 
 import com.vadmack.petter.ad.Ad;
+import com.vadmack.petter.ad.AdService;
+import com.vadmack.petter.ad.dto.AdGetDto;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.FileMetadata;
 import com.vadmack.petter.file.ImageService;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +28,11 @@ import java.util.Optional;
 public class UserService {
 
   private final UserRepository userRepository;
+  private AdService adService;
+  private final ImageService imageService;
 
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
-  private final ImageService imageService;
 
   public void create(UserCreateDto dto) {
     User user = dtoToEntity(dto);
@@ -53,6 +58,10 @@ public class UserService {
     return userRepository.findById(new ObjectId(id));
   }
 
+  public List<AdGetDto> getFavoriteAds(User user) {
+    return adService.findByIdIn(user.getFavoriteAdsIds());
+  }
+
   @Transactional
   public void setAvatar(MultipartFile image, User user) {
     FileMetadata fileMetadata = imageService.save(image, user.getId());
@@ -76,4 +85,8 @@ public class UserService {
     return modelMapper.map(entity, UserGetDto.class);
   }
 
+  @Autowired
+  public void setAdService(AdService adService) {
+    this.adService = adService;
+  }
 }
