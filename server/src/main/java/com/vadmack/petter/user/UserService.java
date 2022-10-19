@@ -2,7 +2,7 @@ package com.vadmack.petter.user;
 
 import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.ad.AdService;
-import com.vadmack.petter.ad.dto.AdGetDto;
+import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.FileMetadata;
 import com.vadmack.petter.file.ImageService;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,13 +22,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 @Service
 public class UserService {
 
   private final UserRepository userRepository;
-  private AdService adService;
   private final ImageService imageService;
+  private final AdService adService;
 
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
@@ -40,12 +39,12 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public List<UserGetDto> findAllDto() {
+  public @NotNull List<UserGetDto> findAllDto() {
     return userRepository.findAll().stream().map(this::entityToDto)
             .toList();
   }
 
-  public UserGetDto findByIdDto(String id) {
+  public @NotNull UserGetDto getDtoById(String id) {
     return entityToDto(getById(id));
   }
 
@@ -58,8 +57,8 @@ public class UserService {
     return userRepository.findById(new ObjectId(id));
   }
 
-  public List<AdGetDto> getFavoriteAds(User user) {
-    return adService.findByIdIn(user.getFavoriteAdsIds());
+  public @NotNull List<AdGetListDto> getFavoriteAds(User user) {
+    return adService.getByIdIn(user.getFavoriteAdsIds());
   }
 
   @Transactional
@@ -83,10 +82,5 @@ public class UserService {
 
   private UserGetDto entityToDto(User entity) {
     return modelMapper.map(entity, UserGetDto.class);
-  }
-
-  @Autowired
-  public void setAdService(AdService adService) {
-    this.adService = adService;
   }
 }

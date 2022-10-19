@@ -2,29 +2,24 @@ package com.vadmack.petter.ad.dto;
 
 import com.vadmack.petter.ad.AdState;
 import com.vadmack.petter.ad.Gender;
-import com.vadmack.petter.ad.Species;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Data
-public class AdGetDto {
+@Builder
+public class AdGetListDto {
   private String id;
   private String ownerId;
   private String name;
   private String price;
-  private Species species;
   private String breed;
   private Gender gender;
   private LocalDate birthDate;
-  private Short height;
-  private Short weight;
-  private Map<String, String> achievements;
-  private Set<String> vaccinations;
-  private String description;
-  private Set<String> imagePaths = new HashSet<>();
+  private boolean hasAchievements;
+  private Set<String> imagePaths;
   private AdState state;
 }
+

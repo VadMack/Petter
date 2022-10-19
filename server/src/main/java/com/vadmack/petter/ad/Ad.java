@@ -28,5 +28,4 @@ public class Ad extends MongoModel {
   private Set<String> imagePaths = new HashSet<>();
   private AdState state;
   private String ownerId;
-
 }

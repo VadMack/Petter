@@ -3,6 +3,7 @@ package com.vadmack.petter.ad;
 import com.vadmack.petter.ad.dto.AdCreateDdo;
 import com.vadmack.petter.ad.dto.AdFilterDto;
 import com.vadmack.petter.ad.dto.AdGetDto;
+import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.controller.SecuredRestController;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +33,14 @@ public class AdController implements SecuredRestController {
   }
 
   @GetMapping
-  public ResponseEntity<List<AdGetDto>> findByProperties(AdFilterDto filter,
-                                                         Pageable pageable) {
-    return ResponseEntity.ok(adService.findByProperties(filter, pageable));
+  public ResponseEntity<List<AdGetListDto>> getByProperties(AdFilterDto filter,
+                                                            Pageable pageable) {
+    return ResponseEntity.ok(adService.getDtoByProperties(filter, pageable));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<AdGetDto> getById(@PathVariable String id) {
+    return ResponseEntity.ok(adService.getDtoById(id));
   }
 
   @PutMapping("/{id}/like")
