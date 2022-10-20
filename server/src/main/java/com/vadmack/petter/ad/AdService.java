@@ -1,9 +1,6 @@
 package com.vadmack.petter.ad;
 
-import com.vadmack.petter.ad.dto.AdCreateDdo;
-import com.vadmack.petter.ad.dto.AdFilterDto;
-import com.vadmack.petter.ad.dto.AdGetDto;
-import com.vadmack.petter.ad.dto.AdGetListDto;
+import com.vadmack.petter.ad.dto.*;
 import com.vadmack.petter.ad.repository.AdRepository;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.FileMetadata;
@@ -53,6 +50,10 @@ public class AdService {
     ad.setOwnerId(userId);
     adRepository.save(ad);
     userService.addAd(ad, userId);
+  }
+
+  public void updateById(AdUpdateDto dto, String id) {
+    adRepository.updateById(dto, id);
   }
 
   @Transactional

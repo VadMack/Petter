@@ -4,6 +4,7 @@ import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.annotation.Secured;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
+import com.vadmack.petter.user.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +38,14 @@ public class UserController {
   @GetMapping("/{id}")
   public ResponseEntity<UserGetDto> getById(@PathVariable String id) {
     return ResponseEntity.ok(userService.getDtoById(id));
+  }
+
+  @Secured
+  @PutMapping("/")
+  public ResponseEntity<?> update(@AuthenticationPrincipal User user,
+                                  @RequestBody UserUpdateDto dto) {
+    userService.updateById(dto, user.getId());
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Secured

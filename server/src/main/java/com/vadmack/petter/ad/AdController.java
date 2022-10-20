@@ -1,9 +1,6 @@
 package com.vadmack.petter.ad;
 
-import com.vadmack.petter.ad.dto.AdCreateDdo;
-import com.vadmack.petter.ad.dto.AdFilterDto;
-import com.vadmack.petter.ad.dto.AdGetDto;
-import com.vadmack.petter.ad.dto.AdGetListDto;
+import com.vadmack.petter.ad.dto.*;
 import com.vadmack.petter.app.controller.SecuredRestController;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +38,15 @@ public class AdController implements SecuredRestController {
   @GetMapping("/{id}")
   public ResponseEntity<AdGetDto> getById(@PathVariable String id) {
     return ResponseEntity.ok(adService.getDtoById(id));
+  }
+
+  @PreAuthorize("@adService.isOwner(#user, #id)")
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateById(@AuthenticationPrincipal User user,
+                                      @PathVariable String id,
+                                      @RequestBody AdUpdateDto dto) {
+    adService.updateById(dto, id);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PutMapping("/{id}/like")

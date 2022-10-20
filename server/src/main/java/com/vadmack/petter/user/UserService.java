@@ -8,6 +8,7 @@ import com.vadmack.petter.file.FileMetadata;
 import com.vadmack.petter.file.ImageService;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
+import com.vadmack.petter.user.dto.UserUpdateDto;
 import com.vadmack.petter.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -59,6 +60,10 @@ public class UserService {
 
   public @NotNull List<AdGetListDto> getFavoriteAds(User user) {
     return adService.getByIdIn(user.getFavoriteAdsIds());
+  }
+
+  public void updateById(UserUpdateDto userUpdateDto, String userId) {
+    userRepository.updateById(userUpdateDto, userId);
   }
 
   @Transactional

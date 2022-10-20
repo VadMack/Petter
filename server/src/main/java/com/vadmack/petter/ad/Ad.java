@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,8 +23,8 @@ public class Ad extends MongoModel {
   private LocalDate birthDate;
   private Short height;
   private Short weight;
-  private Map<String, String> achievements;
-  private Set<String> vaccinations;
+  private Map<String, String> achievements = new HashMap<>();
+  private Set<String> vaccinations = new HashSet<>();
   private String description;
   private Set<String> imagePaths = new HashSet<>();
   private AdState state;

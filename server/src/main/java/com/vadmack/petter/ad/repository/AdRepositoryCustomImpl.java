@@ -4,6 +4,7 @@ import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.ad.AdState;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
+import com.vadmack.petter.ad.dto.AdUpdateDto;
 import com.vadmack.petter.app.repository.CustomMongoRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -58,4 +59,10 @@ public class AdRepositoryCustomImpl extends CustomMongoRepository implements AdR
       query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
     return mongoTemplate.find(query, Ad.class);
   }
+
+  @Override
+  public void updateById(AdUpdateDto dto, String id) {
+    super.updateById(dto, id, Ad.class);
+  }
+
 }
