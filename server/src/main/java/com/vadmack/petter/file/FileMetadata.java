@@ -1,20 +1,19 @@
 package com.vadmack.petter.file;
 
+import com.vadmack.petter.app.model.MongoModel;
 import lombok.Builder;
 import lombok.Data;
-import org.bson.types.ObjectId;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Builder
+@EqualsAndHashCode(callSuper = true)
 @Data
 @CompoundIndex(name = "path", def = "{'originalFilename' : 1, 'directory': 1}", unique = true)
 @Document("fileMetadata")
-public class FileMetadata {
-  @MongoId
-  private ObjectId id;
+public class FileMetadata extends MongoModel {
   @Indexed(unique = true)
   private String relativePath;
   private Long size;

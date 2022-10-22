@@ -1,19 +1,16 @@
 package com.vadmack.petter.user;
 
-import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.ad.AdService;
 import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.AttachmentType;
 import com.vadmack.petter.file.FileMetadata;
-import com.vadmack.petter.file.FileMetadataService;
 import com.vadmack.petter.file.ImageService;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
 import com.vadmack.petter.user.dto.UserUpdateDto;
 import com.vadmack.petter.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
@@ -32,7 +29,6 @@ public class UserService {
   private final UserRepository userRepository;
   private final ImageService imageService;
   private final AdService adService;
-  private final FileMetadataService fileMetadataService;
 
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
@@ -58,11 +54,11 @@ public class UserService {
   }
 
   private Optional<User> findById(String id) {
-    return userRepository.findById(new ObjectId(id));
+    return userRepository.findById(id);
   }
 
   public @NotNull List<AdGetListDto> getFavoriteAds(User user) {
-    return adService.getByIdIn(user.getFavoriteAdsIds());
+    return adService.getByIdIn(user.getFavoriteAdIds());
   }
 
   public void save(User user) {
@@ -85,12 +81,12 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public void addAd(Ad ad, String userId) {
-    userRepository.addAd(ad, userId);
+  public void addAd(String adId, String userId) {
+    userRepository.addAdId(adId, userId);
   }
 
-  public void addFavoriteAd(Ad ad, String userId) {
-    userRepository.addFavouriteAd(ad, userId);
+  public void addFavoriteAd(String adId, String userId) {
+    userRepository.addFavouriteAdId(adId, userId);
   }
 
   private User dtoToEntity(UserCreateDto dto) {

@@ -1,6 +1,5 @@
 package com.vadmack.petter.user.repository;
 
-import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.app.repository.CustomMongoRepository;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.dto.UserUpdateDto;
@@ -13,17 +12,17 @@ import org.springframework.stereotype.Repository;
 public class UserRepositoryCustomImpl extends CustomMongoRepository implements UserRepositoryCustom {
 
   @Override
-  public void addAd(Ad ad, String userId) {
+  public void addAdId(String adId, String userId) {
     Update update = new Update();
-    update.addToSet("ads", ad);
+    update.addToSet("adIds", adId);
     Criteria criteria = Criteria.where("_id").is(userId);
     mongoTemplate.updateFirst(Query.query(criteria), update, User.class);
   }
 
   @Override
-  public void addFavouriteAd(Ad ad, String userId) {
+  public void addFavouriteAdId(String adId, String userId) {
     Update update = new Update();
-    update.addToSet("favoriteAds", ad);
+    update.addToSet("favoriteAdIds", adId);
     Criteria criteria = Criteria.where("_id").is(userId);
     mongoTemplate.updateFirst(Query.query(criteria), update, User.class);
   }

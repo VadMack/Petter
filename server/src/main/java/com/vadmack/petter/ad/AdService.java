@@ -9,7 +9,6 @@ import com.vadmack.petter.file.ImageService;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
@@ -49,8 +48,8 @@ public class AdService {
   public void create(AdCreateDdo dto, String userId) {
     Ad ad = dtoToEntity(dto);
     ad.setOwnerId(userId);
-    adRepository.save(ad);
-    userService.addAd(ad, userId);
+    Ad createdAd = adRepository.save(ad);
+    userService.addAd(createdAd.getId(), userId);
   }
 
   public void save(Ad ad) {
@@ -65,7 +64,7 @@ public class AdService {
   public void like(String adId, String userId) {
     Ad ad = AppUtils.checkFound(findById(adId),
             String.format("File metadata with id=%s not found", adId));
-    userService.addFavoriteAd(ad, userId);
+    userService.addFavoriteAd(adId, userId);
   }
 
   @Transactional
@@ -84,7 +83,7 @@ public class AdService {
   }
 
   public Optional<Ad> findById(String id) {
-    return adRepository.findById(new ObjectId(id));
+    return adRepository.findById(id);
   }
 
   private Ad dtoToEntity(AdCreateDdo dto) {

@@ -27,7 +27,7 @@ public class User extends MongoModel implements UserDetails {
   private Address address;
   private String avatarPath;
   private Set<String> adIds = new HashSet<>();
-  private Set<String> favoriteAdsIds = new HashSet<>();
+  private Set<String> favoriteAdIds = new HashSet<>();
 
   public void setAvatarPath(String avatarPath) {
     this.avatarPath = avatarPath;
