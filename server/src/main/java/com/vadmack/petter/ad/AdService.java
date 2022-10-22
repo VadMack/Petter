@@ -3,6 +3,7 @@ package com.vadmack.petter.ad;
 import com.vadmack.petter.ad.dto.*;
 import com.vadmack.petter.ad.repository.AdRepository;
 import com.vadmack.petter.app.utils.AppUtils;
+import com.vadmack.petter.file.AttachmentType;
 import com.vadmack.petter.file.FileMetadata;
 import com.vadmack.petter.file.ImageService;
 import com.vadmack.petter.user.User;
@@ -52,6 +53,10 @@ public class AdService {
     userService.addAd(ad, userId);
   }
 
+  public void save(Ad ad) {
+    adRepository.save(ad);
+  }
+
   public void updateById(AdUpdateDto dto, String id) {
     adRepository.updateById(dto, id);
   }
@@ -65,7 +70,7 @@ public class AdService {
 
   @Transactional
   public void addImage(MultipartFile image, String adId, String userId) {
-    FileMetadata fileMetadata = imageService.save(image, userId);
+    FileMetadata fileMetadata = imageService.save(image, userId, AttachmentType.AD, adId);
     adRepository.addImage(fileMetadata.getRelativePath(), adId);
   }
 
@@ -97,5 +102,13 @@ public class AdService {
   public boolean isOwner(User user, String adId) {
     Ad ad = getById(adId);
     return ad.getOwnerId().equals(user.getId());
+  }
+
+  public boolean adContainsImage(String adId, String imagePath) {
+    return getById(adId).getImagePaths().contains(imagePath);
+  }
+
+  public boolean checkCanDeleteImage(User user, String adId, String imagePath) {
+    return isOwner(user, adId) && adContainsImage(adId, imagePath);
   }
 }

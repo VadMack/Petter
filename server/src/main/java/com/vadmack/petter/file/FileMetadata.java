@@ -20,4 +20,5 @@ public class FileMetadata {
   private Long size;
   private String contentType;
   private String originalFilename;
+  private Attachment attachment;
 }

@@ -4,7 +4,9 @@ import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.ad.AdService;
 import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.utils.AppUtils;
+import com.vadmack.petter.file.AttachmentType;
 import com.vadmack.petter.file.FileMetadata;
+import com.vadmack.petter.file.FileMetadataService;
 import com.vadmack.petter.file.ImageService;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
@@ -30,6 +32,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final ImageService imageService;
   private final AdService adService;
+  private final FileMetadataService fileMetadataService;
 
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
@@ -49,7 +52,7 @@ public class UserService {
     return entityToDto(getById(id));
   }
 
-  private @NotNull User getById(String id) {
+  public @NotNull User getById(String id) {
     return AppUtils.checkFound(findById(id),
             String.format("User with id=%s not found", id));
   }
@@ -62,13 +65,22 @@ public class UserService {
     return adService.getByIdIn(user.getFavoriteAdsIds());
   }
 
+  public void save(User user) {
+    userRepository.save(user);
+  }
+
   public void updateById(UserUpdateDto userUpdateDto, String userId) {
     userRepository.updateById(userUpdateDto, userId);
   }
 
   @Transactional
   public void setAvatar(MultipartFile image, User user) {
-    FileMetadata fileMetadata = imageService.save(image, user.getId());
+    String existedAvatarPath = user.getAvatarPath();
+    if (existedAvatarPath != null) {
+      imageService.deleteByRelativePath(existedAvatarPath);
+    }
+    String userId = user.getId();
+    FileMetadata fileMetadata = imageService.save(image, userId, AttachmentType.USER, userId);
     user.setAvatarPath(fileMetadata.getRelativePath());
     userRepository.save(user);
   }

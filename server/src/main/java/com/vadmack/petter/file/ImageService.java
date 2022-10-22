@@ -24,7 +24,7 @@ import java.util.UUID;
 @Service
 public class ImageService {
 
-  static final String USERS_PHOTO_STORAGE_FOLDER_NAME = "users";
+  public static final String USERS_PHOTO_STORAGE_FOLDER_NAME = "users";
 
   private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of("image/png", "image/jpeg", "image/jpg");
 
@@ -38,12 +38,12 @@ public class ImageService {
     try {
       Files.createDirectories(Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME));
     } catch (IOException ex) {
-      throw new ServerSideException("Could not create upload folder: " + ex.getMessage());
+      throw new ServerSideException("Could not create upload folder. " + ex.getMessage());
     }
   }
 
   @Transactional
-  public FileMetadata save(MultipartFile image, String userId) {
+  public FileMetadata save(MultipartFile image, String userId, AttachmentType attachmentType, String attachmentId) {
     validateContentType(image);
     String generatedFilename = generateFilename(FilenameUtils.getExtension(image.getOriginalFilename()));
     Path relativePath = Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId, generatedFilename);
@@ -59,7 +59,8 @@ public class ImageService {
             .relativePath(Paths.get(photoStorage).relativize(relativePath).toString())
             .originalFilename(generatedFilename)
             .contentType(image.getContentType())
-            .size(image.getSize()).build();
+            .size(image.getSize())
+            .attachment(new Attachment(attachmentType, attachmentId)).build();
 
     fileMetadataService.save(fileMetadata);
     return fileMetadata;
@@ -83,4 +84,20 @@ public class ImageService {
   public boolean isOwner(User user, String folderName) {
     return user.getId().equals(folderName);
   }
+
+  @Transactional
+  public void deleteByRelativePath(Path relativePath) {
+    deleteByRelativePath(relativePath.toString());
+  }
+
+  @Transactional
+  public void deleteByRelativePath(String relativePath) {
+    fileMetadataService.deleteByRelativePath(relativePath);
+    try {
+      Files.delete(Paths.get(photoStorage, relativePath));
+    } catch (IOException ex) {
+      throw new ServerSideException("Could not delete file. " + ex.getMessage());
+    }
+  }
+
 }

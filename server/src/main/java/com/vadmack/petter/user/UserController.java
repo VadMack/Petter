@@ -56,8 +56,8 @@ public class UserController {
 
   @Secured
   @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<?> uploadImage(@AuthenticationPrincipal User user,
-                                       @RequestParam MultipartFile image) {
+  public ResponseEntity<?> uploadAvatar(@AuthenticationPrincipal User user,
+                                        @RequestParam MultipartFile image) {
     userService.setAvatar(image, user);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
