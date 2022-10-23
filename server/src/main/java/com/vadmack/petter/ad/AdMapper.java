@@ -18,6 +18,7 @@ public class AdMapper {
               .ownerId(ad.getOwnerId())
               .name(ad.getName())
               .price(ad.getPrice())
+              .species(ad.getSpecies())
               .breed(ad.getBreed())
               .gender(ad.getGender())
               .birthDate(ad.getBirthDate())

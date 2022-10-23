@@ -58,13 +58,7 @@ public class AdService {
   }
 
   public @NotNull List<AdGetListDto> getDtoByProperties(@NotNull AdFilterDto filter, Pageable pageable) {
-    return entityListToDto(adRepository.findByProperties(
-            filter.getOwnerId(),
-            filter.getState(),
-            filter.getSpecies(),
-            filter.getBreed(),
-            filter.getGender(),
-            pageable));
+    return entityListToDto(adRepository.findByProperties(filter, pageable));
   }
 
   public void save(Ad ad) {

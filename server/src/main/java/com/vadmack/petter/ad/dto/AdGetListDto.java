@@ -2,6 +2,7 @@ package com.vadmack.petter.ad.dto;
 
 import com.vadmack.petter.ad.AdState;
 import com.vadmack.petter.ad.Gender;
+import com.vadmack.petter.ad.Species;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class AdGetListDto {
   private String id;
   private String ownerId;
   private String name;
+  private Species species;
   private String price;
   private String breed;
   private Gender gender;
