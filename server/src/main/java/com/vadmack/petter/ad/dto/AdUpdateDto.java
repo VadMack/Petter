@@ -1,5 +1,6 @@
 package com.vadmack.petter.ad.dto;
 
+import com.vadmack.petter.ad.AdState;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
 import com.vadmack.petter.app.model.ModelUpdateDto;
@@ -22,4 +23,5 @@ public class AdUpdateDto implements ModelUpdateDto {
   private Map<String, String> achievements;
   private Set<String> vaccinations;
   private String description;
+  private AdState state;
 }

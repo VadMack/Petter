@@ -49,6 +49,14 @@ public class AdController implements SecuredRestController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PreAuthorize("@adService.isOwner(#user, #id)")
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteById(@AuthenticationPrincipal User user,
+                                      @PathVariable String id) {
+    adService.deleteWithDependenciesById(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @PutMapping("/{id}/like")
   public ResponseEntity<?> like(@AuthenticationPrincipal User user,
                                 @PathVariable String id) {

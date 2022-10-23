@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor(onConstructor_ = {@Lazy})
 @Service
@@ -33,7 +34,7 @@ public class UserService {
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
 
-  public void create(UserCreateDto dto) {
+  public void create(@NotNull UserCreateDto dto) {
     User user = dtoToEntity(dto);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
@@ -44,36 +45,36 @@ public class UserService {
             .toList();
   }
 
-  public @NotNull UserGetDto getDtoById(String id) {
+  public @NotNull UserGetDto getDtoById(@NotNull String id) {
     return entityToDto(getById(id));
   }
 
-  public @NotNull User getById(String id) {
+  public @NotNull User getById(@NotNull String id) {
     return AppUtils.checkFound(findById(id),
             String.format("User with id=%s not found", id));
   }
 
-  private Optional<User> findById(String id) {
+  private Optional<User> findById(@NotNull String id) {
     return userRepository.findById(id);
   }
 
-  public @NotNull List<AdGetListDto> getFavoriteAds(User user) {
-    return adService.getByIdIn(user.getFavoriteAdIds());
+  public @NotNull List<AdGetListDto> getFavoriteAds(@NotNull User user) {
+    return adService.getDtoByIdIn(user.getFavoriteAdIds());
   }
 
   public void save(User user) {
     userRepository.save(user);
   }
 
-  public void updateById(UserUpdateDto userUpdateDto, String userId) {
+  public void updateById(@NotNull UserUpdateDto userUpdateDto, @NotNull String userId) {
     userRepository.updateById(userUpdateDto, userId);
   }
 
   @Transactional
-  public void setAvatar(MultipartFile image, User user) {
+  public void setAvatar(@NotNull MultipartFile image, @NotNull User user) {
     String existedAvatarPath = user.getAvatarPath();
     if (existedAvatarPath != null) {
-      imageService.deleteByRelativePath(existedAvatarPath);
+      imageService.unlinkAndDeleteByRelativePath(existedAvatarPath);
     }
     String userId = user.getId();
     FileMetadata fileMetadata = imageService.save(image, userId, AttachmentType.USER, userId);
@@ -81,19 +82,39 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public void addAd(String adId, String userId) {
+  /**
+   * Deletes a user with attached avatar image and ads with their images
+   */
+  @Transactional
+  public void deleteWithDependencies(@NotNull User user) {
+    String avatarPath = user.getAvatarPath();
+    if (avatarPath != null) {
+      imageService.deleteByRelativePath(avatarPath);
+    }
+
+    Set<String> adIds = user.getAdIds();
+    adService.deleteWithDependenciesByIdIn(adIds);
+
+    delete(user);
+  }
+
+  private void delete(@NotNull User user) {
+    userRepository.delete(user);
+  }
+
+  public void addAd(@NotNull String adId, @NotNull String userId) {
     userRepository.addAdId(adId, userId);
   }
 
-  public void addFavoriteAd(String adId, String userId) {
+  public void addFavoriteAd(@NotNull String adId, @NotNull String userId) {
     userRepository.addFavouriteAdId(adId, userId);
   }
 
-  private User dtoToEntity(UserCreateDto dto) {
+  private User dtoToEntity(@NotNull UserCreateDto dto) {
     return modelMapper.map(dto, User.class);
   }
 
-  private UserGetDto entityToDto(User entity) {
+  private UserGetDto entityToDto(@NotNull User entity) {
     return modelMapper.map(entity, UserGetDto.class);
   }
 }

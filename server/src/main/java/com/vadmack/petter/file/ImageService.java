@@ -5,6 +5,7 @@ import com.vadmack.petter.app.exception.ValidationException;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,7 +45,10 @@ public class ImageService {
   }
 
   @Transactional
-  public FileMetadata save(MultipartFile image, String userId, AttachmentType attachmentType, String attachmentId) {
+  public FileMetadata save(@NotNull MultipartFile image,
+                           @NotNull String userId,
+                           @NotNull AttachmentType attachmentType,
+                           @NotNull String attachmentId) {
     validateContentType(image);
     String generatedFilename = generateFilename(FilenameUtils.getExtension(image.getOriginalFilename()));
     Path relativePath = Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId, generatedFilename);
@@ -66,33 +71,48 @@ public class ImageService {
     return fileMetadata;
   }
 
-  public Resource getByRelativePath(Path relativePath) {
+  public Resource getByRelativePath(@NotNull Path relativePath) {
     fileMetadataService.validatePathForGet(relativePath);
     return new FileSystemResource(Paths.get(photoStorage, relativePath.toString()));
   }
 
-  private void validateContentType(MultipartFile file) {
+  private void validateContentType(@NotNull MultipartFile file) {
     if (!ALLOWED_CONTENT_TYPES.contains(file.getContentType())) {
       throw new ValidationException("Allowed content types: " + ALLOWED_CONTENT_TYPES);
     }
   }
 
-  private String generateFilename(String extension) {
+  private String generateFilename(@NotNull String extension) {
     return UUID.randomUUID() + "." + extension;
   }
 
-  public boolean isOwner(User user, String folderName) {
+  public boolean isOwner(@NotNull User user, @NotNull String folderName) {
     return user.getId().equals(folderName);
   }
 
   @Transactional
-  public void deleteByRelativePath(Path relativePath) {
-    deleteByRelativePath(relativePath.toString());
+  public void unlinkAndDeleteByRelativePath(@NotNull Path relativePath) {
+    unlinkAndDeleteByRelativePath(relativePath.toString());
   }
 
   @Transactional
-  public void deleteByRelativePath(String relativePath) {
+  public void unlinkAndDeleteByRelativePath(@NotNull String relativePath) {
+    fileMetadataService.unlinkAndDeleteByRelativePath(relativePath);
+    deleteFile(relativePath);
+  }
+
+  @Transactional
+  public void deleteByRelativePath(@NotNull String relativePath) {
     fileMetadataService.deleteByRelativePath(relativePath);
+    deleteFile(relativePath);
+  }
+
+  @Transactional
+  public void deleteByRelativePaths(@NotNull Collection<String> relativePaths) {
+    relativePaths.forEach(this::deleteByRelativePath);
+  }
+
+  private void deleteFile(@NotNull String relativePath) {
     try {
       Files.delete(Paths.get(photoStorage, relativePath));
     } catch (IOException ex) {

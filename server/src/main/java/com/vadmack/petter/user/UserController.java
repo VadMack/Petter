@@ -61,4 +61,11 @@ public class UserController {
     userService.setAvatar(image, user);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
+
+  @Secured
+  @DeleteMapping("/")
+  public ResponseEntity<?> delete(@AuthenticationPrincipal User user) {
+    userService.deleteWithDependencies(user);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

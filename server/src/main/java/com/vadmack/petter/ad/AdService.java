@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +31,33 @@ public class AdService {
 
   private final ModelMapper modelMapper;
 
-  public @NotNull List<AdGetListDto> getDtoByProperties(AdFilterDto filter, Pageable pageable) {
+  @Transactional
+  public void create(@NotNull AdCreateDdo dto, @NotNull String userId) {
+    Ad ad = dtoToEntity(dto);
+    ad.setOwnerId(userId);
+    ad.setState(AdState.OPEN);
+    Ad createdAd = adRepository.save(ad);
+    userService.addAd(createdAd.getId(), userId);
+  }
+
+  public @NotNull AdGetDto getDtoById(@NotNull String id) {
+    return entityToDto(getById(id));
+  }
+
+  public @NotNull Ad getById(@NotNull String id) {
+    return AppUtils.checkFound(findById(id),
+            String.format("Ad with id=%s not found", id));
+  }
+
+  public Optional<Ad> findById(@NotNull String id) {
+    return adRepository.findById(id);
+  }
+
+  public @NotNull List<AdGetListDto> getDtoByIdIn(@NotNull Collection<String> ids) {
+    return entityListToDto(adRepository.findByIdIn(ids));
+  }
+
+  public @NotNull List<AdGetListDto> getDtoByProperties(@NotNull AdFilterDto filter, Pageable pageable) {
     return entityListToDto(adRepository.findByProperties(
             filter.getOwnerId(),
             filter.getState(),
@@ -40,74 +67,63 @@ public class AdService {
             pageable));
   }
 
-  public @NotNull List<AdGetListDto> getByIdIn(Collection<String> ids) {
-    return entityListToDto(adRepository.findByIdIn(ids));
-  }
-
-  @Transactional
-  public void create(AdCreateDdo dto, String userId) {
-    Ad ad = dtoToEntity(dto);
-    ad.setOwnerId(userId);
-    Ad createdAd = adRepository.save(ad);
-    userService.addAd(createdAd.getId(), userId);
-  }
-
   public void save(Ad ad) {
     adRepository.save(ad);
   }
 
-  public void updateById(AdUpdateDto dto, String id) {
+  public void updateById(@NotNull AdUpdateDto dto, @NotNull String id) {
     adRepository.updateById(dto, id);
   }
 
   @Transactional
-  public void like(String adId, String userId) {
-    Ad ad = AppUtils.checkFound(findById(adId),
-            String.format("File metadata with id=%s not found", adId));
+  public void like(@NotNull String adId, @NotNull String userId) {
+    getById(adId);
     userService.addFavoriteAd(adId, userId);
   }
 
   @Transactional
-  public void addImage(MultipartFile image, String adId, String userId) {
+  public void addImage(@NotNull MultipartFile image, @NotNull String adId, @NotNull String userId) {
     FileMetadata fileMetadata = imageService.save(image, userId, AttachmentType.AD, adId);
     adRepository.addImage(fileMetadata.getRelativePath(), adId);
   }
 
-  public @NotNull AdGetDto getDtoById(String id) {
-    return entityToDto(getById(id));
+  /**
+   * Deletes an ad with attached images
+   */
+  @Transactional
+  public void deleteWithDependenciesById(@NotNull String id) {
+    deleteAttachedImagesById(id);
+    deleteById(id);
+  }
+  public void deleteById(@NotNull String id) {
+    adRepository.deleteById(id);
   }
 
-  public @NotNull Ad getById(String id) {
-    return AppUtils.checkFound(findById(id),
-            String.format("Ad with id=%s not found", id));
+  public void deleteWithDependenciesByIdIn(@NotNull Collection<String> ids) {
+    ids.forEach(this::deleteAttachedImagesById);
+    adRepository.deleteByIdIn(ids);
   }
 
-  public Optional<Ad> findById(String id) {
-    return adRepository.findById(id);
+  private void deleteAttachedImagesById(@NotNull String id) {
+    Ad ad = getById(id);
+    Set<String> imagePaths = ad.getImagePaths();
+    imageService.deleteByRelativePaths(imagePaths);
   }
 
-  private Ad dtoToEntity(AdCreateDdo dto) {
+  private Ad dtoToEntity(@NotNull AdCreateDdo dto) {
     return modelMapper.map(dto, Ad.class);
   }
 
-  private AdGetDto entityToDto(Ad entity) {
+  private AdGetDto entityToDto(@NotNull Ad entity) {
     return modelMapper.map(entity, AdGetDto.class);
   }
 
-  private List<AdGetListDto> entityListToDto(Collection<Ad> entities) {
-    return AdMapper.entityToListDto(entities);
+  private List<AdGetListDto> entityListToDto(@NotNull Collection<Ad> entities) {
+    return AdMapper.entityListToDto(entities);
   }
 
-  public boolean isOwner(User user, String adId) {
+  public boolean isOwner(@NotNull User user, @NotNull String adId) {
     Ad ad = getById(adId);
     return ad.getOwnerId().equals(user.getId());
-  }
-
-  public boolean adContainsImage(String adId, String imagePath) {
-    return getById(adId).getImagePaths().contains(imagePath);
-  }
-
-  public boolean checkCanDeleteImage(User user, String adId, String imagePath) {
-    return isOwner(user, adId) && adContainsImage(adId, imagePath);
   }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @UtilityClass
 public class AdMapper {
 
-  public static List<AdGetListDto> entityToListDto(Collection<Ad> entities) {
+  public static List<AdGetListDto> entityListToDto(Collection<Ad> entities) {
     List<AdGetListDto> result = new ArrayList<>();
     entities.forEach(ad -> {
       AdGetListDto dto = AdGetListDto.builder()

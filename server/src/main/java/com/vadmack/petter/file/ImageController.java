@@ -44,7 +44,7 @@ public class ImageController implements SecuredRestController {
   public ResponseEntity<Resource> deleteImage(@AuthenticationPrincipal User user,
                                                 @PathVariable String folderName,
                                                 @PathVariable String fileName) {
-    imageService.deleteByRelativePath(Paths.get(USERS_PHOTO_STORAGE_FOLDER_NAME,
+    imageService.unlinkAndDeleteByRelativePath(Paths.get(USERS_PHOTO_STORAGE_FOLDER_NAME,
             folderName, fileName));
     return new ResponseEntity<>(HttpStatus.OK);
   }

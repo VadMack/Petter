@@ -29,29 +29,29 @@ public class  FileMetadataService {
     fileMetadataRepository.save(metadata);
   }
 
-  public @NotNull FileMetadata getById(String id) {
+  public @NotNull FileMetadata getById(@NotNull String id) {
     return AppUtils.checkFound(fileMetadataRepository.findById(new ObjectId(id)),
             String.format("File metadata with id=%s not found", id));
   }
 
-  public Optional<FileMetadata> findById(String id) {
+  public Optional<FileMetadata> findById(@NotNull String id) {
     return fileMetadataRepository.findById(new ObjectId(id));
   }
 
-  public @NotNull FileMetadata getByRelativePath(String relativePath) {
+  public @NotNull FileMetadata getByRelativePath(@NotNull String relativePath) {
     return AppUtils.checkFound(findByRelativePath(relativePath),
             String.format("File metadata with relativePath=%s not found", relativePath));
   }
 
-  public Optional<FileMetadata> findByRelativePath(String relativePath) {
+  public Optional<FileMetadata> findByRelativePath(@NotNull String relativePath) {
     return fileMetadataRepository.findByRelativePath(relativePath);
   }
 
-  public void validatePathForSave(Path path) {
+  public void validatePathForSave(@NotNull Path path) {
     validatePathForSave(path.toString());
   }
 
-  public void validatePathForSave(String path) {
+  public void validatePathForSave(@NotNull String path) {
     if (outsideDirectory(path)) {
       throw new ValidationException("Path cannot contain '..'");
     }
@@ -61,11 +61,11 @@ public class  FileMetadataService {
     }
   }
 
-  public void validatePathForGet(Path path) {
+  public void validatePathForGet(@NotNull Path path) {
     validatePathForGet(path.toString());
   }
 
-  public void validatePathForGet(String path) {
+  public void validatePathForGet(@NotNull String path) {
     if (outsideDirectory(path)) {
       throw new ValidationException("Path cannot contain '..'");
     }
@@ -75,23 +75,27 @@ public class  FileMetadataService {
     }
   }
 
-  public boolean outsideDirectory(String path) {
+  public boolean outsideDirectory(@NotNull String path) {
     return path.contains("..");
   }
 
-  public boolean existsByRelativePath(String relativePath) {
+  public boolean existsByRelativePath(@NotNull String relativePath) {
     return fileMetadataRepository.existsByRelativePath(relativePath);
   }
 
   @Transactional
-  public void deleteByRelativePath(String relativePath) {
+  public void unlinkAndDeleteByRelativePath(@NotNull String relativePath) {
     FileMetadata metadata = getByRelativePath(relativePath);
     Attachment attachment = metadata.getAttachment();
     unlinkFromAttachment(attachment, relativePath);
+    deleteByRelativePath(relativePath);
+  }
+
+  public void deleteByRelativePath(@NotNull String relativePath) {
     fileMetadataRepository.deleteByRelativePath(relativePath);
   }
 
-  private void unlinkFromAttachment(Attachment attachment, String relativePath) {
+  private void unlinkFromAttachment(@NotNull Attachment attachment, @NotNull String relativePath) {
     String attachmentId = attachment.getId();
     switch (attachment.getType()) {
       case USER -> {
