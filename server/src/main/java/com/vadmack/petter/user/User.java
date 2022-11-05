@@ -16,7 +16,7 @@ import java.util.Set;
 @Data
 @Document(collection = "users")
 public class User extends MongoModel implements UserDetails {
-  @Indexed(unique = true)
+  @Indexed(unique = true, partialFilter = "{ name: { $exists: true } }")
   private String email;
   @Indexed(unique = true)
   private String username;

@@ -14,12 +14,15 @@ public class MongoConfig {
 
   @Bean
   public MongoClient mongo(@Value("${spring.data.mongodb.username}") String username,
-                           @Value("${spring.data.mongodb.password}") String password) {
+                           @Value("${spring.data.mongodb.password}") String password,
+                           @Value("${spring.data.mongodb.host}") String host,
+                           @Value("${spring.data.mongodb.port}") String port
+
+  ) {
     ConnectionString connectionString =
-            new ConnectionString(String.format("mongodb://%s:%s@localhost:27017", username, password));
+            new ConnectionString(String.format("mongodb://%s:%s@%s:%s", username, password, host, port));
     MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
-
             .build();
 
     return MongoClients.create(mongoClientSettings);
@@ -27,7 +30,7 @@ public class MongoConfig {
 
   @Bean
   public MongoTemplate mongoTemplate(MongoClient mongoClient,
-                                     @Value("${spring.data.mongodb.database}") String dbName) throws Exception {
+                                     @Value("${spring.data.mongodb.database}") String dbName) {
     return new MongoTemplate(mongoClient, dbName);
   }
 }
