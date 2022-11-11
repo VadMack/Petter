@@ -2,6 +2,7 @@ package com.vadmack.petter.user;
 
 import com.vadmack.petter.ad.AdService;
 import com.vadmack.petter.ad.dto.AdGetListDto;
+import com.vadmack.petter.app.exception.ValidationException;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.AttachmentType;
 import com.vadmack.petter.file.FileMetadata;
@@ -35,6 +36,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   public void create(@NotNull UserCreateDto dto) {
+    checkNotExistsByUsername(dto.getUsername());
     User user = dtoToEntity(dto);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
@@ -56,6 +58,12 @@ public class UserService {
 
   private Optional<User> findById(@NotNull String id) {
     return userRepository.findById(id);
+  }
+
+  private void checkNotExistsByUsername(@NotNull String username) {
+    if (userRepository.existsByUsername(username)) {
+      throw new ValidationException(String.format("User with username=%s already exists", username));
+    }
   }
 
   public @NotNull List<AdGetListDto> getFavoriteAds(@NotNull User user) {
