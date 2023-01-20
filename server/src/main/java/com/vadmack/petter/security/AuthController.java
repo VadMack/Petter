@@ -1,11 +1,15 @@
 package com.vadmack.petter.security;
 
 import com.vadmack.petter.app.exception.UnauthorizedException;
+import com.vadmack.petter.security.dto.AuthRequest;
+import com.vadmack.petter.security.dto.RegistrationConfirmRequest;
 import com.vadmack.petter.user.User;
+import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +30,19 @@ public class AuthController {
   private final AuthenticationManager authenticationManager;
   private final JwtTokenUtil jwtTokenUtil;
   private final ModelMapper modelMapper;
+  private final RegistrationService registrationService;
+
+  @PostMapping("/registration")
+  public ResponseEntity<UserGetDto> register(@RequestBody UserCreateDto dto) {
+    UserGetDto createdUser = registrationService.register(dto);
+    return ResponseEntity.ok(createdUser);
+  }
+
+  @PostMapping("/registration-confirm")
+  public ResponseEntity<?> registrationConfirm(@RequestBody RegistrationConfirmRequest request) {
+    registrationService.registrationConfirm(request);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
   @PostMapping("/auth")
   public ResponseEntity<UserGetDto> login(@RequestBody @Valid AuthRequest request) {

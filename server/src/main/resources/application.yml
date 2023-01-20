@@ -12,6 +12,32 @@ spring:
       auto-index-creation: true
   main:
     allow-circular-references: true
+  mail:
+    protocol: smtp
+
+    # Mail.ru config
+#    host: smtp.mail.ru
+#    port: 465
+#    username: ${MAILRU_EMAIL}
+#    password: ${MAILRU_PASSWORD}
+
+    # Gmail config
+#    host: smtp.gmail.com
+#    port: 465
+#    username: ${GMAIL_EMAIL}
+#    password: ${GMAIL_PASSWORD}
+
+    # Yandex config
+    host: smtp.yandex.ru
+    port: 465
+    username: ${YANDEX_EMAIL}
+    password: ${YANDEX_PASSWORD}
+
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
+      "mail.smtp.ssl.enable": true
 
 authorization:
   enabled: true

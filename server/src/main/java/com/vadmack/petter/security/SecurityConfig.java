@@ -25,7 +25,11 @@ public class SecurityConfig {
 
   private static final String[] AUTH_WHITELIST = {
           "/v3/api-docs/**",
-          "/swagger-ui/**"
+          "/swagger-ui/**",
+
+          "/api/auth",
+          "/api/registration",
+          "/api/registration-confirm"
   };
 
   private final JwtTokenFilter jwtTokenFilter;
@@ -36,7 +40,6 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
     httpSecurity.csrf().disable()
             .authorizeHttpRequests()
-            .antMatchers("/api/auth").permitAll()
             .antMatchers(AUTH_WHITELIST).permitAll()
             .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
             .anyRequest().authenticated().and()

@@ -35,11 +35,11 @@ public class UserService {
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
 
-  public void create(@NotNull UserCreateDto dto) {
-    checkNotExistsByUsername(dto.getUsername());
+  public @NotNull User create(@NotNull UserCreateDto dto) {
+    checkNotExistsByUsernameOrEmail(dto.getUsername(), dto.getEmail());
     User user = dtoToEntity(dto);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    userRepository.save(user);
+    return userRepository.save(user);
   }
 
   public @NotNull List<UserGetDto> findAllDto() {
@@ -60,9 +60,20 @@ public class UserService {
     return userRepository.findById(id);
   }
 
+  private void checkNotExistsByUsernameOrEmail(@NotNull String username, @NotNull String email) {
+    checkNotExistsByUsername(username);
+    checkNotExistsByEmail(email);
+  }
+
   private void checkNotExistsByUsername(@NotNull String username) {
     if (userRepository.existsByUsername(username)) {
       throw new ValidationException(String.format("User with username=%s already exists", username));
+    }
+  }
+
+  private void checkNotExistsByEmail(@NotNull String email) {
+    if (userRepository.existsByEmail(email)) {
+      throw new ValidationException(String.format("User with email=%s already exists", email));
     }
   }
 
@@ -122,7 +133,7 @@ public class UserService {
     return modelMapper.map(dto, User.class);
   }
 
-  private UserGetDto entityToDto(@NotNull User entity) {
+  public UserGetDto entityToDto(@NotNull User entity) {
     return modelMapper.map(entity, UserGetDto.class);
   }
 }

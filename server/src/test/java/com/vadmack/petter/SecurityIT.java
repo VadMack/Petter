@@ -3,7 +3,8 @@ package com.vadmack.petter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.vadmack.petter.security.AuthRequest;
+import com.vadmack.petter.mail.MailService;
+import com.vadmack.petter.security.dto.AuthRequest;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterAll;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -33,6 +35,9 @@ class SecurityIT {
   @Autowired
   private MockMvc mvc;
 
+  @MockBean
+  private MailService mailService;
+
   @Autowired
   private UserRepository userRepository;
 
@@ -47,6 +52,7 @@ class SecurityIT {
     User user = new User();
     user.setUsername(USERNAME);
     user.setPassword(passwordEncoder.encode(PASSWORD));
+    user.setEnabled(true);
     savedUser = userRepository.save(user);
   }
 
