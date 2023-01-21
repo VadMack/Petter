@@ -12,4 +12,5 @@ public class UserGetDto {
   private String phoneNumber;
   private Address address;
   private String avatarPath;
+  private boolean enabled;
 }

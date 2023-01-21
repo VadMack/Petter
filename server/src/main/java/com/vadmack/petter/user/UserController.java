@@ -22,12 +22,6 @@ public class UserController {
 
   private final UserService userService;
 
-  @PostMapping
-  public ResponseEntity<?> create(@RequestBody UserCreateDto dto) {
-    userService.create(dto);
-    return new ResponseEntity<>(HttpStatus.CREATED);
-  }
-
   @Secured
   @GetMapping
   public ResponseEntity<List<UserGetDto>> getAll() {

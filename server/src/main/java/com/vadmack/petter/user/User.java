@@ -28,6 +28,7 @@ public class User extends MongoModel implements UserDetails {
   private String avatarPath;
   private Set<String> adIds = new HashSet<>();
   private Set<String> favoriteAdIds = new HashSet<>();
+  private boolean enabled = false;
 
   public void setAvatarPath(String avatarPath) {
     this.avatarPath = avatarPath;
@@ -50,6 +51,6 @@ public class User extends MongoModel implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return enabled;
   }
 }
