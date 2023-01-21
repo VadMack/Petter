@@ -16,7 +16,7 @@ fun includeModulesInRoot(root: String) {
     rootFile.walkTopDown().maxDepth(3).forEach { file ->
         if (file.isModule()) {
             val modulePath = file.path.drop(rootFile.path.length)
-            val module = ":$root${modulePath.replace("/", ":")}"
+            val module = ":$root${modulePath.replace("\\", ":")}"
             include(module)
         }
     }

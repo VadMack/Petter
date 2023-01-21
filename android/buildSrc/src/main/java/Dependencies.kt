@@ -14,7 +14,6 @@ object Libs {
     const val coroutines =
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
     const val coil = "io.coil-kt:coil:${Versions.coil}"
-    const val compressor = "id.zelory:compressor:${Versions.compressor}"
     const val viewBinding =
         "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding}"
 
