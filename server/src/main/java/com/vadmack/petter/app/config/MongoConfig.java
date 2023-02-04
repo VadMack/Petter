@@ -30,10 +30,11 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
   @Value("${spring.data.mongodb.auto-index-creation}")
   private boolean autoIndexCreation;
 
+
   @Override
   public @NotNull MongoClient mongoClient() {
-    ConnectionString connectionString =
-            new ConnectionString(String.format("mongodb://%s:%s@%s:%s", username, password, host, port));
+    ConnectionString connectionString = new ConnectionString(String.format("mongodb://%s:%s@%s:%s",
+                    username, password, host, port));
     MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
             .applyConnectionString(connectionString)
             .build();

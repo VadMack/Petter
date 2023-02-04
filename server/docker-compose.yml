@@ -2,19 +2,31 @@ version: '3'
 
 services:
   mongo:
+#    hostname: mongo
+    image: mongo
     container_name: mongo
-    image: mongo:latest
-    restart: unless-stopped
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+
+  mongosetup:
+    image: mongo
+    container_name: mongo_setup
+    depends_on:
+      - mongo
+    volumes:
+      - ./scripts:/scripts
+    restart: "no"
+    entrypoint: [ "bash", "/scripts/rs-init.sh" ]
 
   server:
     container_name: server
     build: ./
     ports:
       - "8080:8080"
+      - "465:465"
+    restart: always
     depends_on:
       - mongo
+      - mongosetup

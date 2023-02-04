@@ -5,7 +5,7 @@ spring:
     mongodb:
       authentication-database: admin
       database: petterDB
-      host: localhost
+      host: mongo
       port: 27017
       password: admin
       username: admin
