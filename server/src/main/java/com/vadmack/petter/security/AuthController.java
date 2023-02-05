@@ -2,7 +2,9 @@ package com.vadmack.petter.security;
 
 import com.vadmack.petter.app.exception.UnauthorizedException;
 import com.vadmack.petter.security.dto.AuthRequest;
-import com.vadmack.petter.security.dto.RegistrationConfirmRequest;
+import com.vadmack.petter.security.dto.PasswordResetConfirmationRequest;
+import com.vadmack.petter.security.dto.PasswordResetRequest;
+import com.vadmack.petter.security.dto.ConfirmationCodeRequest;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
@@ -30,17 +32,29 @@ public class AuthController {
   private final AuthenticationManager authenticationManager;
   private final JwtTokenUtil jwtTokenUtil;
   private final ModelMapper modelMapper;
-  private final RegistrationService registrationService;
+  private final AuthService authService;
 
   @PostMapping("/registration")
   public ResponseEntity<UserGetDto> register(@RequestBody UserCreateDto dto) {
-    UserGetDto createdUser = registrationService.register(dto);
+    UserGetDto createdUser = authService.register(dto);
     return ResponseEntity.ok(createdUser);
   }
 
   @PostMapping("/registration-confirm")
-  public ResponseEntity<?> registrationConfirm(@RequestBody RegistrationConfirmRequest request) {
-    registrationService.registrationConfirm(request);
+  public ResponseEntity<?> registrationConfirm(@RequestBody ConfirmationCodeRequest request) {
+    authService.registrationConfirm(request);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/password-reset")
+  public ResponseEntity<UserGetDto> resetPassword(@RequestBody PasswordResetRequest request) {
+    UserGetDto user = authService.resetPassword(request.getEmail());
+    return ResponseEntity.ok(user);
+  }
+
+  @PostMapping("/password-reset-confirm")
+  public ResponseEntity<?> resetPasswordConfirm(@RequestBody PasswordResetConfirmationRequest request) {
+    authService.resetPasswordConfirm(request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

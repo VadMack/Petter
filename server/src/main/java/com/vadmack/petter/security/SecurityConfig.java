@@ -29,7 +29,9 @@ public class SecurityConfig {
 
           "/api/auth",
           "/api/registration",
-          "/api/registration-confirm"
+          "/api/registration-confirm",
+          "/api/password-reset",
+          "/api/password-reset-confirm"
   };
 
   private final JwtTokenFilter jwtTokenFilter;

@@ -60,6 +60,15 @@ public class UserService {
     return userRepository.findById(id);
   }
 
+  public @NotNull User getByEmail(@NotNull String email) {
+    return AppUtils.checkFound(findByEmail(email),
+            String.format("User with email=%s not found", email));
+  }
+
+  private Optional<User> findByEmail(@NotNull String id) {
+    return userRepository.findByEmail(id);
+  }
+
   private void checkNotExistsByUsernameOrEmail(@NotNull String username, @NotNull String email) {
     checkNotExistsByUsername(username);
     checkNotExistsByEmail(email);

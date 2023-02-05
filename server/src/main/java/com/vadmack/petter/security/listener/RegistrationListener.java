@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
   private static final String REGISTRATION_EMAIL_SUBJECT = "Petter registration";
-  private static final String REGISTRATION_EMAIL_TEMPLATE = "Confirm registration by entering the following numbers" +
-          " in the mobile application: ";
+  private static final String REGISTRATION_EMAIL_TEMPLATE =
+          "Confirm registration by entering the following numbers in the mobile application: ";
 
   private final MailService emailService;
 
