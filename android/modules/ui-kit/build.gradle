@@ -1,0 +1,13 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+dependencies {
+    implementation AndroidX.composeUi
+    implementation AndroidX.composeUiTooling
+    implementation AndroidX.composeMaterial
+    implementation AndroidX.composePreview
+
+    implementation project(":modules:theme")
+}

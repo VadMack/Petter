@@ -1,7 +1,6 @@
 package ru.gortea.petter.theme
 
 import androidx.compose.material.Typography
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -19,7 +18,11 @@ private val fonts = FontFamily(
     Font(R.font.font_nunito_medium_italic, weight = FontWeight.Medium, style = FontStyle.Italic),
     Font(R.font.font_nunito_regular, weight = FontWeight.Normal),
     Font(R.font.font_nunito_semi_bold, weight = FontWeight.SemiBold),
-    Font(R.font.font_nunito_semi_bold_italic, weight = FontWeight.SemiBold, style = FontStyle.Italic),
+    Font(
+        R.font.font_nunito_semi_bold_italic,
+        weight = FontWeight.SemiBold,
+        style = FontStyle.Italic
+    ),
 )
 
 // Set of Material typography styles to start with
@@ -81,3 +84,12 @@ val Typography = Typography(
         lineHeight = 18.sp
     )
 )
+
+val Typography.body3: TextStyle
+    get() = TextStyle(
+        fontFamily = fonts,
+        fontWeight = FontWeight.Light,
+        fontStyle = FontStyle.Italic,
+        fontSize = 16.sp,
+        lineHeight = 20.sp
+    )
