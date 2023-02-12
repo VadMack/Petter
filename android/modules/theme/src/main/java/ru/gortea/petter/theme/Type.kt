@@ -93,3 +93,11 @@ val Typography.body3: TextStyle
         fontSize = 16.sp,
         lineHeight = 20.sp
     )
+
+val Typography.button2: TextStyle
+    get() = TextStyle(
+        fontFamily = fonts,
+        fontWeight = FontWeight.Bold,
+        fontSize = 12.sp,
+        lineHeight = 18.sp
+    )
