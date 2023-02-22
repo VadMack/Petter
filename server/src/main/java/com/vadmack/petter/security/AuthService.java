@@ -1,18 +1,26 @@
 package com.vadmack.petter.security;
 
+import com.vadmack.petter.app.exception.UnauthorizedException;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCodeService;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCodeType;
-import com.vadmack.petter.security.dto.ConfirmationCodeRequest;
-import com.vadmack.petter.security.dto.PasswordResetConfirmationRequest;
+import com.vadmack.petter.security.dto.request.ConfirmationCodeRequest;
+import com.vadmack.petter.security.dto.request.PasswordResetConfirmationRequest;
+import com.vadmack.petter.security.dto.response.LoginResponse;
 import com.vadmack.petter.security.event.OnPasswordResetEvent;
 import com.vadmack.petter.security.event.OnRegistrationCompleteEvent;
+import com.vadmack.petter.security.token.TokenService;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.UserService;
 import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +29,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
+  private final JwtTokenUtil jwtTokenUtil;
   private final UserService userService;
   private final ConfirmationCodeService confirmationCodeService;
+  private final TokenService tokenService;
 
+  private final AuthenticationManager authenticationManager;
   private final ApplicationEventPublisher eventPublisher;
   private final PasswordEncoder passwordEncoder;
+  private final ModelMapper modelMapper;
 
   @Transactional
   public @NotNull UserGetDto register(@NotNull UserCreateDto dto) {
@@ -45,6 +57,7 @@ public class AuthService {
             ConfirmationCodeType.REGISTRATION);
   }
 
+  @Transactional
   public @NotNull UserGetDto resetPassword(@NotNull String email) {
     User user = userService.getByEmail(email);
     short code = confirmationCodeService.create(user.getId(), ConfirmationCodeType.PASSWORD_RESET);
@@ -52,6 +65,7 @@ public class AuthService {
     return userService.entityToDto(user);
   }
 
+  @Transactional
   public void resetPasswordConfirm(@NotNull PasswordResetConfirmationRequest request) {
     confirmationCodeService.validateCode(request.getCode(), request.getUserId(), ConfirmationCodeType.PASSWORD_RESET);
     User user = userService.getById(request.getUserId());
@@ -59,6 +73,31 @@ public class AuthService {
     userService.save(user);
     confirmationCodeService.deleteByCodeAndUserIdAndType(request.getCode(), request.getUserId(),
             ConfirmationCodeType.PASSWORD_RESET);
+  }
+
+  public @NotNull LoginResponse login(@NotNull String username, @NotNull String password) {
+    Authentication authenticate;
+    try {
+      authenticate = authenticationManager
+              .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    } catch (AuthenticationException e) {
+      throw new UnauthorizedException("Bad credentials");
+    }
+    User user = (User) authenticate.getPrincipal();
+
+    UserGetDto userDto = modelMapper.map(user, UserGetDto.class);
+    String refreshToken = tokenService.createRefreshToken(user.getId());
+    String jwtToken = jwtTokenUtil.generateAccessToken(user);
+    return new LoginResponse(userDto, refreshToken, jwtToken);
+  }
+
+  @Transactional
+  public LoginResponse refreshToken(String tokenValue) {
+    String userId = tokenService.validate(tokenValue);
+    tokenService.deleteByValue(tokenValue);
+    User user = userService.getById(userId);
+    String jwtToken = jwtTokenUtil.generateAccessToken(user);
+    return new LoginResponse(modelMapper.map(user, UserGetDto.class), userId, jwtToken);
   }
 
 }

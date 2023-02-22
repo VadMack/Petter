@@ -1,4 +1,4 @@
-package com.vadmack.petter.security.dto;
+package com.vadmack.petter.security.dto.request;
 
 import lombok.Data;
 

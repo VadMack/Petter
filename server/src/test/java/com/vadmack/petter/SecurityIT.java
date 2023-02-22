@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.vadmack.petter.mail.MailService;
-import com.vadmack.petter.security.dto.AuthRequest;
+import com.vadmack.petter.security.dto.request.AuthRequest;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterAll;

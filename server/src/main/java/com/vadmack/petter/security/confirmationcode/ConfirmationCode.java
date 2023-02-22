@@ -11,7 +11,7 @@ import javax.validation.constraints.Min;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@CompoundIndex(name = "userId_type", def = "{'userId': 1, 'type': 1}")
+@CompoundIndex(name = "userId_type", def = "{'userId': 1, 'type': 1}", unique = true)
 @Document(collection = "confirmationCodes")
 public class ConfirmationCode extends MongoModel {
   private String userId;
