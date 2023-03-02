@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class PasswordResetRequest {
+public class EmailWrapper {
   @Email
   @NotBlank
   private String email;

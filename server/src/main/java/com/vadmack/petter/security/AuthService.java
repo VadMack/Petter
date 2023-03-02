@@ -1,6 +1,7 @@
 package com.vadmack.petter.security;
 
 import com.vadmack.petter.app.exception.UnauthorizedException;
+import com.vadmack.petter.security.confirmationcode.ConfirmationCode;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCodeService;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCodeType;
 import com.vadmack.petter.security.dto.request.ConfirmationCodeRequest;
@@ -24,6 +25,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -58,6 +61,11 @@ public class AuthService {
   }
 
   @Transactional
+  public @NotNull UserGetDto resendRegistrationConfirmationCode(@NotNull String email) {
+    return resendConfirmationCode(email, ConfirmationCodeType.REGISTRATION);
+  }
+
+  @Transactional
   public @NotNull UserGetDto resetPassword(@NotNull String email) {
     User user = userService.getByEmail(email);
     short code = confirmationCodeService.create(user.getId(), ConfirmationCodeType.PASSWORD_RESET);
@@ -73,6 +81,21 @@ public class AuthService {
     userService.save(user);
     confirmationCodeService.deleteByCodeAndUserIdAndType(request.getCode(), request.getUserId(),
             ConfirmationCodeType.PASSWORD_RESET);
+  }
+
+  @Transactional
+  public @NotNull UserGetDto resendResetPasswordConfirmationCode(@NotNull String email) {
+    return resendConfirmationCode(email, ConfirmationCodeType.PASSWORD_RESET);
+  }
+
+  private @NotNull UserGetDto resendConfirmationCode(@NotNull String email, ConfirmationCodeType type) {
+    User user = userService.getByEmail(email);
+    Optional<ConfirmationCode> existedConfirmationCode = confirmationCodeService
+            .findByUserIdAndType(user.getId(), type);
+    short code = existedConfirmationCode.map(ConfirmationCode::getCode)
+            .orElseGet(() -> confirmationCodeService.create(user.getId(), type));
+    eventPublisher.publishEvent(new OnRegistrationCompleteEvent(this, email, code));
+    return userService.entityToDto(user);
   }
 
   public @NotNull LoginResponse login(@NotNull String username, @NotNull String password) {

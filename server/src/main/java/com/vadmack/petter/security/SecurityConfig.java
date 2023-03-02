@@ -28,10 +28,8 @@ public class SecurityConfig {
           "/swagger-ui/**",
 
           "/api/auth",
-          "/api/registration",
-          "/api/registration-confirm",
-          "/api/password-reset",
-          "/api/password-reset-confirm",
+          "/api/registration/**",
+          "/api/password-reset/**",
           "/api/refresh-token"
   };
 

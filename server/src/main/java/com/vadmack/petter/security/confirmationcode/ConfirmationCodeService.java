@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
@@ -27,6 +28,11 @@ public class ConfirmationCodeService {
     if (!existsByCodeAndUserIdAndType(code, userId, type)) {
       throw new ValidationException("Invalid code or userId");
     }
+  }
+
+  public Optional<ConfirmationCode> findByUserIdAndType(@NotNull String userId,
+                                                        @NotNull ConfirmationCodeType type) {
+    return confirmationCodeRepository.findByUserIdAndType(userId, type);
   }
 
   private boolean existsByCodeAndUserIdAndType(short code, @NotNull String userId,

@@ -27,22 +27,34 @@ public class AuthController {
     return ResponseEntity.ok(createdUser);
   }
 
-  @PostMapping("/registration-confirm")
+  @PostMapping("/registration/confirm")
   public ResponseEntity<?> registrationConfirm(@RequestBody ConfirmationCodeRequest request) {
     authService.registrationConfirm(request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PostMapping("/registration/resend-confirmation-code")
+  public ResponseEntity<UserGetDto> resendRegistrationConfirmationCode(@RequestBody EmailWrapper request) {
+    UserGetDto user = authService.resendRegistrationConfirmationCode(request.getEmail());
+    return ResponseEntity.ok(user);
+  }
+
   @PostMapping("/password-reset")
-  public ResponseEntity<UserGetDto> resetPassword(@RequestBody PasswordResetRequest request) {
+  public ResponseEntity<?> resetPassword(@RequestBody EmailWrapper request) {
     UserGetDto user = authService.resetPassword(request.getEmail());
     return ResponseEntity.ok(user);
   }
 
-  @PostMapping("/password-reset-confirm")
+  @PostMapping("/password-reset/confirm")
   public ResponseEntity<?> resetPasswordConfirm(@RequestBody PasswordResetConfirmationRequest request) {
     authService.resetPasswordConfirm(request);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/password-reset/resend-confirmation-code")
+  public ResponseEntity<UserGetDto> resendResetPasswordConfirmationCode(@RequestBody EmailWrapper request) {
+    UserGetDto user = authService.resendResetPasswordConfirmationCode(request.getEmail());
+    return ResponseEntity.ok(user);
   }
 
   @PostMapping("/auth")
