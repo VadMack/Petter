@@ -4,10 +4,12 @@ plugins {
 }
 
 dependencies {
-    implementation AndroidX.composeUi
-    implementation AndroidX.composeUiTooling
-    implementation AndroidX.composeMaterial
-    implementation AndroidX.composePreview
+    api AndroidX.composeUi
+    api AndroidX.composeFoundation
+    api AndroidX.composeMaterial
+    api AndroidX.composePreview
 
-    implementation project(":modules:theme")
+    debugApi AndroidX.composeUiTooling
+
+    api project(":modules:theme")
 }

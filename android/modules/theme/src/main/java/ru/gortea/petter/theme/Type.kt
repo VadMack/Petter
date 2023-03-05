@@ -40,7 +40,7 @@ val Typography = Typography(
     h3 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 24.sp
+        fontSize = 18.sp
     ),
     h4 = TextStyle(
         fontFamily = fonts,
@@ -84,6 +84,15 @@ val Typography = Typography(
         lineHeight = 18.sp
     )
 )
+
+val Typography.appHeader: TextStyle
+    get() = TextStyle(
+        fontFamily = fonts,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Italic,
+        fontSize = 48.sp,
+        color = Primary600
+    )
 
 val Typography.body3: TextStyle
     get() = TextStyle(

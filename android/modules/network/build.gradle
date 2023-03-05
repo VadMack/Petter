@@ -1,0 +1,11 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'kotlinx-serialization'
+}
+
+dependencies {
+    implementation Libs.serialization
+    implementation Libs.retrofitSerializationConverter
+
+    api Libs.retrofit
+}

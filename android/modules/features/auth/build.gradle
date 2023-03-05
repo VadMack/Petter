@@ -1,0 +1,10 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+dependencies {
+    implementation project(":modules:arch-android")
+    implementation project(":modules:features:auth-data")
+    implementation project(":modules:ui-kit")
+}

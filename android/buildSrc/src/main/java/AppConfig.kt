@@ -8,8 +8,6 @@ object AppConfig {
     const val versionCode = 1
     const val versionName = "1.0"
 
-    const val composeVersion = "1.3.0"
-
     object CompileOptions {
         val javaSourceCompatibility = JavaVersion.VERSION_1_8
         const val kotlinJvmTarget = "1.8"

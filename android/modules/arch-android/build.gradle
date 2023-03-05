@@ -1,0 +1,12 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+dependencies {
+    implementation AndroidX.composeUi
+    implementation AndroidX.lifecycleViewModelKtx
+
+    api AndroidX.composeViewModel
+    api project(":modules:arch")
+}
