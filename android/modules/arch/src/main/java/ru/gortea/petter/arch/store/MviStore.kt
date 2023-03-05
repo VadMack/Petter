@@ -21,7 +21,7 @@ abstract class MviStore<State: Any, Event : Any, Action: Any>(initialState: Stat
     val actionsFlow = _actionsChannel.consumeAsFlow()
 
     override fun dispatch(event: Event) {
-        coroutineScope.launch { _eventsChannel.send(event) }
+        _eventsChannel.trySend(event)
     }
 
     override fun attach(coroutineScope: CoroutineScope) {
@@ -44,9 +44,11 @@ internal fun <UiState : Any, State : Any, Event : Any> MviStore<State, Event, *>
     mapper: UiStateMapper<State, UiState>,
     renderer: (UiState) -> Unit
 ) {
-    stateFlow.map(mapper::map)
-        .onEach(renderer)
-        .launchIn(coroutineScope)
+    coroutineScope.launch {
+        stateFlow.map(mapper::map)
+            .onEach(renderer)
+            .collect()
+    }
 }
 
 internal fun<Action : Any, State : Any, Event : Any> MviStore<State, Event, Action>.handleAction(

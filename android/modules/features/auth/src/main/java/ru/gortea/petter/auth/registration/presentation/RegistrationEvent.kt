@@ -10,7 +10,7 @@ internal sealed interface RegistrationEvent {
         val failedReasons: List<RegistrationFailedReason>
     ) : RegistrationEvent
 
-    class AccountCreateProcess(val status: DataState<String>) : RegistrationEvent
+    data class AccountCreateProcess(val status: DataState<String>) : RegistrationEvent
 }
 
 internal interface RegistrationUiEvent : RegistrationEvent {

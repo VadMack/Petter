@@ -1,13 +1,17 @@
 package ru.gortea.petter.ui_kit
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
@@ -15,8 +19,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import ru.gortea.petter.theme.*
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextField(
     text: String,
@@ -47,9 +53,11 @@ fun TextField(
     }
 
     val mergedTextStyle = MaterialTheme.typography.body1.merge(TextStyle(color = textColor))
-
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = modifier
+            .bringIntoViewRequester(bringIntoViewRequester)
     ) {
         label?.let {
             Label(
@@ -63,7 +71,14 @@ fun TextField(
             value = text,
             modifier = Modifier
                 .background(colors.backgroundColor(enabled).value, shape)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .onFocusEvent { focusState ->
+                    if (focusState.isFocused) {
+                        coroutineScope.launch {
+                            bringIntoViewRequester.bringIntoView()
+                        }
+                    }
+                },
             onValueChange = onValueChange,
             enabled = enabled,
             readOnly = readOnly,

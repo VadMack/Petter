@@ -24,24 +24,28 @@ internal class TeaStoreImpl<State : Any, Event : Any, Action : Any, Command : An
     }
 
     private fun startCommandsFlow() {
-        commandsFlow.shareIn(coroutineScope + Dispatchers.Unconfined, SharingStarted.Eagerly)
+        coroutineScope.launch {
+            commandsFlow.shareIn(this + Dispatchers.Unconfined, SharingStarted.Eagerly)
+        }
     }
 
     private fun startEventsFlow() {
-        eventsFlow
-            .map { reducer.reduce(stateFlow.value, it) }
-            .onEach { message -> _stateFlow.emit(message.state) }
-            .onEach { message -> message.commands.forEach { commandsFlow.emit(it) } }
-            .onEach { message -> message.actions.forEach { _actionsChannel.send(it) } }
-            .launchIn(coroutineScope + Dispatchers.Unconfined)
+        coroutineScope.launch {
+            eventsFlow
+                .map { reducer.reduce(stateFlow.value, it) }
+                .onEach { message -> _stateFlow.emit(message.state) }
+                .onEach { message -> message.commands.forEach { commandsFlow.emit(it) } }
+                .onEach { message -> message.actions.forEach { _actionsChannel.send(it) } }
+                .launchIn(this + Dispatchers.Unconfined)
+        }
     }
 
     private fun startActors() {
         actors.forEach { actor ->
-            coroutineScope.launch(Dispatchers.Unconfined) {
+            coroutineScope.launch {
                 actor.process(commandsFlow)
                     .onEach(_eventsChannel::send)
-                    .launchIn(this)
+                    .launchIn(this + Dispatchers.Unconfined)
             }
         }
     }

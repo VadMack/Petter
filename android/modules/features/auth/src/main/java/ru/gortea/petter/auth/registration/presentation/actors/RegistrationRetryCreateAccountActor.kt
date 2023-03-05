@@ -6,14 +6,13 @@ import ru.gortea.petter.auth.data.RegistrationRepository
 import ru.gortea.petter.auth.registration.presentation.RegistrationCommand
 import ru.gortea.petter.auth.registration.presentation.RegistrationEvent
 
-internal class RegistrationCreateAccountActor(
+internal class RegistrationRetryCreateAccountActor(
     private val repository: RegistrationRepository
 ) : Actor<RegistrationCommand, RegistrationEvent> {
 
     override fun process(commands: Flow<RegistrationCommand>): Flow<RegistrationEvent> {
-        return commands
-            .filterIsInstance<RegistrationCommand.CreateAccount>()
-            .flatMapMerge { repository.createAccount(it.model) }
-            .map { RegistrationEvent.AccountCreateProcess(it) }
+        return commands.filterIsInstance<RegistrationCommand.RetryCreateAccount>()
+            .mapLatest { repository.retryCreateAccount(it.model) }
+            .flatMapMerge { emptyFlow() }
     }
 }

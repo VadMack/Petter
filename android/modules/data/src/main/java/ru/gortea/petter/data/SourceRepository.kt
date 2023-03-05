@@ -1,9 +1,11 @@
 package ru.gortea.petter.data
 
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.onCompletion
 import ru.gortea.petter.arch.collection.collect
 import ru.gortea.petter.data.model.Arguments
 import ru.gortea.petter.data.model.DataState
@@ -13,13 +15,15 @@ import ru.gortea.petter.data.mvi.RepositoryStore
 
 @Suppress("UNCHECKED_CAST")
 class SourceRepository<T>(
-    source: suspend (Arguments) -> T
+    source: suspend (Arguments) -> T,
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : Repository<T> {
 
     private val store = RepositoryStore(source)
-    private val dataFlow = MutableSharedFlow<DataState<T>>(extraBufferCapacity = 5)
+    private val dataFlow = MutableSharedFlow<DataState<T>>(extraBufferCapacity = 1)
 
     init {
+        store.attach(coroutineScope)
         store.collect(::stateMapper, ::stateRenderer)
     }
 
@@ -34,9 +38,8 @@ class SourceRepository<T>(
     }
 
     override suspend fun get(args: Arguments): Flow<DataState<T>> {
-        coroutineScope { store.attach(this) }
         store.dispatch(RepositoryEvent.User.Invalidate(args))
 
-        return dataFlow.asSharedFlow()
+        return dataFlow.onCompletion { coroutineScope.cancel() }
     }
 }
