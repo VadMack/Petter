@@ -5,8 +5,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import ru.gortea.petter.arch.UiStateMapper
 import ru.gortea.petter.auth.registration.presentation.state.RegistrationFieldState
 import ru.gortea.petter.auth.registration.presentation.state.RegistrationState
+import ru.gortea.petter.auth.registration.ui.state.ButtonState
 import ru.gortea.petter.auth.registration.ui.state.RegistrationUiState
 import ru.gortea.petter.auth.registration.ui.state.TextFieldState
+import ru.gortea.petter.data.model.DataState
 
 internal class RegistrationUiStateMapper : UiStateMapper<RegistrationState, RegistrationUiState> {
 
@@ -15,7 +17,8 @@ internal class RegistrationUiStateMapper : UiStateMapper<RegistrationState, Regi
             emailState = state.email.toTextFieldState(),
             usernameState = state.username.toTextFieldState(),
             passwordState = state.password.toTextFieldState(),
-            passwordConfirmState = state.passwordConfirm.toTextFieldState()
+            passwordConfirmState = state.passwordConfirm.toTextFieldState(),
+            createAccountState = state.registrationStatus.toButtonState()
         )
     }
 
@@ -25,6 +28,12 @@ internal class RegistrationUiStateMapper : UiStateMapper<RegistrationState, Regi
             text = text,
             isIncorrect = !isValid,
             visualTransformation = transform
+        )
+    }
+
+    private fun DataState<*>.toButtonState(): ButtonState {
+        return ButtonState(
+            isLoading = this is DataState.Loading
         )
     }
 }

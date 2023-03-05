@@ -52,8 +52,8 @@ fun RegistrationScreen() {
             passwordChanged = { store.dispatch(PasswordChanged(it)) },
             passwordConfirmChanged = { store.dispatch(PasswordConfirmChanged(it)) },
             createAccountClicked = { store.dispatch(CreateAccount) },
-            authorizeClicked = {  },
-            backClicked = { }
+            authorizeClicked = { /* TODO Open auth screen */ },
+            backClicked = { /* TODO Go back */ }
         )
     }
 }
@@ -184,7 +184,9 @@ private fun RegistrationForm(
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.create_account),
-                onClick = createAccountClicked
+                onClick = createAccountClicked,
+                isLoading = state.createAccountState.isLoading,
+                isClickable = !state.createAccountState.isLoading
             )
 
             TextButton(

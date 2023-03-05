@@ -2,11 +2,9 @@ package ru.gortea.petter.ui_kit.button
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,20 +16,37 @@ fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isClickable: Boolean = true,
+    isLoading: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Button(
-        onClick = onClick,
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
+        onClick = { if (isClickable) onClick() },
+        modifier = modifier.height(38.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+            disabledElevation = 0.dp,
+            hoveredElevation = 4.dp,
+            focusedElevation = 4.dp,
+        )
     ) {
         leadingIcon?.invoke()
 
-        Text(
-            text = text.uppercase(),
-            style = MaterialTheme.typography.button
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                color = MaterialTheme.colors.onPrimary,
+                strokeWidth = 2.dp
+            )
+        } else {
+            Text(
+                text = text.uppercase(),
+                style = MaterialTheme.typography.button
+            )
+        }
 
         trailingIcon?.invoke()
     }
@@ -46,8 +61,8 @@ private fun PrimaryButton_Preview() {
                 text = "Button",
                 onClick = {},
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                    .fillMaxWidth(),
+                isLoading = true
             )
         }
     }
