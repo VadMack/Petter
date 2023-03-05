@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation Libs.serialization
     implementation Libs.retrofitSerializationConverter
+    implementation Libs.okHttpLoggingInterceptor
 
     api Libs.retrofit
 }
