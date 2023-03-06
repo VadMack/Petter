@@ -18,34 +18,40 @@ import java.util.Map;
 public class CustomExceptionHandler {
 
   @ExceptionHandler({NotFoundException.class})
-  public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+  public ResponseEntity<ExceptionResponseWrapper> handleNotFoundException(NotFoundException ex) {
+    HttpStatus status = HttpStatus.NOT_FOUND;
+    return new ResponseEntity<>(new ExceptionResponseWrapper(status.value(), ex.getMessage()), status);
   }
 
   @ExceptionHandler({ValidationException.class})
-  public ResponseEntity<String> handleValidationException(ValidationException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<ExceptionResponseWrapper> handleValidationException(ValidationException ex) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    return new ResponseEntity<>(new ExceptionResponseWrapper(status.value(), ex.getMessage()), status);
   }
 
   @ExceptionHandler({UnauthorizedException.class})
-  public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  public ResponseEntity<ExceptionResponseWrapper> handleUnauthorizedException(UnauthorizedException ex) {
+    HttpStatus status = HttpStatus.UNAUTHORIZED;
+    return new ResponseEntity<>(new ExceptionResponseWrapper(status.value(), ex.getMessage()), status);
   }
 
   @ExceptionHandler({MethodArgumentNotValidException.class})
-  public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+  public ResponseEntity<ExceptionResponseWrapper> handleMethodArgumentNotValidException(
           MethodArgumentNotValidException ex) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult().getAllErrors().forEach(error -> {
       String fieldName = ((FieldError) error).getField();
       String errorMessage = error.getDefaultMessage();
       errors.put(fieldName, errorMessage);
     });
-    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(new ExceptionResponseWrapper(status.value(), errors.toString()), status);
   }
 
   @ExceptionHandler({FileSizeLimitExceededException.class})
-  public ResponseEntity<String> handleFileSizeLimitExceededException(FileSizeLimitExceededException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<ExceptionResponseWrapper> handleFileSizeLimitExceededException(
+          FileSizeLimitExceededException ex) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    return new ResponseEntity<>(new ExceptionResponseWrapper(status.value(), ex.getMessage()), status);
   }
 }

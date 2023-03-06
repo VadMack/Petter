@@ -2,7 +2,6 @@ package com.vadmack.petter.user;
 
 import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.annotation.Secured;
-import com.vadmack.petter.user.dto.UserCreateDto;
 import com.vadmack.petter.user.dto.UserGetDto;
 import com.vadmack.petter.user.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;

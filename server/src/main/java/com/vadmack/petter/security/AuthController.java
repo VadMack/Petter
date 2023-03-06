@@ -22,43 +22,43 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/registration")
-  public ResponseEntity<UserGetDto> register(@RequestBody UserCreateDto dto) {
+  public ResponseEntity<UserGetDto> register(@Valid @RequestBody UserCreateDto dto) {
     UserGetDto createdUser = authService.register(dto);
     return ResponseEntity.ok(createdUser);
   }
 
   @PostMapping("/registration/confirm")
-  public ResponseEntity<?> registrationConfirm(@RequestBody ConfirmationCodeRequest request) {
+  public ResponseEntity<?> registrationConfirm(@Valid @RequestBody ConfirmationCodeRequest request) {
     authService.registrationConfirm(request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/registration/resend-confirmation-code")
-  public ResponseEntity<UserGetDto> resendRegistrationConfirmationCode(@RequestBody EmailWrapper request) {
+  public ResponseEntity<UserGetDto> resendRegistrationConfirmationCode(@Valid @RequestBody EmailWrapper request) {
     UserGetDto user = authService.resendRegistrationConfirmationCode(request.getEmail());
     return ResponseEntity.ok(user);
   }
 
   @PostMapping("/password-reset")
-  public ResponseEntity<?> resetPassword(@RequestBody EmailWrapper request) {
+  public ResponseEntity<?> resetPassword(@Valid @RequestBody EmailWrapper request) {
     UserGetDto user = authService.resetPassword(request.getEmail());
     return ResponseEntity.ok(user);
   }
 
   @PostMapping("/password-reset/confirm")
-  public ResponseEntity<?> resetPasswordConfirm(@RequestBody PasswordResetConfirmationRequest request) {
+  public ResponseEntity<?> resetPasswordConfirm(@Valid @RequestBody PasswordResetConfirmationRequest request) {
     authService.resetPasswordConfirm(request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/password-reset/resend-confirmation-code")
-  public ResponseEntity<UserGetDto> resendResetPasswordConfirmationCode(@RequestBody EmailWrapper request) {
+  public ResponseEntity<UserGetDto> resendResetPasswordConfirmationCode(@Valid @RequestBody EmailWrapper request) {
     UserGetDto user = authService.resendResetPasswordConfirmationCode(request.getEmail());
     return ResponseEntity.ok(user);
   }
 
   @PostMapping("/auth")
-  public ResponseEntity<LoginResponse> login(@RequestBody @Valid AuthRequest request) {
+  public ResponseEntity<LoginResponse> login(@Valid @RequestBody AuthRequest request) {
     LoginResponse loginResponse = authService.login(request.getUsername(), request.getPassword());
     return ResponseEntity.ok()
             .header(
@@ -69,7 +69,7 @@ public class AuthController {
   }
 
   @PostMapping("/refresh-token")
-  public ResponseEntity<LoginResponse> refreshToken(@RequestBody @Valid RefreshTokenRequest request) {
+  public ResponseEntity<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
     LoginResponse loginResponse = authService.refreshToken(request.getToken());
     return ResponseEntity.ok()
             .header(
