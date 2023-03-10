@@ -17,4 +17,10 @@
 
     <string name="create_account">Создать профиль</string>
     <string name="authorize">Войти</string>
+
+    <string name="registration_confirm_description">Мы отправили на %s код подтверждения.
+        \nПожалуйста подтвердите ваш email.</string>
+    <string name="registration_confirm_code_label">Код подтверждения</string>
+    <string name="registration_confirm_send_code">Подтвердить</string>
+    <string name="registration_confirm_resend_code">Отправить повторно</string>
 </resources>

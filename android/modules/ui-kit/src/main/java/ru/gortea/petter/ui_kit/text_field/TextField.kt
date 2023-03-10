@@ -25,9 +25,9 @@ import ru.gortea.petter.theme.*
 @Composable
 fun TextField(
     state: TextFieldState,
-    placeholder: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    placeholder: String = "",
     label: String? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,

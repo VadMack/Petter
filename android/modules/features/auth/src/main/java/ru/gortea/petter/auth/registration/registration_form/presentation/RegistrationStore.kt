@@ -6,7 +6,6 @@ import ru.gortea.petter.auth.registration.di.RegistrationComponent
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationCreateAccountActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationRetryCreateAccountActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationValidateActor
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.RegistrationValidatorComposite
 
 internal typealias RegistrationStore = MviStore<RegistrationState, RegistrationEvent, Nothing>

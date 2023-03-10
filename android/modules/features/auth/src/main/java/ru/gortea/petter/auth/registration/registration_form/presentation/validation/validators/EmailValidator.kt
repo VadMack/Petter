@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.registration.registration_form.presentation.validation.validators
 
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.isNotBlank
+import ru.gortea.petter.auth.registration.common.isNotBlank
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState
 import ru.gortea.petter.auth.validation.Validator
 
 internal class EmailValidator : Validator<RegistrationState> {

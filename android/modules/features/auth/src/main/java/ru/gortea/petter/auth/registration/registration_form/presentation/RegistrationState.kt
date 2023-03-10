@@ -1,6 +1,8 @@
-package ru.gortea.petter.auth.registration.registration_form.presentation.state
+package ru.gortea.petter.auth.registration.registration_form.presentation
 
 import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
+import ru.gortea.petter.auth.registration.common.RegistrationFieldState
+import ru.gortea.petter.auth.registration.common.hide
 import ru.gortea.petter.data.model.DataState
 
 internal data class RegistrationState(

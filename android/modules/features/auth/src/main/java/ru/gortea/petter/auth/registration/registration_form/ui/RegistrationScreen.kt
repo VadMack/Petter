@@ -109,13 +109,12 @@ private fun RegistrationScreenContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 60.dp),
+                .padding(bottom = 60.dp, top = 112.dp),
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.appHeader,
             textAlign = TextAlign.Center

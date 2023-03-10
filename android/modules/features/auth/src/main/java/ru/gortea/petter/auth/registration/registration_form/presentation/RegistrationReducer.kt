@@ -3,16 +3,16 @@ package ru.gortea.petter.auth.registration.registration_form.presentation
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.auth.data.model.RegistrationModel
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationFieldState
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.invalid
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.valid
+import ru.gortea.petter.auth.registration.common.RegistrationFieldState
+import ru.gortea.petter.auth.registration.common.invalid
+import ru.gortea.petter.auth.registration.common.valid
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.*
 import ru.gortea.petter.data.model.isInitial
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand as Command
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent as Event
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState as State
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent as UiEvent
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState as State
 
 internal class RegistrationReducer : Reducer<State, Event, Nothing, Command>() {
 

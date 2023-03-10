@@ -1,7 +1,6 @@
 package ru.gortea.petter.auth.registration.registration_form.presentation
 
 import ru.gortea.petter.auth.data.model.RegistrationModel
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState
 
 internal sealed interface RegistrationCommand {
     class Validate(val state: RegistrationState) : RegistrationCommand

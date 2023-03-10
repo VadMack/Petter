@@ -1,7 +1,6 @@
 package ru.gortea.petter.auth.registration.registration_form.presentation
 
 import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
-import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.data.model.DataState
 

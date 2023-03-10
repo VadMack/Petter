@@ -1,4 +1,4 @@
-package ru.gortea.petter.auth.registration.registration_form.presentation.state
+package ru.gortea.petter.auth.registration.common
 
 internal data class RegistrationFieldState(
     val text: String = "",
