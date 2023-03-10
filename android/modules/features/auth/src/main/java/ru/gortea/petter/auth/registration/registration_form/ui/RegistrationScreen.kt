@@ -28,7 +28,7 @@ import ru.gortea.petter.auth.registration.registration_form.ui.mapper.Registrati
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
-import ru.gortea.petter.ui_kit.TextField
+import ru.gortea.petter.ui_kit.text_field.TextField
 import ru.gortea.petter.ui_kit.button.PrimaryButton
 import ru.gortea.petter.ui_kit.button.TextButton
 import ru.gortea.petter.ui_kit.toolbar.BackIcon
@@ -148,45 +148,39 @@ private fun RegistrationForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
-            text = state.emailState.text,
+            state = state.emailState,
             placeholder = stringResource(R.string.email_placeholder),
             onValueChange = emailChanged,
-            label = stringResource(R.string.email_label),
-            isError = state.emailState.isIncorrect
+            label = stringResource(R.string.email_label)
         )
 
         TextField(
-            text = state.usernameState.text,
+            state = state.usernameState,
             placeholder = stringResource(R.string.username_placeholder),
             onValueChange = usernameChanged,
-            label = stringResource(R.string.user_name_label),
-            isError = state.usernameState.isIncorrect
+            label = stringResource(R.string.user_name_label)
         )
 
         TextField(
-            text = state.passwordState.text,
+            state = state.passwordState,
             placeholder = stringResource(R.string.password_placeholder),
             onValueChange = passwordChanged,
-            label = stringResource(R.string.password_label),
-            visualTransformation = state.passwordState.visualTransformation,
-            isError = state.passwordState.isIncorrect
+            label = stringResource(R.string.password_label)
         )
 
         TextField(
-            text = state.passwordConfirmState.text,
+            state = state.passwordConfirmState,
             placeholder = stringResource(R.string.password_confirm_placeholder),
             onValueChange = passwordConfirmChanged,
-            label = stringResource(R.string.password_confirm_label),
-            visualTransformation = state.passwordConfirmState.visualTransformation,
-            isError = state.passwordConfirmState.isIncorrect
+            label = stringResource(R.string.password_confirm_label)
         )
 
         Column {
             PrimaryButton(
+                state = state.createAccountState,
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.create_account),
                 onClick = createAccountClicked,
-                isLoading = state.createAccountState.isLoading,
                 isClickable = !state.createAccountState.isLoading
             )
 

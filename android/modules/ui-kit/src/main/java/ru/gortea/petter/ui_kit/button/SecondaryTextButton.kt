@@ -1,4 +1,4 @@
-package ru.gortea.petter.ui_kit
+package ru.gortea.petter.ui_kit.button
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues

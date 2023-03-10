@@ -5,10 +5,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import ru.gortea.petter.arch.UiStateMapper
 import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationFieldState
 import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState
-import ru.gortea.petter.auth.registration.registration_form.ui.state.ButtonState
+import ru.gortea.petter.ui_kit.button.ButtonState
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
-import ru.gortea.petter.auth.registration.registration_form.ui.state.TextFieldState
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.ui_kit.text_field.TextFieldState
 
 internal class RegistrationUiStateMapper : UiStateMapper<RegistrationState, RegistrationUiState> {
 

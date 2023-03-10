@@ -17,7 +17,7 @@ fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isClickable: Boolean = true,
-    isLoading: Boolean = false,
+    state: ButtonState = ButtonState(),
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
@@ -35,7 +35,7 @@ fun PrimaryButton(
     ) {
         leadingIcon?.invoke()
 
-        if (isLoading) {
+        if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(18.dp),
                 color = MaterialTheme.colors.onPrimary,
@@ -62,7 +62,7 @@ private fun PrimaryButton_Preview() {
                 onClick = {},
                 modifier = Modifier
                     .fillMaxWidth(),
-                isLoading = true
+                state = ButtonState(true)
             )
         }
     }

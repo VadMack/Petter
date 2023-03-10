@@ -1,4 +1,4 @@
-package ru.gortea.petter.ui_kit
+package ru.gortea.petter.ui_kit.text_field
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ import ru.gortea.petter.theme.*
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextField(
-    text: String,
+    state: TextFieldState,
     placeholder: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -34,10 +33,8 @@ fun TextField(
     readOnly: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = MaterialTheme.shapes.small.copy(CornerSize(4.dp)),
     colors: TextFieldColors = TextFieldDefaults.textFieldColors(
@@ -68,7 +65,7 @@ fun TextField(
 
         @OptIn(ExperimentalMaterialApi::class)
         BasicTextField(
-            value = text,
+            value = state.text,
             modifier = Modifier
                 .background(colors.backgroundColor(enabled).value, shape)
                 .fillMaxWidth()
@@ -83,29 +80,29 @@ fun TextField(
             enabled = enabled,
             readOnly = readOnly,
             textStyle = mergedTextStyle,
-            cursorBrush = SolidColor(colors.cursorColor(isError).value),
-            visualTransformation = visualTransformation,
+            cursorBrush = SolidColor(colors.cursorColor(state.isIncorrect).value),
+            visualTransformation = state.visualTransformation,
             interactionSource = interactionSource,
             singleLine = singleLine,
             maxLines = maxLines,
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                    value = text,
-                    visualTransformation = visualTransformation,
+                    value = state.text,
+                    visualTransformation = state.visualTransformation,
                     innerTextField = innerTextField,
                     placeholder = { Placeholder(text = placeholder) },
                     leadingIcon = leadingIcon,
                     trailingIcon = trailingIcon,
                     singleLine = singleLine,
                     enabled = enabled,
-                    isError = isError,
+                    isError = state.isIncorrect,
                     interactionSource = interactionSource,
                     colors = colors,
                     contentPadding = PaddingValues(8.dp),
                     border = {
                         TextFieldDefaults.BorderBox(
                             enabled,
-                            isError,
+                            state.isIncorrect,
                             interactionSource,
                             colors,
                             shape
@@ -143,12 +140,12 @@ private fun Label(
 private fun TextField_Preview() {
     PetterAppTheme {
         Surface(color = MaterialTheme.colors.background) {
-            var state: String by remember { mutableStateOf("") }
+            var state by remember { mutableStateOf(TextFieldState()) }
             TextField(
-                text = state,
+                state = state,
                 placeholder = "Input text",
                 label = "label",
-                onValueChange = { state = it },
+                onValueChange = { state = state.copy(text = it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
