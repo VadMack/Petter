@@ -1,4 +1,4 @@
-package ru.gortea.petter.auth.registration.presentation.validation.reason
+package ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason
 
 import ru.gortea.petter.auth.validation.FailedReason
 

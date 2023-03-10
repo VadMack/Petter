@@ -1,4 +1,4 @@
-package ru.gortea.petter.auth.registration.ui.state
+package ru.gortea.petter.auth.registration.registration_form.ui.state
 
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation

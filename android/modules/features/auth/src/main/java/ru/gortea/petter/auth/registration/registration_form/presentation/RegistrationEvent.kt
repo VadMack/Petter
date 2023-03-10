@@ -1,7 +1,8 @@
-package ru.gortea.petter.auth.registration.presentation
+package ru.gortea.petter.auth.registration.registration_form.presentation
 
-import ru.gortea.petter.auth.registration.presentation.state.RegistrationState
-import ru.gortea.petter.auth.registration.presentation.validation.reason.RegistrationFailedReason
+import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
+import ru.gortea.petter.auth.registration.registration_form.presentation.state.RegistrationState
+import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.data.model.DataState
 
 internal sealed interface RegistrationEvent {
@@ -10,7 +11,9 @@ internal sealed interface RegistrationEvent {
         val failedReasons: List<RegistrationFailedReason>
     ) : RegistrationEvent
 
-    data class AccountCreateProcess(val status: DataState<String>) : RegistrationEvent
+    data class AccountCreateProcess(
+        val status: DataState<RegistrationSuccessModel>
+    ) : RegistrationEvent
 }
 
 internal interface RegistrationUiEvent : RegistrationEvent {

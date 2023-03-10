@@ -1,10 +1,10 @@
-package ru.gortea.petter.auth.registration.presentation.actors
+package ru.gortea.petter.auth.registration.registration_form.presentation.actors
 
 import kotlinx.coroutines.flow.*
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.auth.data.RegistrationRepository
-import ru.gortea.petter.auth.registration.presentation.RegistrationCommand
-import ru.gortea.petter.auth.registration.presentation.RegistrationEvent
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent
 
 internal class RegistrationRetryCreateAccountActor(
     private val repository: RegistrationRepository

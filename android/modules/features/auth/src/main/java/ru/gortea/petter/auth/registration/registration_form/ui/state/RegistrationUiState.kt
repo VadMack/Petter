@@ -1,4 +1,4 @@
-package ru.gortea.petter.auth.registration.ui.state
+package ru.gortea.petter.auth.registration.registration_form.ui.state
 
 internal data class RegistrationUiState(
     val emailState: TextFieldState = TextFieldState(),
