@@ -6,6 +6,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import ru.gortea.petter.network.errors.ErrorHandlingCallAdapterFactory
 
 object PetterRetrofit {
 
@@ -15,6 +16,7 @@ object PetterRetrofit {
             .baseUrl("http://10.0.2.2:8080/")
             .client(createClient())
             .addConverterFactory(Json.asConverterFactory(contentType))
+            .addCallAdapterFactory(ErrorHandlingCallAdapterFactory())
             .build()
     }
 
