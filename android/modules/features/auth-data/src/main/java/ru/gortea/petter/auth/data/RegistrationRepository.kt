@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import ru.gortea.petter.auth.data.api.AuthApi
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
+import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.data.model.RegistrationModel
 import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
 import ru.gortea.petter.data.SourceRepository
@@ -28,6 +29,13 @@ class RegistrationRepository(
         )
     }
 
+    private val resendConfirmCodeSource by lazy {
+        SourceRepository(
+            source = { api.resendConfirmCode(it as RegistrationEmailModel) },
+            coroutineScope = coroutineScope
+        )
+    }
+
     suspend fun createAccount(args: RegistrationModel): Flow<DataState<RegistrationSuccessModel>> {
         return registrationSource.get(args)
     }
@@ -36,11 +44,21 @@ class RegistrationRepository(
         registrationSource.invalidate(args)
     }
 
-    suspend fun registrationConfirm(args: RegistrationConfirmModel) : Flow<DataState<Unit>> {
+    suspend fun registrationConfirm(args: RegistrationConfirmModel): Flow<DataState<Unit>> {
         return registrationConfirmSource.get(args)
     }
 
     fun retryRegistrationConfirm(args: RegistrationConfirmModel) {
         registrationConfirmSource.invalidate(args)
+    }
+
+    suspend fun resendConfirmCode(
+        args: RegistrationEmailModel
+    ): Flow<DataState<RegistrationSuccessModel>> {
+        return resendConfirmCodeSource.get(args)
+    }
+
+    fun retryResendConfirmCode(args: RegistrationEmailModel) {
+        resendConfirmCodeSource.invalidate(args)
     }
 }

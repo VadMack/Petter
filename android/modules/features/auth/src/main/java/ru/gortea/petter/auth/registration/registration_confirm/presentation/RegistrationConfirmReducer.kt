@@ -3,6 +3,8 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
+import ru.gortea.petter.auth.data.model.RegistrationEmailModel
+import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
 import ru.gortea.petter.auth.registration.common.RegistrationFieldState
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.model.isInitial
@@ -16,6 +18,7 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
         when (event) {
             is Event.ConfirmationStatus -> confirmationStatus(event.dataState)
+            is Event.ResendCodeStatus -> resendCodeStatus(event.dataState)
             is Event.CodeValidated ->codeValidated(event.isValid)
             is UiEvent -> handleUiEvent(event)
         }
@@ -29,6 +32,10 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
         )
         copy(codeState = fieldState, confirmationStatus = status)
     }
+
+    private fun MessageBuilder<State, Nothing, Command>.resendCodeStatus(
+        status: DataState<RegistrationSuccessModel>
+    ) = state { copy(resendCodeStatus = status) }
 
     private fun MessageBuilder<State, Nothing, Command>.codeValidated(isValid: Boolean) {
         if (isValid) {
@@ -49,9 +56,18 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.Confirm -> commands(Command.Validate(state.codeState.text))
+            is UiEvent.ResendCode -> resendCode()
             is UiEvent.CodeChanged -> state {
                 copy(codeState = RegistrationFieldState(text = event.text, isValid = true))
             }
+        }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.resendCode() {
+        if (state.resendCodeStatus.isInitial()) {
+            commands(Command.ResendCode(RegistrationEmailModel(state.email)))
+        } else {
+            commands(Command.RetryResendCode(RegistrationEmailModel(state.email)))
         }
     }
 
