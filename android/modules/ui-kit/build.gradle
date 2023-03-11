@@ -8,6 +8,8 @@ dependencies {
     api AndroidX.composeFoundation
     api AndroidX.composeMaterial
     api AndroidX.composePreview
+    api AndroidX.composeActivity
+    api AndroidX.activityKtx
 
     debugApi AndroidX.composeUiTooling
 

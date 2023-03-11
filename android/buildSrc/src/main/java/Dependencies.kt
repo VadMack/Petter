@@ -68,6 +68,7 @@ object AndroidX {
     private object Versions {
         const val coreKtx = "1.9.0"
         const val fragmentKtx = "1.4.1"
+        const val activityKtx = "1.6.1"
         const val appCompat = "1.4.1"
         const val material = "1.5.0"
         const val lifecycleRuntimeKtx = "2.5.1"
@@ -91,8 +92,9 @@ object AndroidX {
 
     const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
     const val fragmentKtx = "androidx.fragment:fragment-ktx:${Versions.fragmentKtx}"
+    const val activityKtx = "androidx.activity:activity-ktx:${Versions.activityKtx}"
 
-    const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
+        const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
     const val material = "com.google.android.material:material:${Versions.material}"
     const val lifecycleRuntimeKtx =
         "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycleRuntimeKtx}"

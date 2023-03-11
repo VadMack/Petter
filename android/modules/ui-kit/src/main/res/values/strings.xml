@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="back">Назад</string>
+    <string name="avatar">Аватар</string>
+    <string name="avatar_edit">Сменить аватар</string>
 </resources>
