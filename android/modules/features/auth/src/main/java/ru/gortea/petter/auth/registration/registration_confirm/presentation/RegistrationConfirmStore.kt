@@ -14,14 +14,22 @@ internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState,
 internal fun createRegistrationConfirmStore(
     component: RegistrationComponent,
     email: String,
-    userId: String
+    userId: String,
+    username: String,
+    password: String
 ): RegistrationConfirmStore {
     val repo = component.registrationRepository
 
     return TeaStore(
-        RegistrationConfirmState(userId = userId, email = email),
+        RegistrationConfirmState(
+            userId = userId,
+            email = email,
+            username = username,
+            password = password
+        ),
         RegistrationConfirmReducer(),
         listOf(
+            AuthorizeActor(component.authorizationRepository),
             RegistrationConfirmValidateActor(),
             RegistrationConfirmActor(repo),
             RegistrationRetryConfirmActor(repo),

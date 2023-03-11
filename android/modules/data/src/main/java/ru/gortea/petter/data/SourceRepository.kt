@@ -14,7 +14,7 @@ import ru.gortea.petter.data.mvi.RepositoryState
 import ru.gortea.petter.data.mvi.RepositoryStore
 
 @Suppress("UNCHECKED_CAST")
-class SourceRepository<T>(
+open class SourceRepository<T>(
     source: suspend (Arguments) -> T,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : Repository<T> {

@@ -38,7 +38,7 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 fun RegistrationConfirmScreen() {
     val component: RegistrationComponent = getComponent()
     val store: RegistrationConfirmStore by storeHolder {
-        createRegistrationConfirmStore(component, "ivan_ivanov@mail.ru", "123")
+        createRegistrationConfirmStore(component, "ivan_ivanov@mail.ru", "123", "", "")
     }
 
     store.collect(RegistrationConfirmUiStateMapper()) { state ->

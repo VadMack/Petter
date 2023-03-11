@@ -2,19 +2,10 @@ package ru.gortea.petter.auth.data.api
 
 import retrofit2.http.Body
 import retrofit2.http.POST
-import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
-import ru.gortea.petter.auth.data.model.RegistrationEmailModel
-import ru.gortea.petter.auth.data.model.RegistrationModel
-import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
+import ru.gortea.petter.auth.data.model.AuthorizationModel
+import ru.gortea.petter.auth.data.model.AuthorizedUserModel
 
 interface AuthApi {
-
-    @POST("api/registration")
-    suspend fun registration(@Body model: RegistrationModel): RegistrationSuccessModel
-
-    @POST("api/registration/confirm")
-    suspend fun registrationConfirm(@Body model: RegistrationConfirmModel)
-
-    @POST("api/password-reset/resend-confirmation-code")
-    suspend fun resendConfirmCode(@Body model: RegistrationEmailModel): RegistrationSuccessModel
+    @POST("api/auth")
+    suspend fun auth(@Body model: AuthorizationModel): AuthorizedUserModel
 }

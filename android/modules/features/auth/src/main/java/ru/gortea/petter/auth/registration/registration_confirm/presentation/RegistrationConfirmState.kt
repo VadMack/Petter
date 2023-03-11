@@ -1,13 +1,17 @@
 package ru.gortea.petter.auth.registration.registration_confirm.presentation
 
-import ru.gortea.petter.auth.data.model.RegistrationSuccessModel
+import ru.gortea.petter.auth.data.model.AuthorizedUserModel
 import ru.gortea.petter.auth.registration.common.RegistrationFieldState
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.profile.data.model.UserModel
 
 internal data class RegistrationConfirmState(
     val userId: String,
     val email: String,
+    val username: String,
+    val password: String,
     val codeState: RegistrationFieldState = RegistrationFieldState(),
     val confirmationStatus: DataState<Unit> = DataState.Empty,
-    val resendCodeStatus: DataState<RegistrationSuccessModel> = DataState.Empty
+    val resendCodeStatus: DataState<UserModel> = DataState.Empty,
+    val authStatus: DataState<AuthorizedUserModel> = DataState.Empty
 )

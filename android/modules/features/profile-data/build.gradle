@@ -9,5 +9,4 @@ dependencies {
     implementation Libs.retrofit
 
     api project(":modules:data")
-    api project(":modules:features:profile-data")
 }

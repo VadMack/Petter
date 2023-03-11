@@ -18,7 +18,7 @@ internal class RegistrationReducer : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
         when (event) {
-            is Event.AccountCreateProcess -> state { copy(registrationStatus = event.status) }
+            is Event.AccountCreateStatus -> state { copy(registrationStatus = event.state) }
             is Event.Validated -> stateValidated(event)
             is UiEvent -> handleUiEvent(event)
         }

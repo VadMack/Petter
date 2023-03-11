@@ -16,13 +16,15 @@ internal class RegistrationConfirmUiStateMapper :
                 text = state.codeState.text,
                 isIncorrect = !state.codeState.isValid
             ),
-            sendCodeButtonState = state.confirmationStatus.toButtonState(),
+            sendCodeButtonState = state.toSendCodeButtonState(),
             maskedEmail = state.email.mask()
         )
     }
 
-    private fun DataState<Unit>.toButtonState(): ButtonState {
-        return ButtonState(isLoading = this is DataState.Loading)
+    private fun RegistrationConfirmState.toSendCodeButtonState(): ButtonState {
+        return ButtonState(
+            isLoading = confirmationStatus is DataState.Loading || authStatus is DataState.Loading
+        )
     }
 
     private fun String.mask(): String {

@@ -26,6 +26,7 @@ dependencies {
 
     implementation project(":modules:arch-android")
     implementation project(":modules:network")
+    implementation project(":modules:token-storage")
     implementation project(":modules:theme")
 
     debugImplementation AndroidX.composeUiTooling

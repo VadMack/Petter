@@ -9,4 +9,6 @@ dependencies {
     implementation Libs.okHttpLoggingInterceptor
 
     api Libs.retrofit
+
+    implementation project(":modules:token-storage")
 }

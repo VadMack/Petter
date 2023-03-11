@@ -11,7 +11,9 @@ class PetterApp : Application(), ComponentProvider {
     override fun onCreate() {
         super.onCreate()
 
-        component = DaggerPetterAppComponent.create()
+        component = DaggerPetterAppComponent.builder()
+            .context(this)
+            .build()
     }
 
     @Suppress("UNCHECKED_CAST")

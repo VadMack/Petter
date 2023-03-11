@@ -18,7 +18,7 @@ internal class RegistrationCreateAccountActor(
             .filterIsInstance<RegistrationCommand.CreateAccount>()
             .flatMapMerge { repository.createAccount(it.model) }
             .map {
-                RegistrationEvent.AccountCreateProcess(it)
+                RegistrationEvent.AccountCreateStatus(it)
             }
     }
 }

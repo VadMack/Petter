@@ -1,6 +1,8 @@
 package ru.gortea.petter.network.errors
 
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.CallAdapter
+import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -20,7 +22,9 @@ internal class ErrorHandlingCallAdapterFactory : CallAdapter.Factory() {
         return ErrorHandlingCallAdapter<Any>(responseType)
     }
 
-    private class ErrorHandlingCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Call<R>> {
+    private class ErrorHandlingCallAdapter<R>(
+        private val responseType: Type
+    ) : CallAdapter<R, Call<R>> {
 
         override fun responseType(): Type {
             return responseType
