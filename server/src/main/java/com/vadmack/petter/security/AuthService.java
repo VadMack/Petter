@@ -104,7 +104,7 @@ public class AuthService {
       authenticate = authenticationManager
               .authenticate(new UsernamePasswordAuthenticationToken(username, password));
     } catch (AuthenticationException e) {
-      throw new UnauthorizedException("Bad credentials");
+      throw new UnauthorizedException(e.getMessage());
     }
     User user = (User) authenticate.getPrincipal();
 
