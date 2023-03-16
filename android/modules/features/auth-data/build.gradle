@@ -1,0 +1,13 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'kotlinx-serialization'
+}
+
+dependencies {
+    implementation Libs.serialization
+    implementation Libs.coroutines
+    implementation Libs.retrofit
+
+    api project(":modules:data")
+    api project(":modules:features:profile-data")
+}

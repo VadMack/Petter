@@ -17,7 +17,6 @@ mongosh --host mongo:27017 <<EOF
   };
   rs.initiate(cfg);
 EOF
-
 echo "User initialization is starting"
 mongosh --host mongo:27017 < /scripts/init-user.js
 echo "User initialized successfully"

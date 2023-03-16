@@ -57,7 +57,7 @@ val Alert200 = Color(0xFFE6969E)
 val Alert100 = Color(0xFFF8CBD4)
 val Alert50 = Color(0xFFFCEAEF)
 
-val Background = Color.White
+val Background = Base0
 
 val Alert = Alert700
 val Like = Alert600

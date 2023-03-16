@@ -6,38 +6,43 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import ru.gortea.petter.ui.theme.PetterTheme
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import ru.gortea.petter.arch.android.compose.LocalApplicationContext
+import ru.gortea.petter.auth.registration.fill_account.ui.FillAccountScreen
+import ru.gortea.petter.theme.PetterAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            PetterTheme {
-                // A surface container using the 'background' color from the theme
+        setContent { Content() }
+
+        setupInsets()
+    }
+
+    @Composable
+    private fun Content() {
+        CompositionLocalProvider(LocalApplicationContext provides applicationContext) {
+            PetterAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    FillAccountScreen()
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    PetterTheme {
-        Greeting("Android")
+    private fun setupInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
+            val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            view.updatePadding(bottom = bottom)
+            insets
+        }
     }
 }

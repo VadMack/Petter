@@ -1,0 +1,9 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+dependencies {
+    implementation Libs.coroutines
+
+    implementation project(":modules:arch")
+}

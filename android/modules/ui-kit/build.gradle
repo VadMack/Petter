@@ -1,0 +1,17 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+dependencies {
+    api AndroidX.composeUi
+    api AndroidX.composeFoundation
+    api AndroidX.composeMaterial
+    api AndroidX.composePreview
+    api AndroidX.composeActivity
+    api AndroidX.activityKtx
+
+    debugApi AndroidX.composeUiTooling
+
+    api project(":modules:theme")
+}

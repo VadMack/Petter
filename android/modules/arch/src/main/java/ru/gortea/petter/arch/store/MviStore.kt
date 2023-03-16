@@ -1,21 +1,27 @@
 package ru.gortea.petter.arch.store
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.gortea.petter.arch.UiStateMapper
 
 abstract class MviStore<State: Any, Event : Any, Action: Any>(initialState: State) : Store<Event> {
     private var _coroutineScope: CoroutineScope? = null
-    protected val coroutineScope: CoroutineScope
+    internal val coroutineScope: CoroutineScope
         get() = _coroutineScope ?: error("Store is not attached")
 
-    internal val stateFlow = MutableStateFlow(initialState)
-    internal val eventsFlow = MutableSharedFlow<Event>(replay = 1)
-    internal val actionsFlow = MutableSharedFlow<Action>(replay = 1)
+    protected val _stateFlow = MutableStateFlow(initialState)
+    val stateFlow = _stateFlow.asStateFlow()
+
+    protected val _eventsChannel = Channel<Event>(Channel.BUFFERED)
+    internal val eventsFlow = _eventsChannel.consumeAsFlow()
+
+    protected val _actionsChannel = Channel<Action>(Channel.BUFFERED)
+    val actionsFlow = _actionsChannel.consumeAsFlow()
 
     override fun dispatch(event: Event) {
-        coroutineScope.launch { eventsFlow.emit(event) }
+        _eventsChannel.trySend(event)
     }
 
     override fun attach(coroutineScope: CoroutineScope) {
@@ -25,7 +31,7 @@ abstract class MviStore<State: Any, Event : Any, Action: Any>(initialState: Stat
     }
 }
 
-fun<State : Any, Event : Any> MviStore<State, Event, *>.renderState(
+internal fun<State : Any, Event : Any> MviStore<State, Event, *>.renderState(
     coroutineScope: CoroutineScope,
     renderer: (State) -> Unit
 ) {
@@ -33,17 +39,19 @@ fun<State : Any, Event : Any> MviStore<State, Event, *>.renderState(
         .launchIn(coroutineScope)
 }
 
-fun <UiState : Any, State : Any, Event : Any> MviStore<State, Event, *>.renderState(
+internal fun <UiState : Any, State : Any, Event : Any> MviStore<State, Event, *>.renderState(
     coroutineScope: CoroutineScope,
     mapper: UiStateMapper<State, UiState>,
     renderer: (UiState) -> Unit
 ) {
-    stateFlow.map(mapper::map)
-        .onEach(renderer)
-        .launchIn(coroutineScope)
+    coroutineScope.launch {
+        stateFlow.map(mapper::map)
+            .onEach(renderer)
+            .collect()
+    }
 }
 
-fun<Action : Any, State : Any, Event : Any> MviStore<State, Event, Action>.handleAction(
+internal fun<Action : Any, State : Any, Event : Any> MviStore<State, Event, Action>.handleAction(
     coroutineScope: CoroutineScope,
     dispatcher: (Action) -> Unit
 ) {
