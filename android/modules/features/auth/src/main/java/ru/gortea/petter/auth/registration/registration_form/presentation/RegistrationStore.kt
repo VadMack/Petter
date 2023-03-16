@@ -4,7 +4,7 @@ import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.auth.registration.di.RegistrationComponent
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationCreateAccountActor
-import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationRetryCreateAccountActor
+import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationInitCreateAccountActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationValidateActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.RegistrationValidatorComposite
 
@@ -21,7 +21,8 @@ internal fun createRegistrationStore(
         listOf(
             RegistrationValidateActor(RegistrationValidatorComposite()),
             RegistrationCreateAccountActor(repo),
-            RegistrationRetryCreateAccountActor(repo)
-        )
+            RegistrationInitCreateAccountActor(repo)
+        ),
+        listOf(RegistrationEvent.InitApi)
     )
 }

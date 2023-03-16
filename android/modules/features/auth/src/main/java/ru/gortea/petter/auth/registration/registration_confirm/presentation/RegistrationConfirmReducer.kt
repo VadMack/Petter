@@ -6,9 +6,9 @@ import ru.gortea.petter.auth.data.model.AuthorizationModel
 import ru.gortea.petter.auth.data.model.AuthorizedUserModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
-import ru.gortea.petter.auth.registration.common.RegistrationFieldState
+import ru.gortea.petter.auth.registration.common.FieldState
+import ru.gortea.petter.auth.registration.common.invalid
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.data.model.isInitial
 import ru.gortea.petter.profile.data.model.UserModel
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmCommand as Command
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmEvent as Event
@@ -23,6 +23,11 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
             is Event.ResendCodeStatus -> resendCodeStatus(event.dataState)
             is Event.AuthorizationStatus -> authorizationStatus(event.dataState)
             is Event.CodeValidated -> codeValidated(event.isValid)
+            is Event.InitApi -> commands(
+                Command.InitResendCode,
+                Command.InitConfirm,
+                Command.InitAuthorize
+            )
             is UiEvent -> handleUiEvent(event)
         }
     }
@@ -41,13 +46,15 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
 
     private fun MessageBuilder<State, Nothing, Command>.resendCodeStatus(
         status: DataState<UserModel>
-    ) = state { copy(resendCodeStatus = status) }
+    ) = state {
+        copy(resendCodeStatus = status)
+    }
 
     private fun MessageBuilder<State, Nothing, Command>.authorizationStatus(
         status: DataState<AuthorizedUserModel>
     ) {
         state { copy(authStatus = status) }
-        when(status) {
+        when (status) {
             is DataState.Loading, is DataState.Empty -> Unit
             is DataState.Content -> Unit /* Todo navigate to fill account */
             is DataState.Fail -> Unit  /* Todo show error and navigate to auth */
@@ -58,16 +65,12 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
         if (isValid) {
             codeValid()
         } else {
-            state { copy(codeState = codeState.copy(isValid = false)) }
+            state { copy(codeState = codeState.invalid()) }
         }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.codeValid() {
-        if (state.confirmationStatus.isInitial()) {
-            commands(Command.Confirm(state.toRegistrationConfirmModel()))
-        } else {
-            commands(Command.RetryConfirm(state.toRegistrationConfirmModel()))
-        }
+        commands(Command.Confirm(state.toRegistrationConfirmModel()))
     }
 
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
@@ -75,17 +78,13 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
             is UiEvent.Confirm -> commands(Command.Validate(state.codeState.text))
             is UiEvent.ResendCode -> resendCode()
             is UiEvent.CodeChanged -> state {
-                copy(codeState = RegistrationFieldState(text = event.text, isValid = true))
+                copy(codeState = FieldState(text = event.text.trim(), isValid = true))
             }
         }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.resendCode() {
-        if (state.resendCodeStatus.isInitial()) {
-            commands(Command.ResendCode(RegistrationEmailModel(state.email)))
-        } else {
-            commands(Command.RetryResendCode(RegistrationEmailModel(state.email)))
-        }
+        commands(Command.ResendCode(RegistrationEmailModel(state.email)))
     }
 
     private fun State.toAuthorizationModel(): AuthorizationModel {
@@ -94,6 +93,7 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
             password = password
         )
     }
+
     private fun State.toRegistrationConfirmModel(): RegistrationConfirmModel {
         return RegistrationConfirmModel(
             userId = userId,

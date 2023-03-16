@@ -23,4 +23,16 @@
     <string name="registration_confirm_code_label">Код подтверждения</string>
     <string name="registration_confirm_send_code">Подтвердить</string>
     <string name="registration_confirm_resend_code">Отправить повторно</string>
+
+    <string name="fill_account_save">Сохранить</string>
+    <string name="fill_account">Создание аккаунта</string>
+
+    <string name="name_label">Имя</string>
+    <string name="country_label">Страна</string>
+    <string name="city_label">Город</string>
+    <string name="street_label">Улица</string>
+    <string name="house_label">Дом</string>
+
+    <string name="edit_avatar">Изменить</string>
+    <string name="delete_avatar">Удалить</string>
 </resources>

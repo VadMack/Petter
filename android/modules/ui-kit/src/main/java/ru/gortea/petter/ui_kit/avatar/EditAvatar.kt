@@ -1,10 +1,5 @@
-package ru.gortea.petter.ui_kit.photo_picker
+package ru.gortea.petter.ui_kit.avatar
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,29 +23,28 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.ui_kit.R
-import ru.gortea.petter.ui_kit.avatar.Avatar
+
 
 @Composable
-fun SinglePhotoPicker(
-    image: Painter,
-    photoPicked: (Uri?) -> Unit,
+fun EditAvatar(
+    image: Painter?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    placeholder: Painter = painterResource(R.drawable.ic_person_placeholder),
     shape: Shape = CircleShape,
     avatarSize: Dp = 116.dp
 ) {
-    val launcher = rememberLauncherForActivityResult(
-        PickVisualMedia(),
-        photoPicked
-    )
-
     Box(
         contentAlignment = Alignment.TopCenter,
         modifier = modifier
             .size(width = avatarSize, height = avatarSize + 12.dp)
-            .clickable { launcher.launch(PickVisualMediaRequest(ImageOnly)) }
+            .clickable {
+                onClick()
+                //launcher.launch(PickVisualMediaRequest(ImageOnly))
+            }
     ) {
         Avatar(
-            image = image,
+            image = image ?: placeholder,
             shape = shape,
             size = avatarSize,
             modifier = Modifier.align(Alignment.TopCenter)
@@ -58,7 +52,8 @@ fun SinglePhotoPicker(
 
         Surface(
             shape = RoundedCornerShape(4.dp),
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .size(24.dp)
         ) {
             Image(
@@ -73,11 +68,11 @@ fun SinglePhotoPicker(
 
 @Preview(showBackground = true)
 @Composable
-private fun SinglePhotoPicker_Preview() {
+private fun EditAvatar_Preview() {
     PetterAppTheme {
-        SinglePhotoPicker(
+        EditAvatar(
             image = painterResource(R.drawable.ic_edit),
-            photoPicked = {}
+            onClick = {}
         )
     }
 }

@@ -37,9 +37,7 @@ open class SourceRepository<T>(
         store.dispatch(RepositoryEvent.User.Invalidate(args))
     }
 
-    override suspend fun get(args: Arguments): Flow<DataState<T>> {
-        store.dispatch(RepositoryEvent.User.Invalidate(args))
-
+    override suspend fun get(): Flow<DataState<T>> {
         return dataFlow.onCompletion { coroutineScope.cancel() }
     }
 }

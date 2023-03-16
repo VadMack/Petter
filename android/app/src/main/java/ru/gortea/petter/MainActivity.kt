@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import ru.gortea.petter.arch.android.compose.LocalApplicationContext
-import ru.gortea.petter.auth.registration.registration_form.ui.RegistrationScreen
+import ru.gortea.petter.auth.registration.fill_account.ui.FillAccountScreen
 import ru.gortea.petter.theme.PetterAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RegistrationScreen()
+                    FillAccountScreen()
                 }
             }
         }

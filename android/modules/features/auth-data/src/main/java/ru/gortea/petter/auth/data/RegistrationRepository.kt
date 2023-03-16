@@ -36,27 +36,27 @@ class RegistrationRepository(
         )
     }
 
-    suspend fun createAccount(args: RegistrationModel): Flow<DataState<UserModel>> {
-        return registrationSource.get(args)
+    suspend fun initCreateAccount(): Flow<DataState<UserModel>> {
+        return registrationSource.get()
     }
 
-    fun retryCreateAccount(args: RegistrationModel) {
+    fun createAccount(args: RegistrationModel) {
         registrationSource.invalidate(args)
     }
 
-    suspend fun registrationConfirm(args: RegistrationConfirmModel): Flow<DataState<Unit>> {
-        return registrationConfirmSource.get(args)
+    suspend fun initRegistrationConfirm(): Flow<DataState<Unit>> {
+        return registrationConfirmSource.get()
     }
 
-    fun retryRegistrationConfirm(args: RegistrationConfirmModel) {
+    fun registrationConfirm(args: RegistrationConfirmModel) {
         registrationConfirmSource.invalidate(args)
     }
 
-    suspend fun resendConfirmCode(args: RegistrationEmailModel): Flow<DataState<UserModel>> {
-        return resendConfirmCodeSource.get(args)
+    suspend fun initResendConfirmCode(): Flow<DataState<UserModel>> {
+        return resendConfirmCodeSource.get()
     }
 
-    fun retryResendConfirmCode(args: RegistrationEmailModel) {
+    fun resendConfirmCode(args: RegistrationEmailModel) {
         resendConfirmCodeSource.invalidate(args)
     }
 }

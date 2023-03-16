@@ -6,5 +6,5 @@ import ru.gortea.petter.data.model.DataState
 
 interface Repository<T> {
     fun invalidate(args: Arguments = Arguments.empty)
-    suspend fun get(args: Arguments = Arguments.empty): Flow<DataState<T>>
+    suspend fun get(): Flow<DataState<T>>
 }

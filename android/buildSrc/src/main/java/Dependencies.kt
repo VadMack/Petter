@@ -3,7 +3,7 @@ object Libs {
     private object Versions {
         const val coroutines = "1.6.1"
         const val serialization = "1.5.0-RC"
-        const val coil = "2.0.0-rc03"
+        const val coil = "2.2.2"
         const val compressor = "3.0.1"
         const val viewBinding = "1.5.3"
         const val okHttp = "4.9.3"
@@ -20,7 +20,7 @@ object Libs {
     const val dagger2 = "com.google.dagger:dagger:${Versions.dagger2}"
     const val dagger2Compiler = "com.google.dagger:dagger-compiler:${Versions.dagger2}"
 
-    const val coil = "io.coil-kt:coil:${Versions.coil}"
+    const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
     const val viewBinding = "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding}"
 
     const val okHttp = "com.squareup.okhttp3:okhttp:${Versions.okHttp}"

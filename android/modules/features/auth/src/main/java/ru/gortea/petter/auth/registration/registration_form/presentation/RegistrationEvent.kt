@@ -11,6 +11,8 @@ internal sealed interface RegistrationEvent {
     ) : RegistrationEvent
 
     class AccountCreateStatus(val state: DataState<UserModel>) : RegistrationEvent
+
+    object InitApi : RegistrationUiEvent
 }
 
 internal interface RegistrationUiEvent : RegistrationEvent {

@@ -7,8 +7,10 @@ import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 internal sealed interface RegistrationConfirmCommand {
     class Authorize(val model: AuthorizationModel) : RegistrationConfirmCommand
     class Confirm(val model: RegistrationConfirmModel) : RegistrationConfirmCommand
-    class RetryConfirm(val model: RegistrationConfirmModel) : RegistrationConfirmCommand
     class ResendCode(val model: RegistrationEmailModel) : RegistrationConfirmCommand
-    class RetryResendCode(val model: RegistrationEmailModel) : RegistrationConfirmCommand
     class Validate(val code: String) : RegistrationConfirmCommand
+
+    object InitAuthorize : RegistrationConfirmCommand
+    object InitConfirm : RegistrationConfirmCommand
+    object InitResendCode : RegistrationConfirmCommand
 }

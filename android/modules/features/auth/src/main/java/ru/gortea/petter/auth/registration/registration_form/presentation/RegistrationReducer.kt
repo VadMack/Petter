@@ -3,12 +3,15 @@ package ru.gortea.petter.auth.registration.registration_form.presentation
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.auth.data.model.RegistrationModel
-import ru.gortea.petter.auth.registration.common.RegistrationFieldState
+import ru.gortea.petter.auth.registration.common.FieldState
 import ru.gortea.petter.auth.registration.common.invalid
+import ru.gortea.petter.auth.registration.common.text
 import ru.gortea.petter.auth.registration.common.valid
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
-import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.*
-import ru.gortea.petter.data.model.isInitial
+import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_EMAIL
+import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_USERNAME
+import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.NONE
+import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.PASSWORDS_ARE_DIFFERENT
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand as Command
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent as Event
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState as State
@@ -20,6 +23,7 @@ internal class RegistrationReducer : Reducer<State, Event, Nothing, Command>() {
         when (event) {
             is Event.AccountCreateStatus -> state { copy(registrationStatus = event.state) }
             is Event.Validated -> stateValidated(event)
+            is Event.InitApi -> commands(Command.InitCreateAccount)
             is UiEvent -> handleUiEvent(event)
         }
     }
@@ -33,13 +37,7 @@ internal class RegistrationReducer : Reducer<State, Event, Nothing, Command>() {
     }
 
     private fun MessageBuilder<State, Nothing, Command>.stateValid(state: State) {
-        if (state.registrationStatus.isInitial()) {
-            commands(Command.CreateAccount(state.toRegistrationModel()))
-        } else {
-            commands(Command.RetryCreateAccount(state.toRegistrationModel()))
-        }
-
-        state { state }
+        commands(Command.CreateAccount(state.toRegistrationModel()))
     }
 
     private fun State.stateInvalid(failedReasons: List<RegistrationFailedReason>): State {
@@ -62,27 +60,21 @@ internal class RegistrationReducer : Reducer<State, Event, Nothing, Command>() {
         when (event) {
             is UiEvent.CreateAccount -> commands(Command.Validate(state))
             is UiEvent.EmailChanged -> state {
-                copy(email = RegistrationFieldState(text = event.email.trim()))
+                copy(email = FieldState(text = event.email.trim()))
             }
             is UiEvent.UsernameChanged -> state {
-                copy(username = RegistrationFieldState(text = event.username.trim()))
+                copy(username = FieldState(text = event.username.trim()))
             }
             is UiEvent.PasswordChanged -> state {
                 copy(
-                    password = password.copy(
-                        text = event.password.trim(),
-                        isValid = true
-                    ),
+                    password = password.text(event.password.trim()),
                     passwordConfirm = passwordConfirm.valid()
                 )
             }
             is UiEvent.PasswordConfirmChanged -> state {
                 copy(
                     password = password.valid(),
-                    passwordConfirm = passwordConfirm.copy(
-                        text = event.passwordConfirm.trim(),
-                        isValid = true
-                    )
+                    passwordConfirm = passwordConfirm.text(event.passwordConfirm.trim())
                 )
             }
         }

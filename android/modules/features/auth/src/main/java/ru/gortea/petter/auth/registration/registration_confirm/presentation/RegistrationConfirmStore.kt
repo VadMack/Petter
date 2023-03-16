@@ -3,10 +3,12 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.auth.registration.di.RegistrationComponent
-import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.*
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.AuthorizeActor
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitAuthorizeActor
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitRegistrationConfirmActor
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitResendCodeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmValidateActor
-import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationRetryConfirmActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.ResendCodeActor
 
 internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent, Nothing>
@@ -19,6 +21,7 @@ internal fun createRegistrationConfirmStore(
     password: String
 ): RegistrationConfirmStore {
     val repo = component.registrationRepository
+    val authRepo = component.authorizationRepository
 
     return TeaStore(
         RegistrationConfirmState(
@@ -29,12 +32,16 @@ internal fun createRegistrationConfirmStore(
         ),
         RegistrationConfirmReducer(),
         listOf(
-            AuthorizeActor(component.authorizationRepository),
+            InitAuthorizeActor(authRepo),
+            InitRegistrationConfirmActor(repo),
+            InitResendCodeActor(repo),
+            AuthorizeActor(authRepo),
             RegistrationConfirmValidateActor(),
             RegistrationConfirmActor(repo),
-            RegistrationRetryConfirmActor(repo),
-            ResendCodeActor(repo),
-            RetryResendCodeStatus(repo)
+            ResendCodeActor(repo)
+        ),
+        listOf(
+            RegistrationConfirmEvent.InitApi
         )
     )
 }
