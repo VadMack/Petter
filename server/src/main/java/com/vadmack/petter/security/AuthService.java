@@ -65,6 +65,10 @@ public class AuthService {
     return resendConfirmationCode(email, ConfirmationCodeType.REGISTRATION);
   }
 
+  public void declineEmailConfirmation(@NotNull String email) {
+    userService.deleteByEmailIfNotActivated(email);
+  }
+
   @Transactional
   public @NotNull UserGetDto resetPassword(@NotNull String email) {
     User user = userService.getByEmail(email);

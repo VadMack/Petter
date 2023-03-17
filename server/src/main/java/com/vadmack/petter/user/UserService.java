@@ -130,6 +130,15 @@ public class UserService {
     userRepository.delete(user);
   }
 
+  public void deleteByEmailIfNotActivated(@NotNull String email) {
+    User user = getByEmail(email);
+    if (user.isEnabled()) {
+      throw new ValidationException(String.format("User with email=%s is activated.", email));
+    } else {
+      delete(user);
+    }
+  }
+
   public void addAd(@NotNull String adId, @NotNull String userId) {
     userRepository.addAdId(adId, userId);
   }

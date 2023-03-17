@@ -39,6 +39,12 @@ public class AuthController {
     return ResponseEntity.ok(user);
   }
 
+  @PostMapping("/registration/decline-confirmation")
+  public ResponseEntity<UserGetDto> declineEmailConfirmation(@Valid @RequestBody EmailWrapper request) {
+    authService.declineEmailConfirmation(request.getEmail());
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @PostMapping("/password-reset")
   public ResponseEntity<?> resetPassword(@Valid @RequestBody EmailWrapper request) {
     UserGetDto user = authService.resetPassword(request.getEmail());
