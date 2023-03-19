@@ -4,7 +4,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,8 +26,17 @@ fun PrimaryButton(
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
+    var colors = ButtonDefaults.buttonColors()
+
+    if (!isClickable) {
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = colors.backgroundColor(true).value,
+            disabledContentColor = colors.contentColor(true).value
+        )
+    }
+
     Button(
-        onClick = { if (isClickable) onClick() },
+        onClick = { onClick() },
         modifier = modifier.height(38.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
         elevation = ButtonDefaults.elevation(
@@ -31,7 +45,9 @@ fun PrimaryButton(
             disabledElevation = 0.dp,
             hoveredElevation = 4.dp,
             focusedElevation = 4.dp,
-        )
+        ),
+        enabled = isClickable,
+        colors = colors
     ) {
         leadingIcon?.invoke()
 

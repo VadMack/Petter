@@ -18,21 +18,16 @@ internal class ErrorHandlingCallAdapterFactory : CallAdapter.Factory() {
             return null
         }
 
-        val responseType: Type = getParameterUpperBound(0, returnType)
-        return ErrorHandlingCallAdapter<Any>(responseType)
+        val delegate = retrofit.nextCallAdapter(this, returnType, annotations)
+        return ErrorHandlingCallAdapter(delegate as CallAdapter<Any, Call<Any>>)
     }
 
     private class ErrorHandlingCallAdapter<R>(
-        private val responseType: Type
-    ) : CallAdapter<R, Call<R>> {
-
-        override fun responseType(): Type {
-            return responseType
-        }
+        private val delegateAdapter: CallAdapter<R, Call<R>>
+    ) : CallAdapter<R, Call<R>> by delegateAdapter {
 
         override fun adapt(call: Call<R>): Call<R> {
-            return ErrorHandlingCall(call)
+            return delegateAdapter.adapt(ErrorHandlingCall(call))
         }
-
     }
 }

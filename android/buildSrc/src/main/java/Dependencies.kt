@@ -9,9 +9,9 @@ object Libs {
         const val okHttp = "4.9.3"
         const val retrofit = "2.9.0"
         const val retrofitSerializationConverter = "0.8.0"
-        const val koin = "3.2.0"
         const val leakCanary = "2.9.1"
         const val dagger2 = "2.17"
+        const val appyx = "1.0.5"
     }
 
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
@@ -19,6 +19,8 @@ object Libs {
 
     const val dagger2 = "com.google.dagger:dagger:${Versions.dagger2}"
     const val dagger2Compiler = "com.google.dagger:dagger-compiler:${Versions.dagger2}"
+
+    const val appyx = "com.bumble.appyx:core:${Versions.appyx}"
 
     const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
     const val viewBinding = "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding}"
@@ -29,8 +31,6 @@ object Libs {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofitSerializationConverter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.retrofitSerializationConverter}"
     const val retrofitGsonConverter = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
-
-    const val koin = "io.insert-koin:koin-android:${Versions.koin}"
 
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
 }

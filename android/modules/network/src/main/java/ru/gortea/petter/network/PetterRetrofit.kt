@@ -12,12 +12,14 @@ import ru.gortea.petter.token.storage.JwtTokenRepository
 
 object PetterRetrofit {
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     fun create(tokenRepository: JwtTokenRepository): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
             .client(createClient(tokenRepository))
-            .addConverterFactory(Json.asConverterFactory(contentType))
+            .addConverterFactory(json.asConverterFactory(contentType))
             .addCallAdapterFactory(ErrorHandlingCallAdapterFactory())
             .build()
     }

@@ -8,14 +8,18 @@ import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.registration.common.FieldState
 import ru.gortea.petter.auth.registration.common.invalid
+import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
 import ru.gortea.petter.profile.data.model.UserModel
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmCommand as Command
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmEvent as Event
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmState as State
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent as UiEvent
 
-internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Command>() {
+internal class RegistrationConfirmReducer(
+    private val router: RegistrationRouter
+) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
         when (event) {
@@ -56,7 +60,7 @@ internal class RegistrationConfirmReducer : Reducer<State, Event, Nothing, Comma
         state { copy(authStatus = status) }
         when (status) {
             is DataState.Loading, is DataState.Empty -> Unit
-            is DataState.Content -> Unit /* Todo navigate to fill account */
+            is DataState.Content -> router.updateRoot(RegistrationFlowNavTarget.FillAccount)
             is DataState.Fail -> Unit  /* Todo show error and navigate to auth */
         }
     }

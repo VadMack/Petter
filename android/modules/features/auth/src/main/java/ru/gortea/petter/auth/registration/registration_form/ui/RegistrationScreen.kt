@@ -1,7 +1,13 @@
 package ru.gortea.petter.auth.registration.registration_form.ui
 
 import androidx.annotation.VisibleForTesting
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -21,16 +27,21 @@ import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
 import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationStore
-import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.*
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.CreateAccount
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.EmailChanged
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.PasswordChanged
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.PasswordConfirmChanged
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.UsernameChanged
 import ru.gortea.petter.auth.registration.registration_form.presentation.createRegistrationStore
 import ru.gortea.petter.auth.registration.registration_form.ui.mapper.RegistrationUiStateMapper
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
-import ru.gortea.petter.ui_kit.text_field.TextField
 import ru.gortea.petter.ui_kit.button.PrimaryButton
 import ru.gortea.petter.ui_kit.button.TextButton
+import ru.gortea.petter.ui_kit.text_field.TextField
 import ru.gortea.petter.ui_kit.toolbar.BackIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 
@@ -40,9 +51,13 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
  */
 
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(
+    router: RegistrationRouter
+) {
     val component: RegistrationComponent = getComponent()
-    val store: RegistrationStore by storeHolder { createRegistrationStore(component) }
+    val store: RegistrationStore by storeHolder("Registration") {
+        createRegistrationStore(component, router)
+    }
 
     store.collect(RegistrationUiStateMapper()) { state ->
         RegistrationScreen(
@@ -88,7 +103,6 @@ private fun RegistrationScreen(
                 authorizeClicked = authorizeClicked,
                 modifier = Modifier
                     .padding(padding)
-                    .padding(horizontal = 16.dp)
             )
         }
     )
@@ -107,18 +121,21 @@ private fun RegistrationScreenContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .padding(horizontal = 16.dp)
+            .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.weight(0.77f))
+
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 60.dp, top = 112.dp),
+                .fillMaxWidth(),
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.appHeader,
             textAlign = TextAlign.Center
         )
+
+        Spacer(modifier = Modifier.weight(0.41f))
 
         RegistrationForm(
             state = state,
@@ -129,6 +146,8 @@ private fun RegistrationScreenContent(
             createAccountClicked = createAccountClicked,
             authorizeClicked = authorizeClicked
         )
+
+        Spacer(modifier = Modifier.weight(0.76f))
     }
 }
 
@@ -143,6 +162,8 @@ private fun RegistrationForm(
     authorizeClicked: () -> Unit,
 ) {
     Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

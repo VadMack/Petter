@@ -9,26 +9,33 @@ internal class ErrorHandlingCall<T>(
 ) : Call<T> by call {
 
     override fun enqueue(callback: Callback<T>) {
-        call.enqueue(createCallback())
+        call.enqueue(createCallback(callback))
     }
 
-    private fun createCallback(): Callback<T> {
+    private fun createCallback(callback: Callback<T>): Callback<T> {
         return object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
-                if (response.isSuccessful) return
-
-                when (response.code()) {
-                    INTERNAL_ERROR -> throw PetterNetworkError.InternalError()
-                    USER_ALREADY_EXISTS -> throw PetterNetworkError.UserAlreadyExists()
-                    else -> throw PetterNetworkError.UnknownError()
+                if (response.isSuccessful) {
+                    callback.onResponse(call, response)
+                    return
                 }
+
+                val error = when (response.code()) {
+                    INTERNAL_ERROR -> PetterNetworkError.InternalError()
+                    USER_ALREADY_EXISTS -> PetterNetworkError.UserAlreadyExists()
+                    else -> PetterNetworkError.UnknownError()
+                }
+
+                callback.onFailure(call, error)
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                throw PetterNetworkError.RequestError(t)
+                callback.onFailure(call, PetterNetworkError.RequestError(t))
             }
         }
     }
+
+    override fun clone() = ErrorHandlingCall(call.clone())
 
     private companion object {
         private const val INTERNAL_ERROR = 500

@@ -27,7 +27,7 @@ internal class RegistrationConfirmUiStateMapper :
     private fun String.mask(): String {
         val (name, domain) = split("@")
         val masked = if (name.length >= 3) {
-            name.run { replaceRange(1 until lastIndex, MASK) }
+            name.run { replaceRange(1..lastIndex, MASK) }
         } else {
             name.run { replaceRange(0..lastIndex, MASK) }
         }

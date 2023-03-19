@@ -1,7 +1,6 @@
 package ru.gortea.petter
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
@@ -12,16 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.bumble.appyx.core.integration.NodeHost
+import com.bumble.appyx.core.integrationpoint.NodeActivity
 import ru.gortea.petter.arch.android.compose.LocalApplicationContext
-import ru.gortea.petter.auth.registration.fill_account.ui.FillAccountScreen
+import ru.gortea.petter.navigation.PetterParentNode
 import ru.gortea.petter.theme.PetterAppTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : NodeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { Content() }
-
         setupInsets()
+        setContent { Content() }
     }
 
     @Composable
@@ -32,7 +32,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    FillAccountScreen()
+                    NodeHost(integrationPoint = appyxIntegrationPoint) {
+                        PetterParentNode(buildContext = it)
+                    }
                 }
             }
         }
