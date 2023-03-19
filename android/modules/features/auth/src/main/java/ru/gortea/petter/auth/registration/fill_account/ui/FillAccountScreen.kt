@@ -57,7 +57,9 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 @Composable
 fun FillAccountScreen() {
     val component: RegistrationComponent = getComponent()
-    val store: FillAccountStore by storeHolder { createFillAccountStore(component) }
+    val store: FillAccountStore by storeHolder(
+        "FillAccountScreen"
+    ) { createFillAccountStore(component) }
     val coroutineScope = rememberCoroutineScope()
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val launcher = rememberLauncherForActivityResult(PickVisualMedia()) { avatar ->

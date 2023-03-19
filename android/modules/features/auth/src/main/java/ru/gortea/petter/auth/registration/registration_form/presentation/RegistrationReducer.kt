@@ -7,25 +7,53 @@ import ru.gortea.petter.auth.registration.common.FieldState
 import ru.gortea.petter.auth.registration.common.invalid
 import ru.gortea.petter.auth.registration.common.text
 import ru.gortea.petter.auth.registration.common.valid
+import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_EMAIL
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_USERNAME
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.NONE
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.PASSWORDS_ARE_DIFFERENT
+import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
+import ru.gortea.petter.profile.data.model.UserModel
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand as Command
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent as Event
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState as State
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent as UiEvent
 
-internal class RegistrationReducer : Reducer<State, Event, Nothing, Command>() {
+internal class RegistrationReducer(
+    private val router: RegistrationRouter
+) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
         when (event) {
-            is Event.AccountCreateStatus -> state { copy(registrationStatus = event.state) }
+            is Event.AccountCreateStatus -> accountCreateStatus(event)
             is Event.Validated -> stateValidated(event)
             is Event.InitApi -> commands(Command.InitCreateAccount)
             is UiEvent -> handleUiEvent(event)
         }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.accountCreateStatus(event: Event.AccountCreateStatus) {
+        state {
+            when(event.state) {
+                is DataState.Loading, is DataState.Empty -> Unit
+                is DataState.Content -> navigateToRegistrationConfirm(event.state.content, password.text)
+                is DataState.Fail -> Unit // todo do something
+            }
+            copy(registrationStatus = event.state)
+        }
+    }
+
+    private fun navigateToRegistrationConfirm(user: UserModel, pwd: String) {
+        router.navigateTo(
+            RegistrationFlowNavTarget.RegistrationConfirm(
+                email = user.email,
+                username = user.username,
+                pwd = pwd,
+                userId = user.id
+            )
+        )
     }
 
     private fun MessageBuilder<State, Nothing, Command>.stateValidated(event: Event.Validated) {

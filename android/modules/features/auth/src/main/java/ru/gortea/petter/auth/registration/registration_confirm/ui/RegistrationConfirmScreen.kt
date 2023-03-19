@@ -1,7 +1,12 @@
 package ru.gortea.petter.auth.registration.registration_confirm.ui
 
 import androidx.annotation.VisibleForTesting
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -21,8 +26,11 @@ import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
 import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmStore
-import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.*
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.CodeChanged
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.Confirm
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.ResendCode
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.createRegistrationConfirmStore
 import ru.gortea.petter.auth.registration.registration_confirm.ui.mapper.RegistrationConfirmUiStateMapper
 import ru.gortea.petter.auth.registration.registration_confirm.ui.state.RegistrationConfirmUiState
@@ -35,10 +43,23 @@ import ru.gortea.petter.ui_kit.toolbar.BackIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 
 @Composable
-fun RegistrationConfirmScreen() {
+fun RegistrationConfirmScreen(
+    email: String,
+    userId: String,
+    username: String,
+    pwd: String,
+    router: RegistrationRouter
+) {
     val component: RegistrationComponent = getComponent()
-    val store: RegistrationConfirmStore by storeHolder {
-        createRegistrationConfirmStore(component, "ivan_ivanov@mail.ru", "123", "", "")
+    val store: RegistrationConfirmStore by storeHolder("RegistrationConfirm") {
+        createRegistrationConfirmStore(
+            component = component,
+            email = email,
+            userId = userId,
+            username = username,
+            password = pwd,
+            router = router
+        )
     }
 
     store.collect(RegistrationConfirmUiStateMapper()) { state ->
@@ -92,20 +113,24 @@ private fun RegistrationConfirmContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.weight(0.77f))
+
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 80.dp, top = 112.dp),
+                .fillMaxWidth(),
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.appHeader,
             textAlign = TextAlign.Center
         )
 
+        Spacer(modifier = Modifier.weight(0.55f))
+
         RegistrationConfirmDescription(state, codeChanged, sendCodeClicked, resendCodeClicked)
+
+        Spacer(modifier = Modifier.weight(1.68f))
     }
 }
 
@@ -116,7 +141,9 @@ private fun RegistrationConfirmDescription(
     sendCodeClicked: () -> Unit,
     resendCodeClicked: () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()

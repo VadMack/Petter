@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -25,6 +26,7 @@ dependencies {
     implementation project(":modules:features:auth-data")
 
     implementation project(":modules:arch-android")
+    implementation project(":modules:navigation")
     implementation project(":modules:network")
     implementation project(":modules:token-storage")
     implementation project(":modules:theme")

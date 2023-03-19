@@ -3,6 +3,7 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.AuthorizeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitAuthorizeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitRegistrationConfirmActor
@@ -18,7 +19,8 @@ internal fun createRegistrationConfirmStore(
     email: String,
     userId: String,
     username: String,
-    password: String
+    password: String,
+    router: RegistrationRouter
 ): RegistrationConfirmStore {
     val repo = component.registrationRepository
     val authRepo = component.authorizationRepository
@@ -30,7 +32,7 @@ internal fun createRegistrationConfirmStore(
             username = username,
             password = password
         ),
-        RegistrationConfirmReducer(),
+        RegistrationConfirmReducer(router),
         listOf(
             InitAuthorizeActor(authRepo),
             InitRegistrationConfirmActor(repo),

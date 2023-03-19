@@ -7,8 +7,8 @@ data class UserModel(
     val id: String,
     val email: String,
     val username: String,
-    val displayName: String,
-    val phoneNumber: String,
-    val address: AddressModel,
-    val avatarPath: String
+    val displayName: String?,
+    val phoneNumber: String?,
+    val address: AddressModel?,
+    val avatarPath: String?
 )
