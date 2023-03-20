@@ -3,4 +3,6 @@
     <string name="back">Назад</string>
     <string name="avatar">Аватар</string>
     <string name="avatar_edit">Сменить аватар</string>
+
+    <string name="logo_desc">Логотип</string>
 </resources>

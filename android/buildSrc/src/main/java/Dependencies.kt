@@ -12,6 +12,7 @@ object Libs {
         const val leakCanary = "2.9.1"
         const val dagger2 = "2.17"
         const val appyx = "1.0.5"
+        const val room = "2.5.0"
     }
 
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
@@ -21,6 +22,10 @@ object Libs {
     const val dagger2Compiler = "com.google.dagger:dagger-compiler:${Versions.dagger2}"
 
     const val appyx = "com.bumble.appyx:core:${Versions.appyx}"
+
+    const val room = "androidx.room:room-common:${Versions.room}"
+    const val roomKtx = "androidx.room:room-ktx:${Versions.room}"
+    const val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
 
     const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
     const val viewBinding = "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding}"

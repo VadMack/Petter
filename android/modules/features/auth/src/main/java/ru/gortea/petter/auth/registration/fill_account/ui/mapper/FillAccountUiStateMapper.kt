@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.registration.fill_account.ui.mapper
 
 import ru.gortea.petter.arch.UiStateMapper
-import ru.gortea.petter.auth.registration.common.toTextFieldState
+import ru.gortea.petter.auth.common.toTextFieldState
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountState
 import ru.gortea.petter.auth.registration.fill_account.ui.state.FillAccountUiState
 import ru.gortea.petter.data.model.DataState

@@ -2,23 +2,23 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.data.model.AuthorizationModel
-import ru.gortea.petter.auth.data.model.AuthorizedUserModel
+import ru.gortea.petter.auth.common.FieldState
+import ru.gortea.petter.auth.common.invalid
+import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
-import ru.gortea.petter.auth.registration.common.FieldState
-import ru.gortea.petter.auth.registration.common.invalid
-import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.graph.NavTarget
 import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmCommand as Command
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmEvent as Event
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmState as State
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent as UiEvent
 
 internal class RegistrationConfirmReducer(
-    private val router: RegistrationRouter
+    private val router: PetterRouter<NavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
@@ -55,7 +55,7 @@ internal class RegistrationConfirmReducer(
     }
 
     private fun MessageBuilder<State, Nothing, Command>.authorizationStatus(
-        status: DataState<AuthorizedUserModel>
+        status: DataState<UserModel>
     ) {
         state { copy(authStatus = status) }
         when (status) {
@@ -84,6 +84,7 @@ internal class RegistrationConfirmReducer(
             is UiEvent.CodeChanged -> state {
                 copy(codeState = FieldState(text = event.text.trim(), isValid = true))
             }
+            is UiEvent.Back -> router.pop()
         }
     }
 
@@ -91,8 +92,8 @@ internal class RegistrationConfirmReducer(
         commands(Command.ResendCode(RegistrationEmailModel(state.email)))
     }
 
-    private fun State.toAuthorizationModel(): AuthorizationModel {
-        return AuthorizationModel(
+    private fun State.toAuthorizationModel(): CredsAuthorizationModel {
+        return CredsAuthorizationModel(
             username = username,
             password = password
         )

@@ -2,11 +2,11 @@ package ru.gortea.petter.auth.registration.fill_account.presentation
 
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.registration.common.invalid
-import ru.gortea.petter.auth.registration.common.text
+import ru.gortea.petter.auth.common.invalid
+import ru.gortea.petter.auth.common.text
 import ru.gortea.petter.auth.registration.fill_account.presentation.validation.reason.FillAccountFailedReason
-import ru.gortea.petter.profile.data.model.AddressModel
-import ru.gortea.petter.profile.data.model.UserUpdateModel
+import ru.gortea.petter.profile.data.remote.model.AddressModel
+import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountAction as Action
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountCommand as Command
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountEvent as Event

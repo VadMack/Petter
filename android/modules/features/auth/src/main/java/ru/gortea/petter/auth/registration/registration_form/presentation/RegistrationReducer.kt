@@ -2,27 +2,29 @@ package ru.gortea.petter.auth.registration.registration_form.presentation
 
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
+import ru.gortea.petter.auth.common.FieldState
+import ru.gortea.petter.auth.common.invalid
+import ru.gortea.petter.auth.common.text
+import ru.gortea.petter.auth.common.valid
 import ru.gortea.petter.auth.data.model.RegistrationModel
-import ru.gortea.petter.auth.registration.common.FieldState
-import ru.gortea.petter.auth.registration.common.invalid
-import ru.gortea.petter.auth.registration.common.text
-import ru.gortea.petter.auth.registration.common.valid
-import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_EMAIL
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_USERNAME
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.NONE
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.PASSWORDS_ARE_DIFFERENT
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.graph.AuthorizationNavTarget
+import ru.gortea.petter.navigation.graph.NavTarget
 import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand as Command
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent as Event
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState as State
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent as UiEvent
 
 internal class RegistrationReducer(
-    private val router: RegistrationRouter
+    private val router: PetterRouter<NavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
@@ -36,9 +38,12 @@ internal class RegistrationReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.accountCreateStatus(event: Event.AccountCreateStatus) {
         state {
-            when(event.state) {
+            when (event.state) {
                 is DataState.Loading, is DataState.Empty -> Unit
-                is DataState.Content -> navigateToRegistrationConfirm(event.state.content, password.text)
+                is DataState.Content -> navigateToRegistrationConfirm(
+                    event.state.content,
+                    password.text
+                )
                 is DataState.Fail -> Unit // todo do something
             }
             copy(registrationStatus = event.state)
@@ -105,6 +110,8 @@ internal class RegistrationReducer(
                     passwordConfirm = passwordConfirm.text(event.passwordConfirm.trim())
                 )
             }
+            is UiEvent.Back -> router.pop()
+            is UiEvent.Authorize -> router.updateRoot(AuthorizationNavTarget.Authorization)
         }
     }
 

@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.registration.fill_account.presentation
 
 import android.net.Uri
-import ru.gortea.petter.profile.data.model.UserUpdateModel
+import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
 
 internal sealed interface FillAccountCommand {
     class Validate(val state: FillAccountState) : FillAccountCommand

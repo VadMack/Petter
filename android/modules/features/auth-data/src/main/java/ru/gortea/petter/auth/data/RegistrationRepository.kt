@@ -9,7 +9,7 @@ import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.data.model.RegistrationModel
 import ru.gortea.petter.data.SourceRepository
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 
 class RegistrationRepository(
     private val api: RegistrationApi

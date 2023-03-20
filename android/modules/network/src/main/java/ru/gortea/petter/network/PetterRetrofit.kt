@@ -8,13 +8,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import ru.gortea.petter.network.auth.AuthInterceptor
 import ru.gortea.petter.network.errors.ErrorHandlingCallAdapterFactory
-import ru.gortea.petter.token.storage.JwtTokenRepository
+import ru.gortea.petter.token.storage.TokenRepository
 
 object PetterRetrofit {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun create(tokenRepository: JwtTokenRepository): Retrofit {
+    fun create(tokenRepository: TokenRepository): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
@@ -24,7 +24,7 @@ object PetterRetrofit {
             .build()
     }
 
-    private fun createClient(tokenRepository: JwtTokenRepository): OkHttpClient {
+    private fun createClient(tokenRepository: TokenRepository): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }

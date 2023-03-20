@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Petter</string>
+
+    <string name="authorize">Войти</string>
+    <string name="do_not_have_account">Еще нет аккаунта?</string>
+    <string name="registrate">Зарегистрироваться</string>
+
     <string name="registration">Регистрация</string>
 
     <string name="email_label">Email</string>
     <string name="email_placeholder">ivan_ivanov@mail.ru</string>
 
-    <string name="user_name_label">Имя пользователя</string>
+    <string name="username_label">Имя пользователя</string>
     <string name="username_placeholder">ivan_ivanov</string>
 
     <string name="password_label">Пароль</string>
@@ -16,7 +21,6 @@
     <string name="password_confirm_placeholder">Повторите пароль</string>
 
     <string name="create_account">Создать профиль</string>
-    <string name="authorize">Войти</string>
 
     <string name="registration_confirm_description">Мы отправили на %s код подтверждения.
         \nПожалуйста подтвердите ваш email.</string>

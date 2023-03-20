@@ -25,15 +25,17 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
-import ru.gortea.petter.auth.registration.di.RegistrationComponent
-import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
+import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmStore
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.Back
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.CodeChanged
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.Confirm
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.ResendCode
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.createRegistrationConfirmStore
 import ru.gortea.petter.auth.registration.registration_confirm.ui.mapper.RegistrationConfirmUiStateMapper
 import ru.gortea.petter.auth.registration.registration_confirm.ui.state.RegistrationConfirmUiState
+import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.graph.NavTarget
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
 import ru.gortea.petter.ui_kit.button.PrimaryButton
@@ -48,9 +50,9 @@ fun RegistrationConfirmScreen(
     userId: String,
     username: String,
     pwd: String,
-    router: RegistrationRouter
+    router: PetterRouter<NavTarget>
 ) {
-    val component: RegistrationComponent = getComponent()
+    val component: AuthorizationComponent = getComponent()
     val store: RegistrationConfirmStore by storeHolder("RegistrationConfirm") {
         createRegistrationConfirmStore(
             component = component,
@@ -68,7 +70,7 @@ fun RegistrationConfirmScreen(
             codeChanged = { store.dispatch(CodeChanged(it)) },
             sendCodeClicked = { store.dispatch(Confirm) },
             resendCodeClicked = { store.dispatch(ResendCode) },
-            backClicked = { /* TODO Go back */ }
+            backClicked = { store.dispatch(Back) }
         )
     }
 }

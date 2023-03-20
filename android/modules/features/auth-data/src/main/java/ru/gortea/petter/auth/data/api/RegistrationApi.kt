@@ -3,7 +3,7 @@ package ru.gortea.petter.auth.data.api
 import retrofit2.http.Body
 import retrofit2.http.POST
 import ru.gortea.petter.auth.data.model.*
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 
 interface RegistrationApi {
 

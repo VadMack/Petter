@@ -2,7 +2,7 @@ package ru.gortea.petter.auth.registration.registration_form.presentation
 
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 
 internal sealed interface RegistrationEvent {
     class Validated(
@@ -22,5 +22,7 @@ internal interface RegistrationUiEvent : RegistrationEvent {
     class PasswordConfirmChanged(val passwordConfirm: String) : RegistrationUiEvent
 
     object CreateAccount : RegistrationUiEvent
+    object Back : RegistrationUiEvent
+    object Authorize : RegistrationUiEvent
 }
 
