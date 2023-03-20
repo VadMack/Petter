@@ -2,7 +2,7 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
-import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.AuthorizeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitAuthorizeActor
@@ -15,7 +15,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.acto
 internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent, Nothing>
 
 internal fun createRegistrationConfirmStore(
-    component: RegistrationComponent,
+    component: AuthorizationComponent,
     email: String,
     userId: String,
     username: String,

@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.registration.fill_account.presentation
 
 import android.net.Uri
-import ru.gortea.petter.auth.registration.common.FieldState
+import ru.gortea.petter.auth.common.FieldState
 import ru.gortea.petter.data.model.DataState
 
 internal data class FillAccountState(

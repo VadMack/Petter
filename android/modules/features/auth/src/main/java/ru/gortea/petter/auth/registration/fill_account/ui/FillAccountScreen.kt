@@ -35,7 +35,7 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
-import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountAction
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountStore
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountUiEvent
@@ -56,7 +56,7 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FillAccountScreen() {
-    val component: RegistrationComponent = getComponent()
+    val component: AuthorizationComponent = getComponent()
     val store: FillAccountStore by storeHolder(
         "FillAccountScreen"
     ) { createFillAccountStore(component) }

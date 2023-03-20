@@ -15,6 +15,10 @@ dependencies {
     implementation Libs.dagger2
     kapt Libs.dagger2Compiler
 
+    implementation Libs.room
+    implementation Libs.roomKtx
+    kapt Libs.roomCompiler
+
     implementation AndroidX.coreKtx
     implementation AndroidX.composeUi
     implementation AndroidX.composeMaterial

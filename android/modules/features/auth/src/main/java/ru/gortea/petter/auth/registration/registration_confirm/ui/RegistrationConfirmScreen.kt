@@ -25,9 +25,10 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
-import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmStore
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.Back
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.CodeChanged
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.Confirm
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent.ResendCode
@@ -50,7 +51,7 @@ fun RegistrationConfirmScreen(
     pwd: String,
     router: RegistrationRouter
 ) {
-    val component: RegistrationComponent = getComponent()
+    val component: AuthorizationComponent = getComponent()
     val store: RegistrationConfirmStore by storeHolder("RegistrationConfirm") {
         createRegistrationConfirmStore(
             component = component,
@@ -68,7 +69,7 @@ fun RegistrationConfirmScreen(
             codeChanged = { store.dispatch(CodeChanged(it)) },
             sendCodeClicked = { store.dispatch(Confirm) },
             resendCodeClicked = { store.dispatch(ResendCode) },
-            backClicked = { /* TODO Go back */ }
+            backClicked = { store.dispatch(Back) }
         )
     }
 }

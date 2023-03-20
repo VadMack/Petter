@@ -1,4 +1,4 @@
-package ru.gortea.petter.profile.data.api
+package ru.gortea.petter.profile.data.remote.api
 
 import okhttp3.MultipartBody
 import retrofit2.http.Body
@@ -6,7 +6,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
-import ru.gortea.petter.profile.data.model.UserUpdateModel
+import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
 
 interface ProfileApi {
 

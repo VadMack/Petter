@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class AppyxRouter<in T : Any>(
+open class PetterRouter<in T : Any>(
     private val backStack: BackStack<T>,
     private val coroutineScope: CoroutineScope
 ) {

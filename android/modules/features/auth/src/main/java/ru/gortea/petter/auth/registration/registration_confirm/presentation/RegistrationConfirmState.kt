@@ -1,8 +1,8 @@
 package ru.gortea.petter.auth.registration.registration_confirm.presentation
 
-import ru.gortea.petter.auth.registration.common.FieldState
+import ru.gortea.petter.auth.common.FieldState
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 
 internal data class RegistrationConfirmState(
     val userId: String,

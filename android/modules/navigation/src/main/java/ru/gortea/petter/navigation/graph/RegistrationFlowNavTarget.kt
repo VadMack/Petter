@@ -8,6 +8,9 @@ sealed interface RegistrationFlowNavTarget : Parcelable {
     object RegistrationForm : RegistrationFlowNavTarget
 
     @Parcelize
+    object AuthorizationScreen : RegistrationFlowNavTarget
+
+    @Parcelize
     class RegistrationConfirm(
         val email: String,
         val userId: String,

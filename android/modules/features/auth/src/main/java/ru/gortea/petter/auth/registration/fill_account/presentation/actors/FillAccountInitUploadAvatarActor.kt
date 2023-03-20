@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.map
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountCommand
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountEvent
-import ru.gortea.petter.profile.data.ProfileUpdateAvatarRepository
+import ru.gortea.petter.profile.data.remote.ProfileUpdateAvatarRepository
 
 internal class FillAccountInitUploadAvatarActor(
     private val repository: ProfileUpdateAvatarRepository

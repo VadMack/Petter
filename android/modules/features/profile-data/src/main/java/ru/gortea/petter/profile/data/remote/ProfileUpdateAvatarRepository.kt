@@ -1,11 +1,11 @@
-package ru.gortea.petter.profile.data
+package ru.gortea.petter.profile.data.remote
 
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import ru.gortea.petter.data.SourceRepository
-import ru.gortea.petter.profile.data.api.ProfileApi
-import ru.gortea.petter.profile.data.model.AvatarModel
+import ru.gortea.petter.profile.data.remote.api.ProfileApi
+import ru.gortea.petter.profile.data.remote.model.AvatarModel
 
 class ProfileUpdateAvatarRepository(
     private val api: ProfileApi

@@ -26,9 +26,11 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
-import ru.gortea.petter.auth.registration.di.RegistrationComponent
+import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationStore
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.Authorize
+import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.Back
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.CreateAccount
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.EmailChanged
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.PasswordChanged
@@ -54,7 +56,7 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 fun RegistrationScreen(
     router: RegistrationRouter
 ) {
-    val component: RegistrationComponent = getComponent()
+    val component: AuthorizationComponent = getComponent()
     val store: RegistrationStore by storeHolder("Registration") {
         createRegistrationStore(component, router)
     }
@@ -67,8 +69,8 @@ fun RegistrationScreen(
             passwordChanged = { store.dispatch(PasswordChanged(it)) },
             passwordConfirmChanged = { store.dispatch(PasswordConfirmChanged(it)) },
             createAccountClicked = { store.dispatch(CreateAccount) },
-            authorizeClicked = { /* TODO Open auth screen */ },
-            backClicked = { /* TODO Go back */ }
+            authorizeClicked = { store.dispatch(Authorize) },
+            backClicked = { store.dispatch(Back) }
         )
     }
 }
@@ -178,7 +180,7 @@ private fun RegistrationForm(
             state = state.usernameState,
             placeholder = stringResource(R.string.username_placeholder),
             onValueChange = usernameChanged,
-            label = stringResource(R.string.user_name_label)
+            label = stringResource(R.string.username_label)
         )
 
         TextField(

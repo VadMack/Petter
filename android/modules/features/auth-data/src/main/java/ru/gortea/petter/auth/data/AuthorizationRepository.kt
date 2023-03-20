@@ -7,7 +7,7 @@ import ru.gortea.petter.auth.data.model.AuthorizedUserModel
 import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.TokenAuthorizationModel
 import ru.gortea.petter.data.MapSourceRepository
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.token.storage.TokenRepository
 
 class AuthorizationRepository(

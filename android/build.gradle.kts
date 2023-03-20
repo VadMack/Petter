@@ -1,4 +1,8 @@
-import com.android.build.gradle.*
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.LibraryPlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -13,8 +17,15 @@ subprojects {
     project.plugins.applyBaseConfig(project)
 }
 
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
+    }
+}
+
 allprojects {
     repositories {
+        gradlePluginPortal()
         google()
         maven { setUrl("https://jitpack.io") }
         mavenCentral()

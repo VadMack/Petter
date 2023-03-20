@@ -1,6 +1,6 @@
 package ru.gortea.petter.auth.registration.fill_account.presentation.validation.validators
 
-import ru.gortea.petter.auth.registration.common.isBlank
+import ru.gortea.petter.auth.common.isBlank
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountState
 import ru.gortea.petter.auth.validation.Validator
 

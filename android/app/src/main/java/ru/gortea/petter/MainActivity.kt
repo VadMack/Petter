@@ -14,7 +14,7 @@ import androidx.core.view.updatePadding
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeActivity
 import ru.gortea.petter.arch.android.compose.LocalApplicationContext
-import ru.gortea.petter.auth.registration.navigation.nodes.RegistrationParentNode
+import ru.gortea.petter.auth.authorization.navigation.nodes.AuthorizationParentNode
 import ru.gortea.petter.theme.PetterAppTheme
 
 class MainActivity : NodeActivity() {
@@ -33,7 +33,7 @@ class MainActivity : NodeActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     NodeHost(integrationPoint = appyxIntegrationPoint) {
-                        RegistrationParentNode(buildContext = it)
+                        AuthorizationParentNode(buildContext = it)
                     }
                 }
             }

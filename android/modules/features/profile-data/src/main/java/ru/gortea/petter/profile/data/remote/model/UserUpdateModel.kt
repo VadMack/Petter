@@ -1,4 +1,4 @@
-package ru.gortea.petter.profile.data.model
+package ru.gortea.petter.profile.data.remote.model
 
 import kotlinx.serialization.Serializable
 import ru.gortea.petter.data.model.Arguments

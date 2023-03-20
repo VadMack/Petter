@@ -13,8 +13,14 @@ sealed interface DataState<out T> {
     data class Content<T>(val content: T) : DataState<T>
 }
 
-suspend fun<T, R> DataState<T>.mapContent(mapper: suspend (T) -> R): DataState<R> {
-    return when(this) {
+val DataState<*>.isContent: Boolean
+    get() = this is DataState.Content
+
+val DataState<*>.isLoading: Boolean
+    get() = this is DataState.Loading
+
+suspend fun <T, R> DataState<T>.mapContent(mapper: suspend (T) -> R): DataState<R> {
+    return when (this) {
         is DataState.Loading.WithContent -> DataState.Loading.WithContent(mapper(content))
         is DataState.Content -> DataState.Content(mapper(content))
         is DataState.Loading.WithError -> this

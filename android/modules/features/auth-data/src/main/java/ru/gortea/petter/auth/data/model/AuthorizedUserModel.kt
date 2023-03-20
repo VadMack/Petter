@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.data.model
 
 import kotlinx.serialization.Serializable
-import ru.gortea.petter.profile.data.model.UserModel
+import ru.gortea.petter.profile.data.remote.model.UserModel
 
 @Serializable
 data class AuthorizedUserModel(

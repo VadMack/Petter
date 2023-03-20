@@ -1,8 +1,8 @@
-package ru.gortea.petter.profile.data
+package ru.gortea.petter.profile.data.remote
 
 import ru.gortea.petter.data.SourceRepository
-import ru.gortea.petter.profile.data.api.ProfileApi
-import ru.gortea.petter.profile.data.model.UserUpdateModel
+import ru.gortea.petter.profile.data.remote.api.ProfileApi
+import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
 
 class ProfileUpdateRepository(
     private val api: ProfileApi

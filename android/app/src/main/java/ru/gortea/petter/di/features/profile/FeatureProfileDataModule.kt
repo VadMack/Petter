@@ -4,9 +4,9 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import ru.gortea.petter.network.createApi
-import ru.gortea.petter.profile.data.ProfileUpdateAvatarRepository
-import ru.gortea.petter.profile.data.ProfileUpdateRepository
-import ru.gortea.petter.profile.data.api.ProfileApi
+import ru.gortea.petter.profile.data.remote.ProfileUpdateAvatarRepository
+import ru.gortea.petter.profile.data.remote.ProfileUpdateRepository
+import ru.gortea.petter.profile.data.remote.api.ProfileApi
 
 @Module
 class FeatureProfileDataModule {

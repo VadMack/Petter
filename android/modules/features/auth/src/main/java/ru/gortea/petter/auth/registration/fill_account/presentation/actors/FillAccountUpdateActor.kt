@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountCommand
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountEvent
-import ru.gortea.petter.profile.data.ProfileUpdateRepository
+import ru.gortea.petter.profile.data.remote.ProfileUpdateRepository
 
 internal class FillAccountUpdateActor(
     private val repository: ProfileUpdateRepository

@@ -1,12 +1,16 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'kotlinx-serialization'
+    id 'kotlin-kapt'
 }
 
 dependencies {
     implementation Libs.serialization
     implementation Libs.coroutines
     implementation Libs.retrofit
+    implementation Libs.room
+
+    kapt Libs.roomCompiler
 
     api project(":modules:data")
 }

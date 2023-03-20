@@ -8,7 +8,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,21 +29,31 @@ fun SecondaryTextButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    OutlinedButton(
-        onClick = onClick,
-        border = BorderStroke(0.dp, Color.Transparent),
-        modifier = modifier,
-        contentPadding = contentPadding
-    ) {
-        leadingIcon?.invoke()
+    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
+        OutlinedButton(
+            onClick = onClick,
+            border = BorderStroke(0.dp, Color.Transparent),
+            modifier = modifier,
+            contentPadding = contentPadding
+        ) {
+            leadingIcon?.invoke()
 
-        Text(
-            text = text,
-            style = MaterialTheme.typography.button2
-        )
+            Text(
+                text = text,
+                style = MaterialTheme.typography.button2
+            )
 
-        trailingIcon?.invoke()
+            trailingIcon?.invoke()
+        }
     }
+}
+
+private object NoRippleTheme : RippleTheme {
+    @Composable
+    override fun defaultColor() = Color.Unspecified
+
+    @Composable
+    override fun rippleAlpha(): RippleAlpha = RippleAlpha(0.0f,0.0f,0.0f,0.0f)
 }
 
 @Preview(showBackground = true)
