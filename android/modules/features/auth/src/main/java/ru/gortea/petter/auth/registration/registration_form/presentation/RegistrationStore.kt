@@ -3,17 +3,18 @@ package ru.gortea.petter.auth.registration.registration_form.presentation
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.auth.di.AuthorizationComponent
-import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationCreateAccountActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationInitCreateAccountActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationValidateActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.RegistrationValidatorComposite
+import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.graph.NavTarget
 
 internal typealias RegistrationStore = MviStore<RegistrationState, RegistrationEvent, Nothing>
 
 internal fun createRegistrationStore(
     component: AuthorizationComponent,
-    router: RegistrationRouter
+    router: PetterRouter<NavTarget>
 ): RegistrationStore {
     val repo = component.registrationRepository
 

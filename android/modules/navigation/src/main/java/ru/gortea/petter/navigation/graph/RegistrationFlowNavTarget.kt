@@ -1,14 +1,10 @@
 package ru.gortea.petter.navigation.graph
 
-import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-sealed interface RegistrationFlowNavTarget : Parcelable {
+sealed interface RegistrationFlowNavTarget : NavTarget {
     @Parcelize
     object RegistrationForm : RegistrationFlowNavTarget
-
-    @Parcelize
-    object AuthorizationScreen : RegistrationFlowNavTarget
 
     @Parcelize
     class RegistrationConfirm(

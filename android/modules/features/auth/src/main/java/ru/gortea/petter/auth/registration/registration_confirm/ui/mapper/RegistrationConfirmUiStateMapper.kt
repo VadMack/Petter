@@ -29,7 +29,7 @@ internal class RegistrationConfirmUiStateMapper :
 
         val masked = name.run {
             if (length >= 3) {
-                replaceAll(1 until lastIndex, MASK)
+                replaceAll(1 .. lastIndex, MASK)
             } else {
                 replaceAll(indices, MASK)
             }
@@ -42,10 +42,10 @@ internal class RegistrationConfirmUiStateMapper :
         range: IntRange,
         replacement: CharSequence
     ): String {
-        return StringBuilder(length).apply {
-            for (i in 0 until range.first) append(this[i])
-            for (i in range) append(replacement)
-            for (i in range.last until length) append(this[i])
+        return StringBuilder(length).also {
+            for (i in 0 until range.first) it.append(this[i])
+            for (i in range) it.append(replacement)
+            for (i in range.last until length) it.append(this[i])
         }.toString()
     }
 

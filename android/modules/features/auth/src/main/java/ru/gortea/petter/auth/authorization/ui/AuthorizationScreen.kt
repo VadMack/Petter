@@ -25,13 +25,14 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
-import ru.gortea.petter.auth.authorization.navigation.AuthorizationRouter
 import ru.gortea.petter.auth.authorization.presentation.AuthStore
 import ru.gortea.petter.auth.authorization.presentation.AuthUiEvent
 import ru.gortea.petter.auth.authorization.presentation.createAuthStore
 import ru.gortea.petter.auth.authorization.ui.mapper.AuthUiStateMapper
 import ru.gortea.petter.auth.authorization.ui.state.AuthUiState
 import ru.gortea.petter.auth.di.AuthorizationComponent
+import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.graph.NavTarget
 import ru.gortea.petter.theme.Base700
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
@@ -44,7 +45,7 @@ import ru.gortea.petter.ui_kit.text_field.hideText
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
-internal fun AuthorizationScreen(router: AuthorizationRouter) {
+internal fun AuthorizationScreen(router: PetterRouter<NavTarget>) {
     val component: AuthorizationComponent = getComponent()
     val store: AuthStore by storeHolder(key = "AuthorizationScreen") {
         createAuthStore(component, router)
