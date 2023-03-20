@@ -2,11 +2,11 @@ package ru.gortea.petter.data
 
 import android.content.Context
 import androidx.core.content.edit
-import ru.gortea.petter.token.storage.JwtTokenRepository
+import ru.gortea.petter.token.storage.TokenRepository
 
-class SharedPrefsTokenRepository(
+class SharedPrefsJwtTokenRepository(
     context: Context
-) : JwtTokenRepository {
+) : TokenRepository {
     private val prefs = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE)
 
     override fun updateToken(newValue: String) {
@@ -18,7 +18,7 @@ class SharedPrefsTokenRepository(
     }
 
     private companion object {
-        private const val TOKEN_PREFS = "TOKEN_PREFS"
-        private const val TOKEN_KEY = "TOKEN_KEY"
+        private const val TOKEN_PREFS = "JWT_TOKEN_PREFS"
+        private const val TOKEN_KEY = "JWT_TOKEN_KEY"
     }
 }

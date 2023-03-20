@@ -26,13 +26,27 @@ internal class RegistrationConfirmUiStateMapper :
 
     private fun String.mask(): String {
         val (name, domain) = split("@")
-        val masked = if (name.length >= 3) {
-            name.run { replaceRange(1..lastIndex, MASK) }
-        } else {
-            name.run { replaceRange(0..lastIndex, MASK) }
+
+        val masked = name.run {
+            if (length >= 3) {
+                replaceAll(1 until lastIndex, MASK)
+            } else {
+                replaceAll(indices, MASK)
+            }
         }
 
         return "$masked@$domain"
+    }
+
+    private fun String.replaceAll(
+        range: IntRange,
+        replacement: CharSequence
+    ): String {
+        return StringBuilder(length).apply {
+            for (i in 0 until range.first) append(this[i])
+            for (i in range) append(replacement)
+            for (i in range.last until length) append(this[i])
+        }.toString()
     }
 
     private companion object {

@@ -3,11 +3,13 @@ package ru.gortea.petter.di.features.auth
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import ru.gortea.petter.auth.data.AuthorizationByCredentialsRepository
+import ru.gortea.petter.auth.data.AuthorizationRepository
 import ru.gortea.petter.auth.data.RegistrationRepository
 import ru.gortea.petter.auth.data.api.AuthApi
 import ru.gortea.petter.auth.data.api.RegistrationApi
+import ru.gortea.petter.di.token.qualifier.RefreshToken
 import ru.gortea.petter.network.createApi
+import ru.gortea.petter.token.storage.TokenRepository
 
 @Module
 class FeatureAuthDataModule {
@@ -28,7 +30,10 @@ class FeatureAuthDataModule {
     }
 
     @Provides
-    fun provideAuthByCredentialsRepository(api: AuthApi): AuthorizationByCredentialsRepository {
-        return AuthorizationByCredentialsRepository(api)
+    fun provideAuthByCredentialsRepository(
+        api: AuthApi,
+        @RefreshToken repository: TokenRepository
+    ): AuthorizationRepository {
+        return AuthorizationRepository(api, repository)
     }
 }

@@ -13,4 +13,13 @@ sealed interface DataState<out T> {
     data class Content<T>(val content: T) : DataState<T>
 }
 
-fun DataState<*>.isInitial(): Boolean = this is DataState.Empty
+suspend fun<T, R> DataState<T>.mapContent(mapper: suspend (T) -> R): DataState<R> {
+    return when(this) {
+        is DataState.Loading.WithContent -> DataState.Loading.WithContent(mapper(content))
+        is DataState.Content -> DataState.Content(mapper(content))
+        is DataState.Loading.WithError -> this
+        is DataState.Loading -> DataState.Loading()
+        is DataState.Fail -> this
+        is DataState.Empty -> this
+    }
+}

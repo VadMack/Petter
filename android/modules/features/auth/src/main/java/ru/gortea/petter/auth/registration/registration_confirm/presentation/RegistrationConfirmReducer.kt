@@ -2,8 +2,7 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.data.model.AuthorizationModel
-import ru.gortea.petter.auth.data.model.AuthorizedUserModel
+import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.registration.common.FieldState
@@ -55,7 +54,7 @@ internal class RegistrationConfirmReducer(
     }
 
     private fun MessageBuilder<State, Nothing, Command>.authorizationStatus(
-        status: DataState<AuthorizedUserModel>
+        status: DataState<UserModel>
     ) {
         state { copy(authStatus = status) }
         when (status) {
@@ -91,8 +90,8 @@ internal class RegistrationConfirmReducer(
         commands(Command.ResendCode(RegistrationEmailModel(state.email)))
     }
 
-    private fun State.toAuthorizationModel(): AuthorizationModel {
-        return AuthorizationModel(
+    private fun State.toAuthorizationModel(): CredsAuthorizationModel {
+        return CredsAuthorizationModel(
             username = username,
             password = password
         )

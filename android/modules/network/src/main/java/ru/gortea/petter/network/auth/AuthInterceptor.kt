@@ -2,10 +2,10 @@ package ru.gortea.petter.network.auth
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.gortea.petter.token.storage.JwtTokenRepository
+import ru.gortea.petter.token.storage.TokenRepository
 
 internal class AuthInterceptor(
-    private val tokenRepository: JwtTokenRepository
+    private val tokenRepository: TokenRepository
 ) : Interceptor {
     private var token: String
         get() = tokenRepository.getToken()

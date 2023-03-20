@@ -1,4 +1,4 @@
-package ru.gortea.petter.navigation
+package ru.gortea.petter.auth.registration.navigation.nodes
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,13 +6,10 @@ import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.registration.navigation.RegistrationRouter
-import ru.gortea.petter.auth.registration.navigation.nodes.FillAccountNode
-import ru.gortea.petter.auth.registration.navigation.nodes.RegistrationConfirmNode
-import ru.gortea.petter.auth.registration.navigation.nodes.RegistrationNode
 import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
 import ru.gortea.petter.navigation.parent.BackStackParentNode
 
-class PetterParentNode(
+class RegistrationParentNode(
     buildContext: BuildContext
 ) : BackStackParentNode<RegistrationFlowNavTarget>(
     initialTarget = RegistrationFlowNavTarget.RegistrationForm,

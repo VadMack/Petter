@@ -8,6 +8,7 @@ dependencies {
     implementation Libs.coroutines
     implementation Libs.retrofit
 
+    implementation project(":modules:token-storage")
     api project(":modules:data")
     api project(":modules:features:profile-data")
 }
