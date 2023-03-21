@@ -7,6 +7,8 @@ import ru.gortea.petter.auth.common.invalid
 import ru.gortea.petter.auth.common.text
 import ru.gortea.petter.auth.common.valid
 import ru.gortea.petter.auth.data.model.RegistrationModel
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_EMAIL
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.INVALID_USERNAME
@@ -14,9 +16,6 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.validat
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.PASSWORDS_ARE_DIFFERENT
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.AuthorizationNavTarget
-import ru.gortea.petter.navigation.graph.NavTarget
-import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand as Command
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent as Event
@@ -24,7 +23,7 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.Registr
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent as UiEvent
 
 internal class RegistrationReducer(
-    private val router: PetterRouter<NavTarget>
+    private val router: PetterRouter<AuthorizationNavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
@@ -52,7 +51,7 @@ internal class RegistrationReducer(
 
     private fun navigateToRegistrationConfirm(user: UserModel, pwd: String) {
         router.navigateTo(
-            RegistrationFlowNavTarget.RegistrationConfirm(
+            Registration.RegistrationConfirm(
                 email = user.email,
                 username = user.username,
                 pwd = pwd,

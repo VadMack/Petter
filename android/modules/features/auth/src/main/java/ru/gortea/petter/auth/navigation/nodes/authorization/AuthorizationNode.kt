@@ -1,16 +1,16 @@
-package ru.gortea.petter.auth.authorization.navigation.nodes
+package ru.gortea.petter.auth.navigation.nodes.authorization
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.authorization.ui.AuthorizationScreen
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.NavTarget
 
-class AuthorizationNode(
+internal class AuthorizationNode(
     buildContext: BuildContext,
-    private val router: PetterRouter<NavTarget>
+    private val router: PetterRouter<AuthorizationNavTarget>
 ) : Node(buildContext) {
 
     @Composable

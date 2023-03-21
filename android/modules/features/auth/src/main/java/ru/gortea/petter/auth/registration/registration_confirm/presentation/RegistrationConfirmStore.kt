@@ -3,6 +3,7 @@ package ru.gortea.petter.auth.registration.registration_confirm.presentation
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.auth.di.AuthorizationComponent
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.AuthorizeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitAuthorizeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.InitRegistrationConfirmActor
@@ -10,8 +11,8 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.acto
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmValidateActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.ResendCodeActor
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.UpdateUserActor
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.NavTarget
 
 internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent, Nothing>
 
@@ -21,7 +22,7 @@ internal fun createRegistrationConfirmStore(
     userId: String,
     username: String,
     password: String,
-    router: PetterRouter<NavTarget>
+    router: PetterRouter<AuthorizationNavTarget>
 ): RegistrationConfirmStore {
     val repo = component.registrationRepository
     val authRepo = component.authorizationRepository
@@ -41,7 +42,8 @@ internal fun createRegistrationConfirmStore(
             AuthorizeActor(authRepo),
             RegistrationConfirmValidateActor(),
             RegistrationConfirmActor(repo),
-            ResendCodeActor(repo)
+            ResendCodeActor(repo),
+            UpdateUserActor(component.userLocalRepository)
         ),
         listOf(
             RegistrationConfirmEvent.InitApi

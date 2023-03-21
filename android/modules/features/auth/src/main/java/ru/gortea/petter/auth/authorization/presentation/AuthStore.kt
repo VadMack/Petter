@@ -7,14 +7,14 @@ import ru.gortea.petter.auth.authorization.presentation.actors.AuthValidateActor
 import ru.gortea.petter.auth.authorization.presentation.actors.AuthorizeActor
 import ru.gortea.petter.auth.authorization.presentation.actors.AuthorizeInitActor
 import ru.gortea.petter.auth.di.AuthorizationComponent
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.NavTarget
 
 internal typealias AuthStore = MviStore<AuthState, AuthEvent, Nothing>
 
 internal fun createAuthStore(
     component: AuthorizationComponent,
-    router: PetterRouter<NavTarget>
+    router: PetterRouter<AuthorizationNavTarget>
 ): AuthStore {
     val authRepo = component.authorizationRepository
 

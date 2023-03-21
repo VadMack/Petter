@@ -7,7 +7,7 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import ru.gortea.petter.navigation.graph.NavTarget
+import ru.gortea.petter.navigation.NavTarget
 
 abstract class BackStackParentNode<T : NavTarget>(
     initialTarget: T,

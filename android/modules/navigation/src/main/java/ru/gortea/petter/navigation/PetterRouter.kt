@@ -8,7 +8,6 @@ import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.gortea.petter.navigation.graph.NavTarget
 
 open class PetterRouter<in T : NavTarget>(
     private val backStack: BackStack<T>,

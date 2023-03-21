@@ -27,6 +27,7 @@ import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.auth.R
 import ru.gortea.petter.auth.di.AuthorizationComponent
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationStore
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.Authorize
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent.Back
@@ -39,7 +40,6 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.createR
 import ru.gortea.petter.auth.registration.registration_form.ui.mapper.RegistrationUiStateMapper
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.NavTarget
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
 import ru.gortea.petter.ui_kit.button.PrimaryButton
@@ -49,8 +49,8 @@ import ru.gortea.petter.ui_kit.toolbar.BackIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 
 @Composable
-fun RegistrationScreen(
-    router: PetterRouter<NavTarget>
+internal fun RegistrationScreen(
+    router: PetterRouter<AuthorizationNavTarget>
 ) {
     val component: AuthorizationComponent = getComponent()
     val store: RegistrationStore by storeHolder("Registration") {

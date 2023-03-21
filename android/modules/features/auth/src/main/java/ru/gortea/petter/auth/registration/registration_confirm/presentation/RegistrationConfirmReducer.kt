@@ -7,10 +7,10 @@ import ru.gortea.petter.auth.common.invalid
 import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.NavTarget
-import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmCommand as Command
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmEvent as Event
@@ -18,7 +18,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.Regi
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent as UiEvent
 
 internal class RegistrationConfirmReducer(
-    private val router: PetterRouter<NavTarget>
+    private val router: PetterRouter<AuthorizationNavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
@@ -27,6 +27,7 @@ internal class RegistrationConfirmReducer(
             is Event.ResendCodeStatus -> resendCodeStatus(event.dataState)
             is Event.AuthorizationStatus -> authorizationStatus(event.dataState)
             is Event.CodeValidated -> codeValidated(event.isValid)
+            is Event.UserUpdated -> userUpdated()
             is Event.InitApi -> commands(
                 Command.InitResendCode,
                 Command.InitConfirm,
@@ -60,7 +61,7 @@ internal class RegistrationConfirmReducer(
         state { copy(authStatus = status) }
         when (status) {
             is DataState.Loading, is DataState.Empty -> Unit
-            is DataState.Content -> router.updateRoot(RegistrationFlowNavTarget.FillAccount)
+            is DataState.Content -> commands(Command.UpdateUser(status.content))
             is DataState.Fail -> Unit  /* Todo show error and navigate to auth */
         }
     }
@@ -71,6 +72,11 @@ internal class RegistrationConfirmReducer(
         } else {
             state { copy(codeState = codeState.invalid()) }
         }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.userUpdated() {
+        state { copy(isUserUpdated = true) }
+        router.navigateTo(Registration.FillAccount)
     }
 
     private fun MessageBuilder<State, Nothing, Command>.codeValid() {
