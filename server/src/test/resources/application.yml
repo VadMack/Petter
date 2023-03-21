@@ -12,9 +12,24 @@ spring:
       auto-index-creation: true
   main:
     allow-circular-references: true
+  mail:
+    protocol: smtp
+    host: smtp.yandex.ru
+    port: 465
+    username: test@test.ru
+    password: test
+
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
+      "mail.smtp.ssl.enable": true
+
+server:
+  port: 0
 
 authorization:
-  enabled: true
+  enabled: false
   secret: TESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRETTESTSECRET
 
 photo-storage:

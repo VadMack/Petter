@@ -1,4 +1,4 @@
-package com.vadmack.petter;
+package com.vadmack.petter.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
