@@ -6,15 +6,15 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.authorization.ui.AuthorizationScreen
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 
 internal class AuthorizationNode(
     buildContext: BuildContext,
-    private val router: PetterRouter<AuthorizationNavTarget>
+    private val router: Router<AuthorizationNavTarget>
 ) : Node(buildContext) {
 
     @Composable
     override fun View(modifier: Modifier) {
-        AuthorizationScreen(router = router)
+        AuthorizationScreen(router = router) { finish() }
     }
 }

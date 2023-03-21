@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_tab">Поиск</string>
+    <string name="chat_tab">Чаты</string>
+    <string name="profile_tab">Профиль</string>
+</resources>

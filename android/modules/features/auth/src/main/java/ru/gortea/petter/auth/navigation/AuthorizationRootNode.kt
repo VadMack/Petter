@@ -48,4 +48,10 @@ class AuthorizationRootNode(
     override fun View(modifier: Modifier) {
         Children(navModel = backStack)
     }
+
+    override fun onChildFinished(child: Node) {
+        if (child is AuthorizationNode) {
+            finish()
+        }
+    }
 }

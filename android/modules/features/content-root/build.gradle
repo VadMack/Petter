@@ -5,12 +5,10 @@ plugins {
 }
 
 dependencies {
-    implementation project(":modules:features:auth-data")
-    implementation project(":modules:features:content-root")
+    implementation AndroidX.composeFoundation
+    implementation AndroidX.composeUi
+    implementation AndroidX.composeMaterial
 
-    implementation project(":modules:arch-android")
     implementation project(":modules:navigation")
     implementation project(":modules:ui-kit")
-
-    implementation Libs.coil
 }

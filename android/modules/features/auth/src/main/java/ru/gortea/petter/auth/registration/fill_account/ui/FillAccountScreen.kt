@@ -60,6 +60,7 @@ fun FillAccountScreen() {
     val store: FillAccountStore by storeHolder(
         "FillAccountScreen"
     ) { createFillAccountStore(component) }
+
     val coroutineScope = rememberCoroutineScope()
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val launcher = rememberLauncherForActivityResult(PickVisualMedia()) { avatar ->

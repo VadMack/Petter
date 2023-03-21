@@ -12,7 +12,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.acto
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmValidateActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.ResendCodeActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.UpdateUserActor
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 
 internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent, Nothing>
 
@@ -22,7 +22,7 @@ internal fun createRegistrationConfirmStore(
     userId: String,
     username: String,
     password: String,
-    router: PetterRouter<AuthorizationNavTarget>
+    router: Router<AuthorizationNavTarget>
 ): RegistrationConfirmStore {
     val repo = component.registrationRepository
     val authRepo = component.authorizationRepository

@@ -10,7 +10,7 @@ import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmCommand as Command
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmEvent as Event
@@ -18,7 +18,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.Regi
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent as UiEvent
 
 internal class RegistrationConfirmReducer(
-    private val router: PetterRouter<AuthorizationNavTarget>
+    private val router: Router<AuthorizationNavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {

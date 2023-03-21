@@ -39,7 +39,7 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.Registr
 import ru.gortea.petter.auth.registration.registration_form.presentation.createRegistrationStore
 import ru.gortea.petter.auth.registration.registration_form.ui.mapper.RegistrationUiStateMapper
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
 import ru.gortea.petter.ui_kit.button.PrimaryButton
@@ -50,7 +50,7 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 
 @Composable
 internal fun RegistrationScreen(
-    router: PetterRouter<AuthorizationNavTarget>
+    router: Router<AuthorizationNavTarget>
 ) {
     val component: AuthorizationComponent = getComponent()
     val store: RegistrationStore by storeHolder("Registration") {

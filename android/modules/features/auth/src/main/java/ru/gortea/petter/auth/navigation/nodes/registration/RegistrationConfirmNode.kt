@@ -6,7 +6,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.registration.registration_confirm.ui.RegistrationConfirmScreen
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 
 internal class RegistrationConfirmNode(
     val buildContext: BuildContext,
@@ -14,7 +14,7 @@ internal class RegistrationConfirmNode(
     val userId: String,
     val username: String,
     val pwd: String,
-    private val router: PetterRouter<AuthorizationNavTarget>
+    private val router: Router<AuthorizationNavTarget>
 ) : Node(buildContext) {
 
     @Composable

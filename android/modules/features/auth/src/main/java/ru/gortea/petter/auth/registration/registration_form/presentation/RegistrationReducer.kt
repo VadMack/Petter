@@ -15,7 +15,7 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.validat
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.NONE
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.reason.RegistrationFailedReason.PASSWORDS_ARE_DIFFERENT
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationCommand as Command
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationEvent as Event
@@ -23,7 +23,7 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.Registr
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationUiEvent as UiEvent
 
 internal class RegistrationReducer(
-    private val router: PetterRouter<AuthorizationNavTarget>
+    private val router: Router<AuthorizationNavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {

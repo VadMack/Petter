@@ -32,7 +32,7 @@ import ru.gortea.petter.auth.authorization.ui.mapper.AuthUiStateMapper
 import ru.gortea.petter.auth.authorization.ui.state.AuthUiState
 import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.theme.Base700
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.appHeader
@@ -45,10 +45,13 @@ import ru.gortea.petter.ui_kit.text_field.hideText
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
-internal fun AuthorizationScreen(router: PetterRouter<AuthorizationNavTarget>) {
+internal fun AuthorizationScreen(
+    router: Router<AuthorizationNavTarget>,
+    finish: () -> Unit
+) {
     val component: AuthorizationComponent = getComponent()
     val store: AuthStore by storeHolder(key = "AuthorizationScreen") {
-        createAuthStore(component, router)
+        createAuthStore(component, router, finish)
     }
 
     store.collect(stateMapper = AuthUiStateMapper()) { state ->
