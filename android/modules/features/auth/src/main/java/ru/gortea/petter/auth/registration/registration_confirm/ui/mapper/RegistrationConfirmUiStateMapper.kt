@@ -4,7 +4,8 @@ import ru.gortea.petter.arch.UiStateMapper
 import ru.gortea.petter.auth.common.toTextFieldState
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmState
 import ru.gortea.petter.auth.registration.registration_confirm.ui.state.RegistrationConfirmUiState
-import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isContent
+import ru.gortea.petter.data.model.isLoading
 import ru.gortea.petter.ui_kit.button.ButtonState
 
 internal class RegistrationConfirmUiStateMapper :
@@ -19,8 +20,9 @@ internal class RegistrationConfirmUiStateMapper :
     }
 
     private fun RegistrationConfirmState.toSendCodeButtonState(): ButtonState {
+        val isUpdatingUser = authStatus.isContent && !isUserUpdated
         return ButtonState(
-            isLoading = confirmationStatus is DataState.Loading || authStatus is DataState.Loading
+            isLoading = confirmationStatus.isLoading || authStatus.isLoading || isUpdatingUser
         )
     }
 
@@ -29,7 +31,7 @@ internal class RegistrationConfirmUiStateMapper :
 
         val masked = name.run {
             if (length >= 3) {
-                replaceAll(1 .. lastIndex, MASK)
+                replaceAll(1..lastIndex, MASK)
             } else {
                 replaceAll(indices, MASK)
             }

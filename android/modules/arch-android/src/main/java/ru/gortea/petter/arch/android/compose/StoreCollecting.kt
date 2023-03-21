@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import ru.gortea.petter.arch.UiStateMapper
@@ -17,7 +18,8 @@ inline fun <State : Any, UiState : Any, Action : Any> MviStore<State, *, Action>
     stateRender: @Composable (UiState) -> Unit
 ) {
     val state by stateFlow.collectAsState()
-    stateRender(stateMapper.map(state))
+    val mapped = remember { stateMapper.map(state) }
+    stateRender(mapped)
 }
 
 @SuppressLint("ComposableNaming", "FlowOperatorInvokedInComposition")
@@ -27,12 +29,13 @@ inline fun <State : Any, UiState : Any, Action : Any> MviStore<State, *, Action>
     stateRender: @Composable (UiState) -> Unit,
     crossinline actionHandler: (Action) -> Unit
 ) {
-    val state by stateFlow.collectAsState()
     LaunchedEffect("Collect") {
         actionsFlow
             .onEach { actionHandler(it) }
             .collect()
     }
-    stateRender(stateMapper.map(state))
-//    action?.let { actionHandler(it) }
+
+    val state by stateFlow.collectAsState()
+    val mapped = remember { stateMapper.map(state) }
+    stateRender(mapped)
 }

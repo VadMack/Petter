@@ -3,10 +3,10 @@ package ru.gortea.petter.auth.authorization.presentation
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
+import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.navigation.graph.NavTarget
-import ru.gortea.petter.navigation.graph.RegistrationFlowNavTarget
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.authorization.presentation.AuthCommand as Command
 import ru.gortea.petter.auth.authorization.presentation.AuthEvent as Event
@@ -14,7 +14,8 @@ import ru.gortea.petter.auth.authorization.presentation.AuthState as State
 import ru.gortea.petter.auth.authorization.presentation.AuthUiEvent as UiEvent
 
 internal class AuthReducer(
-    private val router: PetterRouter<NavTarget>
+    private val router: Router<AuthorizationNavTarget>,
+    private val finish: () -> Unit
 ) : Reducer<State, Event, Nothing, Command>() {
 
     override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
@@ -42,7 +43,7 @@ internal class AuthReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.userUpdated() {
         state { copy(userUpdated = true) }
-        // TODO navigate to main
+        finish()
     }
 
     private fun MessageBuilder<State, Nothing, Command>.validated(event: Event.Validated) = state {
@@ -64,7 +65,7 @@ internal class AuthReducer(
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.Authorize -> authorize()
-            is UiEvent.Registration -> router.navigateTo(RegistrationFlowNavTarget.RegistrationForm)
+            is UiEvent.Registration -> router.navigateTo(Registration.RegistrationForm)
             is UiEvent.UsernameChanged -> usernameChanged(event.text)
             is UiEvent.PasswordChanged -> passwordChanged(event.text)
         }

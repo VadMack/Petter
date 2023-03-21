@@ -116,10 +116,9 @@ fun TextField(
 
 @Composable
 private fun Placeholder(text: String) {
-    // Todo change to theme colors
     Text(
         text = text,
-        style = MaterialTheme.typography.body3.copy(color = Base600)
+        style = MaterialTheme.typography.body3.copy(color = MaterialTheme.colors.surface)
     )
 }
 

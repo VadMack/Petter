@@ -26,6 +26,7 @@ dependencies {
     implementation AndroidX.lifecycleRuntimeKtx
     implementation AndroidX.composeActivity
 
+    implementation project(":modules:features:content-root")
     implementation project(":modules:features:auth")
     implementation project(":modules:features:auth-data")
 
