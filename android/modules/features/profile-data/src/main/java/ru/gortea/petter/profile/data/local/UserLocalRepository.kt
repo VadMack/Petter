@@ -14,12 +14,12 @@ class UserLocalRepository(
     }
 
     suspend fun deleteCurrentUser() = withContext(Dispatchers.IO) {
-        val user = userDao.get()
+        val user = userDao.get() ?: return@withContext
         userDao.delete(user)
     }
 
-    suspend fun getCurrentUser(): UserModel = withContext(Dispatchers.IO) {
-        userDao.get().toModel()
+    suspend fun getCurrentUser(): UserModel? = withContext(Dispatchers.IO) {
+        userDao.get()?.toModel()
     }
 
     private fun UserModel.toEntity(): UserEntity {

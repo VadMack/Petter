@@ -23,6 +23,7 @@ internal class ErrorHandlingCall<T>(
                 val error = when (response.code()) {
                     INTERNAL_ERROR -> PetterNetworkError.InternalError()
                     USER_ALREADY_EXISTS -> PetterNetworkError.UserAlreadyExists()
+                    NOT_FOUND -> PetterNetworkError.NotFound()
                     else -> PetterNetworkError.UnknownError()
                 }
 
@@ -40,6 +41,7 @@ internal class ErrorHandlingCall<T>(
     private companion object {
         private const val INTERNAL_ERROR = 500
         private const val USER_ALREADY_EXISTS = 400
+        private const val NOT_FOUND = 404
     }
 }
 

@@ -17,6 +17,10 @@ class SharedPrefsRefreshTokenRepository(
         return prefs.getString(TOKEN_KEY, "") ?: ""
     }
 
+    override fun removeToken() {
+        updateToken("")
+    }
+
     private companion object {
         private const val TOKEN_PREFS = "REFRESH_TOKEN_PREFS"
         private const val TOKEN_KEY = "REFRESH_TOKEN_KEY"

@@ -7,6 +7,5 @@ import ru.gortea.petter.profile.data.remote.model.UserModel
 internal data class AuthState(
     val username: FieldState = FieldState(),
     val password: FieldState = FieldState(isVisible = false),
-    val userUpdated: Boolean = false,
     val authStatus: DataState<UserModel> = DataState.Empty
 )

@@ -17,6 +17,10 @@ class SharedPrefsJwtTokenRepository(
         return prefs.getString(TOKEN_KEY, "") ?: ""
     }
 
+    override fun removeToken() {
+        updateToken("")
+    }
+
     private companion object {
         private const val TOKEN_PREFS = "JWT_TOKEN_PREFS"
         private const val TOKEN_KEY = "JWT_TOKEN_KEY"

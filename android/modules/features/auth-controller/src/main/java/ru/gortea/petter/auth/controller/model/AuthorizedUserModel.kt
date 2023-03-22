@@ -1,4 +1,4 @@
-package ru.gortea.petter.auth.data.model
+package ru.gortea.petter.auth.controller.model
 
 import kotlinx.serialization.Serializable
 import ru.gortea.petter.profile.data.remote.model.UserModel

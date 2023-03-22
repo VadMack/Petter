@@ -2,6 +2,11 @@
 <resources>
 
     <style name="Theme.Petter" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="SplashScreen" parent="Theme.Petter">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
     </style>
 </resources>
