@@ -10,5 +10,5 @@ dependencies {
 
     implementation project(":modules:token-storage")
     api project(":modules:data")
-    api project(":modules:features:profile-data")
+    api project(":modules:features:auth-controller")
 }

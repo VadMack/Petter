@@ -9,7 +9,6 @@ internal sealed interface RegistrationConfirmEvent {
     class AuthorizationStatus(val dataState: DataState<UserModel>) : RegistrationConfirmEvent
     class CodeValidated(val isValid: Boolean) : RegistrationConfirmEvent
 
-    object UserUpdated : RegistrationConfirmEvent
     object InitApi : RegistrationConfirmEvent
 }
 

@@ -10,7 +10,6 @@ internal sealed interface AuthEvent {
         val pwdValid: Boolean
     ) : AuthEvent
 
-    object UserUpdated : AuthEvent
     object InitApi : AuthEvent
 }
 

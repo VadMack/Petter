@@ -2,7 +2,7 @@ package ru.gortea.petter.auth.data.api
 
 import retrofit2.http.Body
 import retrofit2.http.POST
-import ru.gortea.petter.auth.data.model.AuthorizedUserModel
+import ru.gortea.petter.auth.controller.model.AuthorizedUserModel
 import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.TokenAuthorizationModel
 

@@ -27,7 +27,6 @@ internal class RegistrationConfirmReducer(
             is Event.ResendCodeStatus -> resendCodeStatus(event.dataState)
             is Event.AuthorizationStatus -> authorizationStatus(event.dataState)
             is Event.CodeValidated -> codeValidated(event.isValid)
-            is Event.UserUpdated -> userUpdated()
             is Event.InitApi -> commands(
                 Command.InitResendCode,
                 Command.InitConfirm,
@@ -61,7 +60,7 @@ internal class RegistrationConfirmReducer(
         state { copy(authStatus = status) }
         when (status) {
             is DataState.Loading, is DataState.Empty -> Unit
-            is DataState.Content -> commands(Command.UpdateUser(status.content))
+            is DataState.Content -> router.navigateTo(Registration.FillAccount)
             is DataState.Fail -> Unit  /* Todo show error and navigate to auth */
         }
     }
@@ -72,11 +71,6 @@ internal class RegistrationConfirmReducer(
         } else {
             state { copy(codeState = codeState.invalid()) }
         }
-    }
-
-    private fun MessageBuilder<State, Nothing, Command>.userUpdated() {
-        state { copy(isUserUpdated = true) }
-        router.navigateTo(Registration.FillAccount)
     }
 
     private fun MessageBuilder<State, Nothing, Command>.codeValid() {

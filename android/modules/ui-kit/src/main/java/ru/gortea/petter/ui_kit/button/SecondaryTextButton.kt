@@ -4,13 +4,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material.ripple.RippleAlpha
-import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -33,6 +32,9 @@ fun SecondaryTextButton(
         OutlinedButton(
             onClick = onClick,
             border = BorderStroke(0.dp, Color.Transparent),
+            colors = ButtonDefaults.outlinedButtonColors(
+                backgroundColor = Color.Transparent
+            ),
             modifier = modifier,
             contentPadding = contentPadding
         ) {
@@ -46,14 +48,6 @@ fun SecondaryTextButton(
             trailingIcon?.invoke()
         }
     }
-}
-
-private object NoRippleTheme : RippleTheme {
-    @Composable
-    override fun defaultColor() = Color.Unspecified
-
-    @Composable
-    override fun rippleAlpha(): RippleAlpha = RippleAlpha(0.0f,0.0f,0.0f,0.0f)
 }
 
 @Preview(showBackground = true)

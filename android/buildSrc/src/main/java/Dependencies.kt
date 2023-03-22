@@ -72,6 +72,7 @@ object AndroidX {
 
     private object Versions {
         const val coreKtx = "1.9.0"
+        const val splashScreen = "1.0.0"
         const val fragmentKtx = "1.4.1"
         const val activityKtx = "1.6.1"
         const val appCompat = "1.4.1"
@@ -96,6 +97,7 @@ object AndroidX {
     const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.composeViewModel}"
 
     const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
+    const val splashScreen = "androidx.core:core-splashscreen:${Versions.splashScreen}"
     const val fragmentKtx = "androidx.fragment:fragment-ktx:${Versions.fragmentKtx}"
     const val activityKtx = "androidx.activity:activity-ktx:${Versions.activityKtx}"
 

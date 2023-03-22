@@ -19,6 +19,7 @@ dependencies {
     implementation Libs.roomKtx
     kapt Libs.roomCompiler
 
+    implementation AndroidX.splashScreen
     implementation AndroidX.coreKtx
     implementation AndroidX.composeUi
     implementation AndroidX.composeMaterial
@@ -29,6 +30,7 @@ dependencies {
     implementation project(":modules:features:content-root")
     implementation project(":modules:features:auth")
     implementation project(":modules:features:auth-data")
+    implementation project(":modules:features:auth-controller")
 
     implementation project(":modules:arch-android")
     implementation project(":modules:navigation")

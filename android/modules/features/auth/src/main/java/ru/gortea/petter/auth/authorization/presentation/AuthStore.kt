@@ -2,7 +2,6 @@ package ru.gortea.petter.auth.authorization.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
-import ru.gortea.petter.auth.authorization.presentation.actors.AuthUpdateUserActor
 import ru.gortea.petter.auth.authorization.presentation.actors.AuthValidateActor
 import ru.gortea.petter.auth.authorization.presentation.actors.AuthorizeActor
 import ru.gortea.petter.auth.authorization.presentation.actors.AuthorizeInitActor
@@ -25,7 +24,6 @@ internal fun createAuthStore(
         actors = listOf(
             AuthorizeInitActor(authRepo),
             AuthorizeActor(authRepo),
-            AuthUpdateUserActor(component.userLocalRepository),
             AuthValidateActor()
         ),
         initialEvents = listOf(AuthEvent.InitApi)

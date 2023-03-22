@@ -6,6 +6,7 @@ import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isContent
 import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.auth.authorization.presentation.AuthCommand as Command
@@ -22,28 +23,17 @@ internal class AuthReducer(
         when (event) {
             is Event.InitApi -> commands(Command.InitAuthorize)
             is Event.AuthorizationStatus -> authorizationStatus(event.state)
-            is Event.UserUpdated -> userUpdated()
             is Event.Validated -> validated(event)
             is UiEvent -> handleUiEvent(event)
         }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.authorizationStatus(state: DataState<UserModel>) {
-        state {
-            copy(
-                userUpdated = false,
-                authStatus = state
-            )
-        }
+        state { copy(authStatus = state) }
 
-        if (state is DataState.Content) {
-            commands(Command.UpdateUser(state.content))
+        if (state.isContent) {
+            finish()
         }
-    }
-
-    private fun MessageBuilder<State, Nothing, Command>.userUpdated() {
-        state { copy(userUpdated = true) }
-        finish()
     }
 
     private fun MessageBuilder<State, Nothing, Command>.validated(event: Event.Validated) = state {

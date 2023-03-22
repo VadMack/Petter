@@ -5,5 +5,6 @@ sealed class PetterNetworkError : Throwable() {
 
     class InternalError : PetterNetworkError()
     class UserAlreadyExists : PetterNetworkError()
+    class NotFound : PetterNetworkError()
     class UnknownError : PetterNetworkError()
 }

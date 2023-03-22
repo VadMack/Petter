@@ -12,6 +12,5 @@ internal data class RegistrationConfirmState(
     val codeState: FieldState = FieldState(),
     val confirmationStatus: DataState<Unit> = DataState.Empty,
     val resendCodeStatus: DataState<UserModel> = DataState.Empty,
-    val authStatus: DataState<UserModel> = DataState.Empty,
-    val isUserUpdated: Boolean = false
+    val authStatus: DataState<UserModel> = DataState.Empty
 )

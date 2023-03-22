@@ -1,4 +1,4 @@
-package ru.gortea.petter
+package ru.gortea.petter.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -18,6 +18,7 @@ import ru.gortea.petter.navigation.PetterRootNode
 import ru.gortea.petter.theme.PetterAppTheme
 
 class MainActivity : NodeActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupInsets()
