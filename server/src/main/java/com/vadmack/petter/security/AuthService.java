@@ -123,8 +123,9 @@ public class AuthService {
     String userId = tokenService.validate(tokenValue);
     tokenService.deleteByValue(tokenValue);
     User user = userService.getById(userId);
+    String refreshToken = tokenService.createRefreshToken(userId);
     String jwtToken = jwtTokenUtil.generateAccessToken(user);
-    return new LoginResponse(modelMapper.map(user, UserGetDto.class), userId, jwtToken);
+    return new LoginResponse(modelMapper.map(user, UserGetDto.class), refreshToken, jwtToken);
   }
 
 }
