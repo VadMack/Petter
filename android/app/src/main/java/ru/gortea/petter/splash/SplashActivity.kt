@@ -37,7 +37,6 @@ class SplashActivity : ComponentActivity() {
             launch {
                 repository.get()
                     .onEach {
-                        println("xxx: $it")
                         when (it) {
                             is DataState.Content, is DataState.Fail -> openMainActivity()
                             is DataState.Loading, DataState.Empty -> Unit

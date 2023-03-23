@@ -21,7 +21,8 @@ internal fun createRegistrationConfirmStore(
     userId: String,
     username: String,
     password: String,
-    router: Router<AuthorizationNavTarget>
+    router: Router<AuthorizationNavTarget>,
+    finish: () -> Unit
 ): RegistrationConfirmStore {
     val repo = component.registrationRepository
     val authRepo = component.authorizationRepository
@@ -33,7 +34,7 @@ internal fun createRegistrationConfirmStore(
             username = username,
             password = password
         ),
-        RegistrationConfirmReducer(router),
+        RegistrationConfirmReducer(finish, router),
         listOf(
             InitAuthorizeActor(authRepo),
             InitRegistrationConfirmActor(repo),

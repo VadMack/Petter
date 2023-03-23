@@ -8,7 +8,6 @@ import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
-import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.UserModel
@@ -18,6 +17,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.Regi
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.RegistrationConfirmUiEvent as UiEvent
 
 internal class RegistrationConfirmReducer(
+    private val finish: () -> Unit,
     private val router: Router<AuthorizationNavTarget>
 ) : Reducer<State, Event, Nothing, Command>() {
 
@@ -60,7 +60,7 @@ internal class RegistrationConfirmReducer(
         state { copy(authStatus = status) }
         when (status) {
             is DataState.Loading, is DataState.Empty -> Unit
-            is DataState.Content -> router.navigateTo(Registration.FillAccount)
+            is DataState.Content -> finish()
             is DataState.Fail -> Unit  /* Todo show error and navigate to auth */
         }
     }

@@ -7,15 +7,14 @@ import kotlinx.coroutines.flow.map
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountCommand
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountEvent
-import ru.gortea.petter.profile.data.remote.ProfileUpdateAvatarRepository
+import ru.gortea.petter.profile.data.remote.UserUpdateRepository
 
-internal class FillAccountInitUploadAvatarActor(
-    private val repository: ProfileUpdateAvatarRepository
+internal class FillAccountInitUpdateUserActor(
+    private val repository: UserUpdateRepository
 ) : Actor<FillAccountCommand, FillAccountEvent> {
-
     override fun process(commands: Flow<FillAccountCommand>): Flow<FillAccountEvent> {
-        return commands.filterIsInstance<FillAccountCommand.InitUploadAvatar>()
+        return commands.filterIsInstance<FillAccountCommand.InitUpdateUser>()
             .flatMapLatest { repository.get() }
-            .map { FillAccountEvent.UploadAvatarStatus(it) }
+            .map { FillAccountEvent.UserUpdateStatus(it) }
     }
 }

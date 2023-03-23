@@ -55,11 +55,11 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FillAccountScreen() {
+fun FillAccountScreen(finish: () -> Unit) {
     val component: AuthorizationComponent = getComponent()
     val store: FillAccountStore by storeHolder(
         "FillAccountScreen"
-    ) { createFillAccountStore(component) }
+    ) { createFillAccountStore(component, finish) }
 
     val coroutineScope = rememberCoroutineScope()
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -256,6 +256,7 @@ private fun FillAccountScreenContent(
         }
 
         PrimaryButton(
+            state = state.saveButton,
             text = stringResource(R.string.fill_account_save),
             onClick = saveClicked,
             modifier = Modifier

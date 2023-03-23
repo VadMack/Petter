@@ -12,19 +12,18 @@ internal class AuthInterceptor(
         set(value) = tokenRepository.updateToken(value)
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        if (token.isEmpty()) {
-            val response = chain.proceed(chain.request())
-            token = response.headers[HEADER_KEY] ?: ""
-            return response
-        }
-
         val request = chain.request().newBuilder()
-            .addHeader(HEADER_KEY, token)
+            .addHeader(HEADER_KEY, "Bearer $token")
             .build()
-        return chain.proceed(request)
+
+        println("xxx: $request")
+
+        val response = chain.proceed(request)
+        response.headers[HEADER_KEY]?.let(::token::set)
+        return response
     }
 
     private companion object {
-        private const val HEADER_KEY = "AuthorizationToken"
+        private const val HEADER_KEY = "Authorization"
     }
 }

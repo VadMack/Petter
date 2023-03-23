@@ -2,10 +2,12 @@ package ru.gortea.petter.profile.data.remote.api
 
 import okhttp3.MultipartBody
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
+import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
 
 interface ProfileApi {
@@ -16,4 +18,7 @@ interface ProfileApi {
     @Multipart
     @POST("api/users/avatar")
     suspend fun uploadAvatar(@Part image: MultipartBody.Part)
+
+    @GET("api/users")
+    suspend fun getUser(): UserModel
 }

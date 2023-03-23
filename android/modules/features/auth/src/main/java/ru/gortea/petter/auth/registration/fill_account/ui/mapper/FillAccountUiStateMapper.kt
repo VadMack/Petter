@@ -4,7 +4,7 @@ import ru.gortea.petter.arch.UiStateMapper
 import ru.gortea.petter.auth.common.toTextFieldState
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountState
 import ru.gortea.petter.auth.registration.fill_account.ui.state.FillAccountUiState
-import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isLoading
 import ru.gortea.petter.ui_kit.button.ButtonState
 
 internal class FillAccountUiStateMapper : UiStateMapper<FillAccountState, FillAccountUiState> {
@@ -23,7 +23,7 @@ internal class FillAccountUiStateMapper : UiStateMapper<FillAccountState, FillAc
 
     private fun FillAccountState.toButtonState(): ButtonState {
         return ButtonState(
-            isLoading = accountUpdateStatus is DataState.Loading || avatarUploadStatus is DataState.Loading
+            isLoading = userUpdateStatus.isLoading
         )
     }
 }

@@ -5,8 +5,7 @@ import ru.gortea.petter.auth.registration.fill_account.presentation.validation.r
 import ru.gortea.petter.data.model.DataState
 
 internal sealed interface FillAccountEvent {
-    class UpdateAccountStatus(val state: DataState<Unit>) : FillAccountEvent
-    class UploadAvatarStatus(val state: DataState<Unit>) : FillAccountEvent
+    class UserUpdateStatus(val state: DataState<Unit>) : FillAccountEvent
     class Validated(val failedReasons: List<FillAccountFailedReason>) : FillAccountEvent
 
     object InitApi : FillAccountEvent

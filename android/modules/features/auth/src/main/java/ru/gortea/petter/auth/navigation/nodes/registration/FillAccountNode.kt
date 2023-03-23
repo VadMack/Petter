@@ -6,13 +6,13 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.registration.fill_account.ui.FillAccountScreen
 
-internal class FillAccountNode(
+class FillAccountNode(
     buildContext: BuildContext
 ) : Node(buildContext = buildContext) {
 
     @Composable
     override fun View(modifier: Modifier) {
-        FillAccountScreen()
+        FillAccountScreen { finish() }
     }
 }
 

@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountCommand
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountEvent
-import ru.gortea.petter.profile.data.remote.ProfileUpdateRepository
+import ru.gortea.petter.profile.data.remote.UserUpdateRepository
 
-internal class FillAccountUpdateActor(
-    private val repository: ProfileUpdateRepository
+internal class FillAccountUpdateUserActor(
+    private val repository: UserUpdateRepository
 ) : Actor<FillAccountCommand, FillAccountEvent> {
 
     override fun process(commands: Flow<FillAccountCommand>): Flow<FillAccountEvent> {
-        return commands.filterIsInstance<FillAccountCommand.UpdateAccount>()
+        return commands.filterIsInstance<FillAccountCommand.UpdateUser>()
             .mapLatest { repository.invalidate(it.user) }
             .flatMapMerge { emptyFlow() }
     }

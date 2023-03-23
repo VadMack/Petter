@@ -25,7 +25,7 @@ open class MapSourceRepository<T, R>(
         sourceRepo.invalidate(args)
     }
 
-    override suspend fun get(): Flow<DataState<R>> {
+    override fun get(): Flow<DataState<R>> {
         return sourceRepo.get()
             .onEach { if (it is DataState.Fail) onFailed(it.reason) }
             .map { it.mapContent(mapper) }

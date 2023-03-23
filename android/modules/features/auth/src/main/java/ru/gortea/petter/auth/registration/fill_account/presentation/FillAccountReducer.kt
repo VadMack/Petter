@@ -5,7 +5,11 @@ import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.auth.common.invalid
 import ru.gortea.petter.auth.common.text
 import ru.gortea.petter.auth.registration.fill_account.presentation.validation.reason.FillAccountFailedReason
+import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isContent
 import ru.gortea.petter.profile.data.remote.model.AddressModel
+import ru.gortea.petter.profile.data.remote.model.AvatarModel
+import ru.gortea.petter.profile.data.remote.model.UserUpdateFullModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountAction as Action
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountCommand as Command
@@ -13,15 +17,24 @@ import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountE
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountState as State
 import ru.gortea.petter.auth.registration.fill_account.presentation.FillAccountUiEvent as UiEvent
 
-internal class FillAccountReducer : Reducer<State, Event, Action, Command>() {
+internal class FillAccountReducer(
+    private val finish: () -> Unit
+) : Reducer<State, Event, Action, Command>() {
 
     override fun MessageBuilder<State, Action, Command>.reduce(event: Event) {
         when (event) {
-            is Event.UpdateAccountStatus -> state { copy(accountUpdateStatus = event.state) }
-            is Event.UploadAvatarStatus -> state { copy(avatarUploadStatus = event.state) }
+            is Event.UserUpdateStatus -> userUpdateStatus(event.state)
             is Event.Validated -> validated(event.failedReasons)
-            is Event.InitApi -> commands(Command.InitUpdateAccount, Command.InitUploadAvatar)
+            is Event.InitApi -> commands(Command.InitUpdateUser)
             is UiEvent -> handleUiEvent(event)
+        }
+    }
+
+    private fun MessageBuilder<State, Action, Command>.userUpdateStatus(state: DataState<Unit>) {
+        state { copy(userUpdateStatus = state) }
+
+        if (state.isContent) {
+            finish()
         }
     }
 
@@ -36,10 +49,7 @@ internal class FillAccountReducer : Reducer<State, Event, Action, Command>() {
     }
 
     private fun MessageBuilder<State, Action, Command>.stateValid() {
-        commands(Command.UpdateAccount(state.toUserUpdateModel()))
-
-        val avatar = state.avatar ?: return
-        commands(Command.UploadAvatar(avatar))
+        commands(Command.UpdateUser(state.toUserUpdateFullModel()))
     }
 
     private fun State.stateInvalid(failedReasons: List<FillAccountFailedReason>): State {
@@ -64,8 +74,8 @@ internal class FillAccountReducer : Reducer<State, Event, Action, Command>() {
         return state
     }
 
-    private fun State.toUserUpdateModel(): UserUpdateModel {
-        return UserUpdateModel(
+    private fun State.toUserUpdateFullModel(): UserUpdateFullModel {
+        val userUpdateModel = UserUpdateModel(
             displayName = nameFieldState.text,
             phoneNumber = "",
             address = AddressModel(
@@ -76,6 +86,10 @@ internal class FillAccountReducer : Reducer<State, Event, Action, Command>() {
                 metroStation = ""
             )
         )
+
+        val avatarModel = AvatarModel(filePath = avatar?.toString())
+
+        return UserUpdateFullModel(userUpdateModel, avatarModel)
     }
 
     private fun MessageBuilder<State, Action, Command>.handleUiEvent(event: UiEvent) {

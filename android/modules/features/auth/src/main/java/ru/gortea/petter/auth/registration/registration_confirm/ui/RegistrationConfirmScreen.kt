@@ -50,7 +50,8 @@ internal fun RegistrationConfirmScreen(
     userId: String,
     username: String,
     pwd: String,
-    router: Router<AuthorizationNavTarget>
+    router: Router<AuthorizationNavTarget>,
+    finish: () -> Unit
 ) {
     val component: AuthorizationComponent = getComponent()
     val store: RegistrationConfirmStore by storeHolder("RegistrationConfirm") {
@@ -60,7 +61,8 @@ internal fun RegistrationConfirmScreen(
             userId = userId,
             username = username,
             password = pwd,
-            router = router
+            router = router,
+            finish = finish
         )
     }
 

@@ -8,5 +8,8 @@ sealed interface PetterRootTarget : NavTarget {
     object Authorization : PetterRootTarget
 
     @Parcelize
+    object UserEdit : PetterRootTarget
+
+    @Parcelize
     object Content : PetterRootTarget
 }
