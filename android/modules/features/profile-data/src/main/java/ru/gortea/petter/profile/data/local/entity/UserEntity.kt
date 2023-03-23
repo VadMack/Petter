@@ -13,7 +13,7 @@ class UserEntity(
     val country: String,
     val city: String,
     val street: String,
-    val houseNumber: String,
+    val houseNumber: Int,
     val metroStation: String,
     val avatarPath: String
 )

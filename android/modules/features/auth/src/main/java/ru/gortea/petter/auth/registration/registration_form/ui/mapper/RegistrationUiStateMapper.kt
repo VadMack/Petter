@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.registration.registration_form.ui.mapper
 
 import ru.gortea.petter.arch.UiStateMapper
-import ru.gortea.petter.auth.common.toTextFieldState
+import ru.gortea.petter.arch.android.util.toTextFieldState
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
 import ru.gortea.petter.data.model.DataState

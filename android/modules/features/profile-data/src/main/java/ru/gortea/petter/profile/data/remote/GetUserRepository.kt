@@ -9,7 +9,10 @@ class GetUserRepository(
     private val api: ProfileApi,
     userLocalRepository: UserLocalRepository
 ) : MapSourceRepository<UserModel, UserModel>(
-    source = { api.getUser() },
+    source = {
+        val id = userLocalRepository.getCurrentUser()?.id ?: ""
+        api.getUserById(id)
+    },
     mapper = { user ->
         userLocalRepository.updateCurrentUser(user)
         user

@@ -7,6 +7,6 @@ data class AddressModel(
     val country: String,
     val city: String,
     val street: String,
-    val houseNumber: String,
+    val houseNumber: Int,
     val metroStation: String
 )

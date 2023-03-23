@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.gortea.petter.root.model.MenuItemModel
 import ru.gortea.petter.root.navigation.BottomNavigationRouter
+import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.ui_kit.separator.Separator
 
 @Composable
@@ -49,7 +50,7 @@ internal fun BottomNavigationContainer(
                     },
                     onClick = { router.restoreIfExists(item.target) },
                     selectedContentColor = MaterialTheme.colors.primary,
-                    unselectedContentColor = MaterialTheme.colors.surface
+                    unselectedContentColor = Base600
                 )
             }
         }

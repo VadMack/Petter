@@ -1,6 +1,6 @@
 package ru.gortea.petter.auth.authorization.presentation
 
-import ru.gortea.petter.auth.common.FieldState
+import ru.gortea.petter.arch.android.util.FieldState
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.profile.data.remote.model.UserModel
 

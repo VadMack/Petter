@@ -1,9 +1,9 @@
 package ru.gortea.petter.auth.registration.registration_confirm.presentation
 
 import ru.gortea.petter.arch.Reducer
+import ru.gortea.petter.arch.android.util.FieldState
+import ru.gortea.petter.arch.android.util.invalid
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.common.FieldState
-import ru.gortea.petter.auth.common.invalid
 import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
@@ -82,7 +82,7 @@ internal class RegistrationConfirmReducer(
             is UiEvent.Confirm -> commands(Command.Validate(state.codeState.text))
             is UiEvent.ResendCode -> resendCode()
             is UiEvent.CodeChanged -> state {
-                copy(codeState = FieldState(text = event.text.trim(), isValid = true))
+                copy(codeState = FieldState(text = event.text.trim()))
             }
             is UiEvent.Back -> router.pop()
         }

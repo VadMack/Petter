@@ -13,7 +13,6 @@ private val DarkColorPalette = darkColors(
     secondary = Secondary700,
     background = Background,
     onBackground = Base900,
-    surface = Base600,
     error = Error
 )
 
@@ -24,7 +23,6 @@ private val LightColorPalette = lightColors(
     secondary = Secondary700,
     background = Background,
     onBackground = Base900,
-    surface = Base600,
     error = Error
 )
 

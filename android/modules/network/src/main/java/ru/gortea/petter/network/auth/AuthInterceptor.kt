@@ -16,8 +16,6 @@ internal class AuthInterceptor(
             .addHeader(HEADER_KEY, "Bearer $token")
             .build()
 
-        println("xxx: $request")
-
         val response = chain.proceed(request)
         response.headers[HEADER_KEY]?.let(::token::set)
         return response

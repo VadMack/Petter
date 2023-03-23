@@ -10,10 +10,10 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.auth.navigation.AuthorizationRootNode
-import ru.gortea.petter.auth.navigation.nodes.registration.FillAccountNode
 import ru.gortea.petter.main.di.MainActivityComponent
 import ru.gortea.petter.navigation.parent.BackStackParentNode
 import ru.gortea.petter.navigation.target.PetterRootTarget
+import ru.gortea.petter.profile.edit.navigation.ProfileEditNode
 import ru.gortea.petter.root.navigation.node.ContentRootParentNode
 
 class PetterRootNode(
@@ -29,7 +29,7 @@ class PetterRootNode(
         return when (navTarget) {
             is PetterRootTarget.Authorization -> AuthorizationRootNode(buildContext)
             is PetterRootTarget.Content -> ContentRootParentNode(buildContext)
-            is PetterRootTarget.UserEdit -> FillAccountNode(buildContext)
+            is PetterRootTarget.UserEdit -> ProfileEditNode(buildContext, isProfileCreate = true)
         }
     }
 
@@ -52,10 +52,9 @@ class PetterRootNode(
     }
 
     override fun onChildFinished(child: Node) {
-        println("xxx: finished $child")
         when (child) {
             is AuthorizationRootNode -> router.updateRoot(PetterRootTarget.Content)
-            is FillAccountNode -> router.updateRoot(PetterRootTarget.Content)
+            is ProfileEditNode -> router.updateRoot(PetterRootTarget.Content)
         }
     }
 }

@@ -1,8 +1,8 @@
 package ru.gortea.petter.auth.registration.registration_form.presentation.validation.validators
 
-import ru.gortea.petter.auth.common.isNotBlank
+import ru.gortea.petter.arch.android.util.isNotBlank
+import ru.gortea.petter.arch.android.util.validation.Validator
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState
-import ru.gortea.petter.auth.validation.Validator
 
 internal class PasswordValidator : Validator<RegistrationState> {
 

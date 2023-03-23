@@ -40,7 +40,7 @@ class UserLocalRepository(
             country = address?.country ?: "",
             city = address?.city ?: "",
             street = address?.street ?: "",
-            houseNumber = address?.houseNumber ?: "",
+            houseNumber = address?.houseNumber ?: -1,
             metroStation = address?.metroStation ?: "",
             avatarPath = avatarPath ?: ""
         )

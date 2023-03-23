@@ -38,10 +38,7 @@ fun EditAvatar(
         contentAlignment = Alignment.TopCenter,
         modifier = modifier
             .size(width = avatarSize, height = avatarSize + 12.dp)
-            .clickable {
-                onClick()
-                //launcher.launch(PickVisualMediaRequest(ImageOnly))
-            }
+            .clickable { onClick() }
     ) {
         Avatar(
             image = image ?: placeholder,

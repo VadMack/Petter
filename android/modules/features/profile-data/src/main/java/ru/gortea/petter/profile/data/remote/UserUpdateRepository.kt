@@ -33,7 +33,7 @@ class UserUpdateRepository(
                     return@async
                 }
 
-                val file = contentFileConverter.fileFromContent(model.avatarModel.filePath)
+                val file = contentFileConverter.fileFromContent(model.avatarModel.filePath) ?: return@async
 
                 val requestFile = RequestBody.create(
                     MediaType.parse("image/png"),
@@ -51,7 +51,8 @@ class UserUpdateRepository(
         }
 
         listOf(userUpdate, avatarUpdate).awaitAll()
-        api.getUser()
+        val id = userLocalRepository.getCurrentUser()?.id ?: ""
+        api.getUserById(id)
     },
     mapper = { user ->
         userLocalRepository.updateCurrentUser(user)

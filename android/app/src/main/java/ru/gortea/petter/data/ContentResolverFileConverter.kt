@@ -13,8 +13,9 @@ class ContentResolverFileConverter(
     private val context: Context
 ) : ContentFileConverter {
 
-    override fun fileFromContent(path: String): File {
+    override fun fileFromContent(path: String): File? {
         val uri = Uri.parse(path)
+        if (uri.scheme != "content") return null
 
         return fileFromContentUri(uri)
     }
