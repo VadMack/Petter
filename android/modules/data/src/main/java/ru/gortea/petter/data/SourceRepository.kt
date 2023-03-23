@@ -20,7 +20,7 @@ open class SourceRepository<T>(
 ) : Repository<T> {
 
     private val store = RepositoryStore(source)
-    private val dataFlow = MutableSharedFlow<DataState<T>>(extraBufferCapacity = 1)
+    private val dataFlow = MutableSharedFlow<DataState<T>>(extraBufferCapacity = 3)
 
     init {
         store.attach(coroutineScope)
@@ -37,7 +37,7 @@ open class SourceRepository<T>(
         store.dispatch(RepositoryEvent.User.Invalidate(args))
     }
 
-    override suspend fun get(): Flow<DataState<T>> {
+    override fun get(): Flow<DataState<T>> {
         return dataFlow.onCompletion { coroutineScope.cancel() }
     }
 }

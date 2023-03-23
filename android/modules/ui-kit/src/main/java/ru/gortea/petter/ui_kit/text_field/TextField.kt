@@ -118,7 +118,7 @@ fun TextField(
 private fun Placeholder(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body3.copy(color = MaterialTheme.colors.surface)
+        style = MaterialTheme.typography.body3.copy(color = Base600)
     )
 }
 

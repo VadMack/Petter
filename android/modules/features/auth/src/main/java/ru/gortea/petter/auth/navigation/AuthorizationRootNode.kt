@@ -6,7 +6,6 @@ import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.navigation.nodes.authorization.AuthorizationNode
-import ru.gortea.petter.auth.navigation.nodes.registration.FillAccountNode
 import ru.gortea.petter.auth.navigation.nodes.registration.RegistrationConfirmNode
 import ru.gortea.petter.auth.navigation.nodes.registration.RegistrationNode
 import ru.gortea.petter.navigation.PetterRouter
@@ -23,14 +22,14 @@ class AuthorizationRootNode(
     private val router = PetterRouter(backStack, coroutineScope)
 
     override fun resolve(navTarget: Target, buildContext: BuildContext): Node {
-        return when(navTarget) {
+        return when (navTarget) {
             is Target.Authorization -> AuthorizationNode(buildContext, router)
             is Target.Registration -> resolve(navTarget, buildContext)
         }
     }
 
     private fun resolve(navTarget: Target.Registration, buildContext: BuildContext): Node {
-        return when(navTarget) {
+        return when (navTarget) {
             is Target.Registration.RegistrationForm -> RegistrationNode(buildContext, router)
             is Target.Registration.RegistrationConfirm -> RegistrationConfirmNode(
                 buildContext = buildContext,
@@ -40,7 +39,6 @@ class AuthorizationRootNode(
                 pwd = navTarget.pwd,
                 router = router
             )
-            is Target.Registration.FillAccount -> FillAccountNode(buildContext)
         }
     }
 
@@ -50,8 +48,6 @@ class AuthorizationRootNode(
     }
 
     override fun onChildFinished(child: Node) {
-        if (child is AuthorizationNode) {
-            finish()
-        }
+        finish()
     }
 }

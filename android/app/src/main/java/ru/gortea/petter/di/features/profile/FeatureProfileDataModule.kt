@@ -1,12 +1,15 @@
 package ru.gortea.petter.di.features.profile
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import ru.gortea.petter.data.ContentResolverFileConverter
 import ru.gortea.petter.network.createApi
-import ru.gortea.petter.profile.data.remote.ProfileUpdateAvatarRepository
-import ru.gortea.petter.profile.data.remote.ProfileUpdateRepository
+import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.remote.UserUpdateRepository
 import ru.gortea.petter.profile.data.remote.api.ProfileApi
+import ru.gortea.petter.profile.data.util.ContentFileConverter
 
 @Module
 class FeatureProfileDataModule {
@@ -17,12 +20,16 @@ class FeatureProfileDataModule {
     }
 
     @Provides
-    fun provideProfileUpdateRepository(api: ProfileApi): ProfileUpdateRepository {
-        return ProfileUpdateRepository(api)
+    fun provideContentFIleConverter(context: Context): ContentFileConverter {
+        return ContentResolverFileConverter(context)
     }
 
     @Provides
-    fun provideProfileUpdateAvatarRepository(api: ProfileApi): ProfileUpdateAvatarRepository {
-        return ProfileUpdateAvatarRepository(api)
+    fun provideUserUpdateRepository(
+        api: ProfileApi,
+        userLocalRepository: UserLocalRepository,
+        contentFileConverter: ContentFileConverter
+    ): UserUpdateRepository {
+        return UserUpdateRepository(api, userLocalRepository, contentFileConverter)
     }
 }

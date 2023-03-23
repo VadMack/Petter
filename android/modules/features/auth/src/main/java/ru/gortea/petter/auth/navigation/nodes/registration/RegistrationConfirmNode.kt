@@ -24,7 +24,8 @@ internal class RegistrationConfirmNode(
             userId = userId,
             username = username,
             pwd = pwd,
-            router = router
+            router = router,
+            finish = ::finish
         )
     }
 }

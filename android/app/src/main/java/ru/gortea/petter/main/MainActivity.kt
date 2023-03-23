@@ -11,13 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import coil.compose.LocalImageLoader
 import com.bumble.appyx.core.integration.NodeHost
 import com.bumble.appyx.core.integrationpoint.NodeActivity
+import ru.gortea.petter.arch.android.activity.getComponent
 import ru.gortea.petter.arch.android.compose.LocalApplicationContext
+import ru.gortea.petter.main.di.MainActivityComponent
 import ru.gortea.petter.navigation.PetterRootNode
 import ru.gortea.petter.theme.PetterAppTheme
 
 class MainActivity : NodeActivity() {
+
+    private val imageLoader by lazy {
+        getComponent<MainActivityComponent>().imageLoader
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +34,10 @@ class MainActivity : NodeActivity() {
 
     @Composable
     private fun Content() {
-        CompositionLocalProvider(LocalApplicationContext provides applicationContext) {
+        CompositionLocalProvider(
+            LocalApplicationContext provides applicationContext,
+            LocalImageLoader provides imageLoader
+        ) {
             PetterAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

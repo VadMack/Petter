@@ -18,8 +18,5 @@ sealed class AuthorizationNavTarget : NavTarget {
             val username: String,
             val pwd: String
         ) : Registration()
-
-        @Parcelize
-        object FillAccount : Registration()
     }
 }

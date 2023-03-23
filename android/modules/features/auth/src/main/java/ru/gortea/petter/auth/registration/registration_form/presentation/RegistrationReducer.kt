@@ -1,11 +1,11 @@
 package ru.gortea.petter.auth.registration.registration_form.presentation
 
 import ru.gortea.petter.arch.Reducer
+import ru.gortea.petter.arch.android.util.FieldState
+import ru.gortea.petter.arch.android.util.invalid
+import ru.gortea.petter.arch.android.util.text
+import ru.gortea.petter.arch.android.util.valid
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.common.FieldState
-import ru.gortea.petter.auth.common.invalid
-import ru.gortea.petter.auth.common.text
-import ru.gortea.petter.auth.common.valid
 import ru.gortea.petter.auth.data.model.RegistrationModel
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration

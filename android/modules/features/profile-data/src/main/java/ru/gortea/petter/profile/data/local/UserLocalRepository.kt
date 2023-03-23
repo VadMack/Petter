@@ -1,6 +1,7 @@
 package ru.gortea.petter.profile.data.local
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import ru.gortea.petter.profile.data.local.entity.UserEntity
 import ru.gortea.petter.profile.data.remote.model.AddressModel
@@ -22,6 +23,13 @@ class UserLocalRepository(
         userDao.get()?.toModel()
     }
 
+    fun isEmpty() = flow {
+        val isEmpty = withContext(Dispatchers.IO) {
+            userDao.get()?.displayName.isNullOrEmpty()
+        }
+        emit(isEmpty)
+    }
+
     private fun UserModel.toEntity(): UserEntity {
         return UserEntity(
             id = id,
@@ -32,7 +40,7 @@ class UserLocalRepository(
             country = address?.country ?: "",
             city = address?.city ?: "",
             street = address?.street ?: "",
-            houseNumber = address?.houseNumber ?: "",
+            houseNumber = address?.houseNumber ?: -1,
             metroStation = address?.metroStation ?: "",
             avatarPath = avatarPath ?: ""
         )
