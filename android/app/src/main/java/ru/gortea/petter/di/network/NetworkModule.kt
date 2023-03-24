@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import ru.gortea.petter.auth.controller.LogoutController
 import ru.gortea.petter.data.PetterImageLoaderFactory
 import ru.gortea.petter.di.token.qualifier.JwtToken
 import ru.gortea.petter.network.PetterNetwork
@@ -27,7 +28,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
-        return PetterNetwork.create(client)
+    fun provideRetrofit(client: OkHttpClient, logoutController: LogoutController): Retrofit {
+        return PetterNetwork.create(client, logoutController)
     }
 }

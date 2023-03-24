@@ -6,6 +6,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import ru.gortea.petter.auth.controller.LogoutController
 import ru.gortea.petter.network.auth.AuthInterceptor
 import ru.gortea.petter.network.errors.ErrorHandlingCallAdapterFactory
 import ru.gortea.petter.token.storage.TokenRepository
@@ -14,13 +15,13 @@ object PetterNetwork {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun create(client: OkHttpClient): Retrofit {
+    fun create(client: OkHttpClient, logoutController: LogoutController): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
             .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
-            .addCallAdapterFactory(ErrorHandlingCallAdapterFactory())
+            .addCallAdapterFactory(ErrorHandlingCallAdapterFactory(logoutController))
             .build()
     }
 

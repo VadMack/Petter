@@ -3,11 +3,14 @@ package ru.gortea.petter.network.errors
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
+import ru.gortea.petter.auth.controller.LogoutController
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 
-internal class ErrorHandlingCallAdapterFactory : CallAdapter.Factory() {
+internal class ErrorHandlingCallAdapterFactory(
+    private val logoutController: LogoutController
+) : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
@@ -19,15 +22,16 @@ internal class ErrorHandlingCallAdapterFactory : CallAdapter.Factory() {
         }
 
         val delegate = retrofit.nextCallAdapter(this, returnType, annotations)
-        return ErrorHandlingCallAdapter(delegate as CallAdapter<Any, Call<Any>>)
+        return ErrorHandlingCallAdapter(logoutController, delegate as CallAdapter<Any, Call<Any>>)
     }
 
     private class ErrorHandlingCallAdapter<R>(
+        private val logoutController: LogoutController,
         private val delegateAdapter: CallAdapter<R, Call<R>>
     ) : CallAdapter<R, Call<R>> by delegateAdapter {
 
         override fun adapt(call: Call<R>): Call<R> {
-            return delegateAdapter.adapt(ErrorHandlingCall(call))
+            return delegateAdapter.adapt(ErrorHandlingCall(logoutController, call))
         }
     }
 }

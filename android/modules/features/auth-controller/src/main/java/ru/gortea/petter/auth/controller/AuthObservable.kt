@@ -1,7 +1,7 @@
 package ru.gortea.petter.auth.controller
 
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface AuthObservable {
-    fun isAuthorized(): StateFlow<Boolean>
+    fun isAuthorized(): Flow<Boolean>
 }

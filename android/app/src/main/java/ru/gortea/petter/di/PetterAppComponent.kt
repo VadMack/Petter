@@ -12,6 +12,7 @@ import ru.gortea.petter.di.network.NetworkModule
 import ru.gortea.petter.di.storage.StorageModule
 import ru.gortea.petter.di.token.TokenModule
 import ru.gortea.petter.main.di.MainActivityComponent
+import ru.gortea.petter.profile.di.ProfileComponent
 import ru.gortea.petter.profile.edit.di.ProfileEditComponent
 import ru.gortea.petter.splash.di.SplashComponent
 import javax.inject.Singleton
@@ -29,6 +30,7 @@ import javax.inject.Singleton
     ]
 )
 interface PetterAppComponent : AuthorizationComponent,
+    ProfileComponent,
     ProfileEditComponent,
     SplashComponent,
     MainActivityComponent {

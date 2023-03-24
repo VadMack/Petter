@@ -15,17 +15,23 @@ class UserLocalRepository(
     }
 
     suspend fun deleteCurrentUser() = withContext(Dispatchers.IO) {
-        val user = userDao.get() ?: return@withContext
-        userDao.delete(user)
+        try {
+            val user = userDao.get()
+            userDao.delete(user)
+        } catch (_: Throwable) { }
     }
 
-    suspend fun getCurrentUser(): UserModel? = withContext(Dispatchers.IO) {
-        userDao.get()?.toModel()
+    suspend fun getCurrentUser(): UserModel = withContext(Dispatchers.IO) {
+        userDao.get().toModel()
     }
 
     fun isEmpty() = flow {
         val isEmpty = withContext(Dispatchers.IO) {
-            userDao.get()?.displayName.isNullOrEmpty()
+            try {
+                userDao.get().displayName.isEmpty()
+            } catch (_: Throwable) {
+                true
+            }
         }
         emit(isEmpty)
     }
@@ -42,7 +48,7 @@ class UserLocalRepository(
             street = address?.street ?: "",
             houseNumber = address?.houseNumber ?: -1,
             metroStation = address?.metroStation ?: "",
-            avatarPath = avatarPath ?: ""
+            avatarPath = avatarPathShort ?: ""
         )
     }
 
@@ -60,7 +66,7 @@ class UserLocalRepository(
                 houseNumber = houseNumber,
                 metroStation = metroStation,
             ),
-            avatarPath = avatarPath
+            avatarPathShort = avatarPath
         )
     }
 }

@@ -41,8 +41,9 @@ fun EditAvatar(
             .clickable { onClick() }
     ) {
         Avatar(
-            image = image ?: placeholder,
+            image = image,
             shape = shape,
+            placeholder = placeholder,
             size = avatarSize,
             modifier = Modifier.align(Alignment.TopCenter)
         )

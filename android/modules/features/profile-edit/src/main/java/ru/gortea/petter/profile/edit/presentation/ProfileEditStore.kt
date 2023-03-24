@@ -9,10 +9,12 @@ import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditUpdateUserAc
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditValidateActor
 import ru.gortea.petter.profile.edit.presentation.validation.ProfileEditValidatorComposite
 
-internal typealias ProfileEditStore = MviStore<ProfileEditState, ProfileEditEvent, ProfileEditAction>
+internal typealias ProfileEditStore = MviStore<ProfileEditState, ProfileEditEvent, Nothing>
 
 internal fun createProfileEditStore(
     component: ProfileEditComponent,
+    showModalImageChooser: () -> Unit,
+    showImagePicker: () -> Unit,
     finish: () -> Unit
 ): ProfileEditStore {
     val userUpdateRepo = component.userUpdateRepository
@@ -20,7 +22,7 @@ internal fun createProfileEditStore(
 
     return TeaStore(
         ProfileEditState(),
-        ProfileEditReducer(finish),
+        ProfileEditReducer(showModalImageChooser, showImagePicker, finish),
         listOf(
             ProfileEditInitUpdateUserActor(userUpdateRepo),
             ProfileEditUpdateUserActor(userUpdateRepo),
