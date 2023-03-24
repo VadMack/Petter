@@ -1,8 +1,10 @@
 package ru.gortea.petter.auth
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import ru.gortea.petter.auth.controller.AuthObservable
 import ru.gortea.petter.auth.controller.LoginController
 import ru.gortea.petter.auth.controller.LogoutController
@@ -17,18 +19,24 @@ class AuthController(
 ) : AuthObservable, LoginController, LogoutController {
     private val authorizedFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    override suspend fun login(userModel: AuthorizedUserModel) {
-        refreshRepository.updateToken(userModel.refreshToken)
-        userRepository.updateCurrentUser(userModel.user)
-        authorizedFlow.emit(true)
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
+    override fun login(userModel: AuthorizedUserModel) {
+        coroutineScope.launch {
+            refreshRepository.updateToken(userModel.refreshToken)
+            userRepository.updateCurrentUser(userModel.user)
+            authorizedFlow.emit(true)
+        }
     }
 
-    override suspend fun logout() {
-        jwtRepository.removeToken()
-        refreshRepository.removeToken()
-        userRepository.deleteCurrentUser()
-        authorizedFlow.emit(false)
+    override fun logout() {
+        coroutineScope.launch {
+            authorizedFlow.emit(false)
+            jwtRepository.removeToken()
+            refreshRepository.removeToken()
+            userRepository.deleteCurrentUser()
+        }
     }
 
-    override fun isAuthorized(): StateFlow<Boolean> = authorizedFlow.asStateFlow()
+    override fun isAuthorized(): Flow<Boolean> = authorizedFlow
 }

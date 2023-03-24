@@ -1,6 +1,5 @@
 package ru.gortea.petter.profile.edit.ui
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
@@ -37,7 +36,6 @@ import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.profile.edit.R
 import ru.gortea.petter.profile.edit.di.ProfileEditComponent
-import ru.gortea.petter.profile.edit.presentation.ProfileEditAction
 import ru.gortea.petter.profile.edit.presentation.ProfileEditStore
 import ru.gortea.petter.profile.edit.presentation.ProfileEditUiEvent
 import ru.gortea.petter.profile.edit.presentation.createProfileEditStore
@@ -54,56 +52,55 @@ import ru.gortea.petter.ui_kit.text_field.TextFieldState
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileEditScreen(isProfileCreate: Boolean, finish: () -> Unit) {
-    val component: ProfileEditComponent = getComponent()
-    val store: ProfileEditStore by storeHolder(
-        "ProfileEditScreen"
-    ) { createProfileEditStore(component, finish) }
-
+    var launcherStore: ProfileEditStore? = null
     val coroutineScope = rememberCoroutineScope()
     val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val launcher = rememberLauncherForActivityResult(PickVisualMedia()) { avatar ->
-        avatar?.let { store.dispatch(ProfileEditUiEvent.AvatarChanged(it)) }
+        avatar?.let { launcherStore?.dispatch(ProfileEditUiEvent.AvatarChanged(it)) }
     }
 
-    store.collect(
-        stateMapper = ProfileEditUiStateMapper(),
-        stateRender = { state ->
-            ProfileEditScreen(
-                isProfileCreate = isProfileCreate,
-                modalState = modalState,
-                state = state,
-                backClicked = { finish() },
-                nameChanged = { store.dispatch(ProfileEditUiEvent.NameChanged(it)) },
-                countryChanged = { store.dispatch(ProfileEditUiEvent.CountryChanged(it)) },
-                cityChanged = { store.dispatch(ProfileEditUiEvent.CityChanged(it)) },
-                streetChanged = { store.dispatch(ProfileEditUiEvent.StreetChanged(it)) },
-                houseChanged = { store.dispatch(ProfileEditUiEvent.HouseChanged(it)) },
-                avatarClicked = { store.dispatch(ProfileEditUiEvent.AvatarClicked) },
-                editAvatarClicked = { store.dispatch(ProfileEditUiEvent.AvatarEditClicked) },
-                deleteAvatarClicked = {
-                    store.dispatch(ProfileEditUiEvent.AvatarDeleteClicked)
-                    coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Hidden) }
-                },
-                saveClicked = { store.dispatch(ProfileEditUiEvent.UpdateAccount) }
-            )
-        },
-        actionHandler = { action ->
-            coroutineScope.launch {
-                when (action) {
-                    ProfileEditAction.ShowImageChooser -> {
-                        modalState.animateTo(ModalBottomSheetValue.Expanded)
-                    }
-                    ProfileEditAction.ShowImagePicker -> {
-                        launcher.launch(PickVisualMediaRequest(ImageOnly))
-                    }
-                }
-            }
-        }
-    )
+    val component: ProfileEditComponent = getComponent()
+    val store: ProfileEditStore by storeHolder {
+        createProfileEditStore(
+            component = component,
+            showModalImageChooser = {
+                coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Expanded) }
+            },
+            showImagePicker = {
+                launcher.launch(PickVisualMediaRequest(ImageOnly))
+            },
+            finish = finish
+        )
+    }
+
+    launcherStore = store
+
+    store.collect(ProfileEditUiStateMapper()) { state ->
+        ProfileEditScreen(
+            isProfileCreate = isProfileCreate,
+            modalState = modalState,
+            state = state,
+            backClicked = { finish() },
+            nameChanged = { store.dispatch(ProfileEditUiEvent.NameChanged(it)) },
+            countryChanged = { store.dispatch(ProfileEditUiEvent.CountryChanged(it)) },
+            cityChanged = { store.dispatch(ProfileEditUiEvent.CityChanged(it)) },
+            streetChanged = { store.dispatch(ProfileEditUiEvent.StreetChanged(it)) },
+            houseChanged = { store.dispatch(ProfileEditUiEvent.HouseChanged(it)) },
+            avatarClicked = { store.dispatch(ProfileEditUiEvent.AvatarClicked) },
+            editAvatarClicked = {
+                store.dispatch(ProfileEditUiEvent.AvatarEditClicked)
+                coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Hidden) }
+            },
+            deleteAvatarClicked = {
+                store.dispatch(ProfileEditUiEvent.AvatarDeleteClicked)
+                coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Hidden) }
+            },
+            saveClicked = { store.dispatch(ProfileEditUiEvent.UpdateAccount) }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)

@@ -9,4 +9,27 @@ data class AddressModel(
     val street: String,
     val houseNumber: Int,
     val metroStation: String
-)
+) {
+
+    override fun toString(): String {
+        var string = buildString {
+            country.appendIfNotEmpty(this)
+            city.appendIfNotEmpty(this)
+            street.appendIfNotEmpty(this)
+            metroStation.appendIfNotEmpty(this)
+        }
+
+        if (string.isNotEmpty()) {
+            string = string.run { removeRange(lastIndex - 1, length) }
+        }
+
+        return string
+    }
+
+    private fun String.appendIfNotEmpty(builder: StringBuilder) {
+        if (isNotEmpty()) {
+            builder.append(this)
+            builder.append(", ")
+        }
+    }
+}

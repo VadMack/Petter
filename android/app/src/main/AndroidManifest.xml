@@ -22,6 +22,7 @@
         <activity
             android:name=".main.MainActivity"
             android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Petter">
         </activity>
 

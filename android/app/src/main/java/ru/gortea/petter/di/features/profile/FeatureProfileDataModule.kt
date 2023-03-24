@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import ru.gortea.petter.data.ContentResolverFileConverter
 import ru.gortea.petter.network.createApi
 import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.remote.GetUserRepository
 import ru.gortea.petter.profile.data.remote.UserUpdateRepository
 import ru.gortea.petter.profile.data.remote.api.ProfileApi
 import ru.gortea.petter.profile.data.util.ContentFileConverter
@@ -31,5 +32,13 @@ class FeatureProfileDataModule {
         contentFileConverter: ContentFileConverter
     ): UserUpdateRepository {
         return UserUpdateRepository(api, userLocalRepository, contentFileConverter)
+    }
+
+    @Provides
+    fun provideGetUserRepository(
+        api: ProfileApi,
+        userLocalRepository: UserLocalRepository
+    ): GetUserRepository {
+        return GetUserRepository(api, userLocalRepository)
     }
 }

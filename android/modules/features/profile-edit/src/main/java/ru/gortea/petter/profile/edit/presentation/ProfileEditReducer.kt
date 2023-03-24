@@ -13,19 +13,19 @@ import ru.gortea.petter.profile.data.remote.model.AvatarModel
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateFullModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
-import ru.gortea.petter.profile.edit.BuildConfig
 import ru.gortea.petter.profile.edit.presentation.validation.reason.ProfileEditFailedReason
-import ru.gortea.petter.profile.edit.presentation.FillAccountCommand as Command
-import ru.gortea.petter.profile.edit.presentation.ProfileEditAction as Action
+import ru.gortea.petter.profile.edit.presentation.ProfileEditCommand as Command
 import ru.gortea.petter.profile.edit.presentation.ProfileEditEvent as Event
 import ru.gortea.petter.profile.edit.presentation.ProfileEditState as State
 import ru.gortea.petter.profile.edit.presentation.ProfileEditUiEvent as UiEvent
 
 internal class ProfileEditReducer(
+    private val showModalImageChooser: () -> Unit,
+    private val showImagePicker: () -> Unit,
     private val finish: () -> Unit
-) : Reducer<State, Event, Action, Command>() {
+) : Reducer<State, Event, Nothing, Command>() {
 
-    override fun MessageBuilder<State, Action, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
         when (event) {
             is Event.UserUpdateStatus -> userUpdateStatus(event.state)
             is Event.Validated -> validated(event.failedReasons)
@@ -36,21 +36,21 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Action, Command>.localUser(user: UserModel) {
+    private fun MessageBuilder<State, Nothing, Command>.localUser(user: UserModel) {
         state {
-            val fullAvatarPath = user.avatarPath?.let { BuildConfig.BaseUrl + "api/files/" + it }
             copy(
-                avatar = fullAvatarPath?.let(Uri::parse),
+                avatar = user.avatarPath?.let(Uri::parse),
                 nameFieldState = user.displayName?.let(::FieldState) ?: nameFieldState,
                 countryFieldState = user.address?.country?.let(::FieldState) ?: countryFieldState,
                 cityFieldState = user.address?.city?.let(::FieldState) ?: cityFieldState,
                 streetFieldState = user.address?.street?.let(::FieldState) ?: streetFieldState,
-                houseFieldState = user.address?.houseNumber?.toString()?.let(::FieldState) ?: houseFieldState
+                houseFieldState = user.address?.houseNumber?.toString()?.let(::FieldState)
+                    ?: houseFieldState
             )
         }
     }
 
-    private fun MessageBuilder<State, Action, Command>.userUpdateStatus(state: DataState<Unit>) {
+    private fun MessageBuilder<State, Nothing, Command>.userUpdateStatus(state: DataState<Unit>) {
         state { copy(userUpdateStatus = state) }
 
         if (state.isContent) {
@@ -58,7 +58,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Action, Command>.validated(
+    private fun MessageBuilder<State, Nothing, Command>.validated(
         failedReasons: List<ProfileEditFailedReason>
     ) {
         if (failedReasons.isEmpty()) {
@@ -68,7 +68,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Action, Command>.stateValid() {
+    private fun MessageBuilder<State, Nothing, Command>.stateValid() {
         commands(Command.UpdateUser(state.toUserUpdateFullModel()))
     }
 
@@ -112,11 +112,11 @@ internal class ProfileEditReducer(
         return UserUpdateFullModel(userUpdateModel, avatarModel)
     }
 
-    private fun MessageBuilder<State, Action, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             UiEvent.AvatarClicked -> avatarClicked()
             UiEvent.AvatarDeleteClicked -> state { copy(avatar = null) }
-            UiEvent.AvatarEditClicked -> actions(Action.ShowImagePicker)
+            UiEvent.AvatarEditClicked -> showImagePicker()
             is UiEvent.AvatarChanged -> state { copy(avatar = event.uri) }
             is UiEvent.CityChanged -> state {
                 copy(cityFieldState = cityFieldState.text(event.text))
@@ -137,11 +137,11 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Action, Command>.avatarClicked() {
+    private fun MessageBuilder<State, Nothing, Command>.avatarClicked() {
         if (state.avatar == null) {
-            actions(Action.ShowImagePicker)
+            showImagePicker()
         } else {
-            actions(Action.ShowImageChooser)
+            showModalImageChooser()
         }
     }
 }

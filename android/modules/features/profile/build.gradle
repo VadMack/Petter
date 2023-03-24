@@ -1,0 +1,18 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+}
+
+dependencies {
+    implementation project(":modules:features:profile-data")
+    implementation project(":modules:features:profile-edit")
+    implementation project(":modules:features:auth-controller")
+
+    implementation project(":modules:arch-android")
+    implementation project(":modules:navigation")
+    implementation project(":modules:ui-kit")
+
+    implementation Libs.coil
+    implementation Libs.coroutines
+}

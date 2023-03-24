@@ -3,8 +3,10 @@ package ru.gortea.petter.network.errors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.gortea.petter.auth.controller.LogoutController
 
 internal class ErrorHandlingCall<T>(
+    private val logoutController: LogoutController,
     private val call: Call<T>
 ) : Call<T> by call {
 
@@ -24,6 +26,10 @@ internal class ErrorHandlingCall<T>(
                     INTERNAL_ERROR -> PetterNetworkError.InternalError()
                     USER_ALREADY_EXISTS -> PetterNetworkError.UserAlreadyExists()
                     NOT_FOUND -> PetterNetworkError.NotFound()
+                    ACCESS_DENIED -> {
+                        logoutController.logout()
+                        PetterNetworkError.AccessDenied()
+                    }
                     else -> PetterNetworkError.UnknownError()
                 }
 
@@ -36,12 +42,13 @@ internal class ErrorHandlingCall<T>(
         }
     }
 
-    override fun clone() = ErrorHandlingCall(call.clone())
+    override fun clone() = ErrorHandlingCall(logoutController, call.clone())
 
     private companion object {
         private const val INTERNAL_ERROR = 500
         private const val USER_ALREADY_EXISTS = 400
         private const val NOT_FOUND = 404
+        private const val ACCESS_DENIED = 403
     }
 }
 

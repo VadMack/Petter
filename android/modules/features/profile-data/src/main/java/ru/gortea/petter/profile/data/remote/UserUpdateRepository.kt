@@ -51,7 +51,7 @@ class UserUpdateRepository(
         }
 
         listOf(userUpdate, avatarUpdate).awaitAll()
-        val id = userLocalRepository.getCurrentUser()?.id ?: ""
+        val id = userLocalRepository.getCurrentUser().id
         api.getUserById(id)
     },
     mapper = { user ->

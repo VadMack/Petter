@@ -41,12 +41,14 @@ class PetterRootNode(
         val authObservable = remember { component.authObservable }
         val userLocalRepository = remember { component.userLocalRepository }
 
-        val isAuthorized by authObservable.isAuthorized().collectAsState()
-        val isEmpty by userLocalRepository.isEmpty().collectAsState(false)
+        val isAuthorized by authObservable.isAuthorized().collectAsState(false)
 
         when {
-            isAuthorized && isEmpty -> router.updateRoot(PetterRootTarget.UserEdit)
-            isAuthorized -> router.updateRoot(PetterRootTarget.Content)
+            isAuthorized -> {
+                val isEmpty by userLocalRepository.isEmpty().collectAsState(false)
+                if (isEmpty) router.updateRoot(PetterRootTarget.UserEdit)
+                else router.updateRoot(PetterRootTarget.Content)
+            }
             else -> router.updateRoot(PetterRootTarget.Authorization)
         }
     }

@@ -29,3 +29,14 @@ suspend fun <T, R> DataState<T>.mapContent(mapper: suspend (T) -> R): DataState<
         is DataState.Empty -> this
     }
 }
+
+fun <T, R> DataState<T>.mapContentSync(mapper: (T) -> R): DataState<R> {
+    return when (this) {
+        is DataState.Loading.WithContent -> DataState.Loading.WithContent(mapper(content))
+        is DataState.Content -> DataState.Content(mapper(content))
+        is DataState.Loading.WithError -> this
+        is DataState.Loading -> DataState.Loading()
+        is DataState.Fail -> this
+        is DataState.Empty -> this
+    }
+}

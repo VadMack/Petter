@@ -11,4 +11,5 @@ dependencies {
     api Libs.retrofit
 
     implementation project(":modules:token-storage")
+    implementation project(":modules:features:auth-controller")
 }
