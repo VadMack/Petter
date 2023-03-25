@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_create">Новая анкета</string>
+    <string name="title_edit">Редактирование анкеты</string>
+
+    <string name="name">Кличка</string>
+
+    <string name="gender">Пол</string>
+    <string name="gender_male">Мальчик</string>
+    <string name="gender_female">Девочка</string>
+
+    <string name="species">Категория</string>
+    <string name="species_dog">Собаки</string>
+    <string name="species_cat">Кошки</string>
+
+    <string name="breed">Порода</string>
+    <string name="birth_date">Дата рождения</string>
+    <string name="price">Цена (руб)</string>
+    <string name="achievements">Награды</string>
+    <string name="description">Описание</string>
+    <string name="weight">Вес (кг)</string>
+    <string name="height">Рост (см)</string>
+    <string name="vaccinations">Прививки</string>
+</resources>

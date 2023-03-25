@@ -76,7 +76,7 @@ fun TextField(
                         }
                     }
                 },
-            onValueChange = onValueChange,
+            onValueChange = { onValueChange(it.trim()) },
             enabled = enabled,
             readOnly = readOnly,
             textStyle = mergedTextStyle,

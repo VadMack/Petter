@@ -29,6 +29,7 @@ dependencies {
     implementation AndroidX.composeActivity
 
     implementation project(":modules:features:content-root")
+
     implementation project(":modules:features:auth")
     implementation project(":modules:features:auth-data")
     implementation project(":modules:features:auth-controller")
@@ -36,6 +37,9 @@ dependencies {
     implementation project(":modules:features:profile")
     implementation project(":modules:features:profile-edit")
     implementation project(":modules:features:profile-data")
+
+    implementation project(":modules:features:pet")
+    implementation project(":modules:features:pet-data")
 
     implementation project(":modules:arch-android")
     implementation project(":modules:navigation")

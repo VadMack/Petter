@@ -3,7 +3,7 @@ package ru.gortea.petter.data
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
-import ru.gortea.petter.profile.data.util.ContentFileConverter
+import ru.gortea.petter.data.util.ContentFileConverter
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
