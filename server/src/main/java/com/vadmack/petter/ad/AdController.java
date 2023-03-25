@@ -23,10 +23,9 @@ public class AdController implements SecuredRestController {
   private final AdService adService;
 
   @PostMapping
-  public ResponseEntity<?> create(@AuthenticationPrincipal User user,
+  public ResponseEntity<AdGetDto> create(@AuthenticationPrincipal User user,
                                   @RequestBody AdCreateDdo dto) {
-    adService.create(dto, user.getId());
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    return ResponseEntity.ok(adService.create(dto, user.getId()));
   }
 
   @GetMapping

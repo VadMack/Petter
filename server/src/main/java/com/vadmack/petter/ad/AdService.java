@@ -32,12 +32,13 @@ public class AdService {
   private final ModelMapper modelMapper;
 
   @Transactional
-  public void create(@NotNull AdCreateDdo dto, @NotNull String userId) {
+  public AdGetDto create(@NotNull AdCreateDdo dto, @NotNull String userId) {
     Ad ad = dtoToEntity(dto);
     ad.setOwnerId(userId);
     ad.setState(AdState.OPEN);
     Ad createdAd = adRepository.save(ad);
     userService.addAd(createdAd.getId(), userId);
+    return entityToDto(createdAd);
   }
 
   public @NotNull AdGetDto getDtoById(@NotNull String id) {
