@@ -1,6 +1,7 @@
 package com.vadmack.petter.ad.dto;
 
 import com.vadmack.petter.ad.AdState;
+import com.vadmack.petter.ad.CompetitionStatus;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
 import com.vadmack.petter.app.model.ModelUpdateDto;
@@ -13,14 +14,14 @@ import java.util.Set;
 @Data
 public class AdUpdateDto implements ModelUpdateDto {
   private String name;
-  private String price;
+  private Integer price;
   private Species species;
   private String breed;
   private Gender gender;
   private LocalDate birthDate;
   private Short height;
   private Short weight;
-  private Map<String, String> achievements;
+  private Map<String, CompetitionStatus> achievements;
   private Set<String> vaccinations;
   private String description;
   private AdState state;

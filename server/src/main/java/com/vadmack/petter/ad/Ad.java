@@ -16,14 +16,14 @@ import java.util.Set;
 @Document("ads")
 public class Ad extends MongoModel {
   private String name;
-  private String price;
+  private Integer price;
   private Species species;
   private String breed;
   private Gender gender;
   private LocalDate birthDate;
   private Short height;
   private Short weight;
-  private Map<String, String> achievements = new HashMap<>();
+  private Map<String, CompetitionStatus> achievements = new HashMap<>();
   private Set<String> vaccinations = new HashSet<>();
   private String description;
   private Set<String> imagePaths = new HashSet<>();

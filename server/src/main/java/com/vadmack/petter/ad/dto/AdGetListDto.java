@@ -16,7 +16,7 @@ public class AdGetListDto {
   private String ownerId;
   private String name;
   private Species species;
-  private String price;
+  private Integer price;
   private String breed;
   private Gender gender;
   private LocalDate birthDate;
