@@ -1,4 +1,4 @@
-package ru.gortea.petter.pet.ui.state
+package ru.gortea.petter.pet.ui.state.showing
 
 import android.net.Uri
 import ru.gortea.petter.pet.presentation.state.PetField

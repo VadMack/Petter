@@ -14,21 +14,21 @@ import ru.gortea.petter.pet.data.model.PetFullModel
 interface PetApi {
 
     @GET("api/ads/{id}")
-    fun getPetById(@Path("id") id: String): PetFullModel
+    suspend fun getPetById(@Path("id") id: String): PetFullModel
 
     @Multipart
     @POST("api/ads/{id}/images")
     suspend fun uploadAvatar(@Path("id") id: String, @Part image: MultipartBody.Part)
 
     @PUT("api/ads/{id}")
-    fun updatePet(@Path("id") id: String, @Body model: PetFullModel)
+    suspend fun updatePet(@Path("id") id: String, @Body model: PetFullModel)
 
     @POST("api/ads")
-    fun createPet(@Body model: PetFullModel): PetFullModel
+    suspend fun createPet(@Body model: PetFullModel): PetFullModel
 
     @DELETE("api/ads/{id}")
-    fun deletePet(@Path("id") id: String)
+    suspend fun deletePet(@Path("id") id: String)
 
     @DELETE("api/files/users/{folder}/{file}")
-    fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
+    suspend fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
 }

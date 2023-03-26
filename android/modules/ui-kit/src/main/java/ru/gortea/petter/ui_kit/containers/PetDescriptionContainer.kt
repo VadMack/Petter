@@ -16,20 +16,22 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PetDescriptionContainer(
     title: String,
+    isValid: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val color = if (isValid) MaterialTheme.colors.primary else MaterialTheme.colors.error
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(8.dp))
+            .border(1.dp, color, RoundedCornerShape(8.dp))
             .padding(horizontal = 16.dp)
             .padding(top = 8.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.h4.copy(color = MaterialTheme.colors.primary),
+            style = MaterialTheme.typography.h4.copy(color = color),
             modifier = Modifier.fillMaxWidth()
         )
 

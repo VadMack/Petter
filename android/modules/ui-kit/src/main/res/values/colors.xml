@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="calendar_accent">#11A9C0</color>
+    <color name="calendar_onPrimary">#000000</color>
+    <color name="calendar_surface">#FFFFFF</color>
+</resources>

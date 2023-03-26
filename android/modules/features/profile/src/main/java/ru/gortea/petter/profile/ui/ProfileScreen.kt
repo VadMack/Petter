@@ -1,25 +1,15 @@
 package ru.gortea.petter.profile.ui
 
 import androidx.annotation.VisibleForTesting
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +33,8 @@ import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.button2
 import ru.gortea.petter.ui_kit.avatar.Avatar
+import ru.gortea.petter.ui_kit.dropdown.Dropdown
+import ru.gortea.petter.ui_kit.dropdown.DropdownItem
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
@@ -157,38 +149,26 @@ private fun ProfileMenu(
     editClicked: () -> Unit,
     logoutClicked: () -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-        ClickableIcon(
-            icon = UiKitR.drawable.ic_popup,
-            size = 32.dp,
-            onClick = { showMenu = !showMenu }
+    Dropdown(
+        target = { showMenu ->
+            ClickableIcon(
+                icon = UiKitR.drawable.ic_popup,
+                size = 32.dp,
+                onClick = { showMenu.value = !showMenu.value }
+            )
+        },
+        items = listOf(
+            DropdownItem(
+                text = stringResource(R.string.profile_edit),
+                onSelected = editClicked
+            ),
+            DropdownItem(
+                text = stringResource(R.string.profile_logout),
+                onSelected = logoutClicked,
+                style = { MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.error) }
+            )
         )
-
-        DropdownMenu(
-            modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-            expanded = showMenu,
-            onDismissRequest = { showMenu = false }
-        ) {
-            DropdownMenuItem(
-                onClick = editClicked
-            ) {
-                Text(
-                    text = stringResource(R.string.profile_edit),
-                    style = MaterialTheme.typography.body2
-                )
-            }
-
-            DropdownMenuItem(
-                onClick = logoutClicked
-            ) {
-                Text(
-                    text = stringResource(R.string.profile_logout),
-                    style = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.error)
-                )
-            }
-        }
-    }
+    )
 }
 
 @Preview(showBackground = true)

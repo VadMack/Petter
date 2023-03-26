@@ -3,6 +3,7 @@ package ru.gortea.petter.pet.presentation.state
 import androidx.annotation.StringRes
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
+import ru.gortea.petter.ui_kit.text_field.isNumber
 import java.time.LocalDate
 
 internal sealed class PetField(
@@ -16,13 +17,19 @@ internal sealed class PetField(
         override val titleRes: Int,
         override val fieldName: PetFieldName,
         val textField: TextFieldState,
-        override val valid: Boolean = true
+        override val valid: Boolean = true,
+        val emptyCorrect: Boolean = false
     ) : PetField(titleRes, fieldName, valid) {
 
         override fun validated(): PetField {
-            val invalid = textField.text.isEmpty()
+            val isNumInvalid = textField.isNumber() && textField.text.toIntOrNull() == null
+            val invalid = if (emptyCorrect) {
+                textField.text.isNotEmpty() && isNumInvalid
+            } else {
+                textField.text.isEmpty() || isNumInvalid
+            }
 
-            return copy(textField = textField.copy(isIncorrect = invalid), valid = invalid)
+            return copy(textField = textField.copy(isIncorrect = invalid), valid = !invalid)
         }
     }
 
@@ -54,7 +61,7 @@ internal sealed class PetField(
                 it.key.copy(isIncorrect = invalid)
             }
 
-            return copy(map = validated, valid = isValid)
+            return copy(map = validated, valid = isValid && map.isNotEmpty())
         }
     }
 
@@ -74,7 +81,7 @@ internal sealed class PetField(
                 it.copy(isIncorrect = invalid)
             }
 
-            return copy(list = validated, valid = isValid)
+            return copy(list = validated, valid = isValid && list.isNotEmpty())
         }
     }
 

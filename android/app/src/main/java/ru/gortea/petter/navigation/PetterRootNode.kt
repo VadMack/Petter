@@ -13,8 +13,8 @@ import ru.gortea.petter.auth.navigation.AuthorizationRootNode
 import ru.gortea.petter.main.di.MainActivityComponent
 import ru.gortea.petter.navigation.parent.BackStackParentNode
 import ru.gortea.petter.navigation.target.PetterRootTarget
+import ru.gortea.petter.pet.navigation.nodes.PetEditNode
 import ru.gortea.petter.profile.edit.navigation.ProfileEditNode
-import ru.gortea.petter.root.navigation.node.ContentRootParentNode
 
 class PetterRootNode(
     buildContext: BuildContext
@@ -28,7 +28,7 @@ class PetterRootNode(
     override fun resolve(navTarget: PetterRootTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
             is PetterRootTarget.Authorization -> AuthorizationRootNode(buildContext)
-            is PetterRootTarget.Content -> ContentRootParentNode(buildContext)
+            is PetterRootTarget.Content -> PetEditNode(buildContext, petId = null)
             is PetterRootTarget.UserEdit -> ProfileEditNode(buildContext, isProfileCreate = true)
         }
     }

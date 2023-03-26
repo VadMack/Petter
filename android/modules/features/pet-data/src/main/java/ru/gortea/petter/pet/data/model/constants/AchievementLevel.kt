@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AchievementLevel {
-    CHAMPION, WINNER, PARTICIPANT
+    WINNER, MEDALIST, PARTICIPANT
 }

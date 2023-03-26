@@ -64,6 +64,7 @@ internal class PetReducer(
             is UiEvent.LoadPet -> commands(Command.LoadPet(event.id))
             is UiEvent.UpdatePet -> updatePet()
             is UiEvent.EditField -> editField(event.field)
+            is UiEvent.AddFields -> addFields(event.fields)
             is UiEvent.GoBack -> goBack()
             is UiEvent.EditPet -> editPet()
             is UiEvent.HidePet -> hidePet()
@@ -73,6 +74,18 @@ internal class PetReducer(
             is UiEvent.AvatarClicked -> avatarClicked()
             is UiEvent.AvatarDeleteClicked -> avatarDeleteClicked()
             is UiEvent.AvatarEditClicked -> showImagePicker()
+        }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.addFields(fields: List<PetField>) {
+        state {
+            copy(
+                petLoadingStatus = petLoadingStatus.mapContentSync {
+                    val newList = it.fields.toMutableList()
+                    newList.addAll(fields)
+                    it.copy(fields = newList)
+                }
+            )
         }
     }
 

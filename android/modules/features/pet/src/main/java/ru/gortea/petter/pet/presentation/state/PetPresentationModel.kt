@@ -7,12 +7,53 @@ import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
+import ru.gortea.petter.ui_kit.text_field.number
+import ru.gortea.petter.ui_kit.text_field.textRes
 
 internal data class PetPresentationModel(
     val photo: Uri?,
     val fields: List<PetField>,
     val model: PetFullModel?
 )
+
+private val allFields = listOf(
+    PetField.SimplePetField(R.string.name, PetFieldName.NAME, TextFieldState()),
+    PetField.EnumPetField(
+        R.string.gender,
+        PetFieldName.GENDER,
+        PetEnum(Gender.values().map(Gender::toPair))
+    ),
+    PetField.EnumPetField(
+        R.string.species,
+        PetFieldName.SPECIES,
+        PetEnum(Species.values().map(Species::toPair))
+    ),
+    PetField.SimplePetField(R.string.breed, PetFieldName.BREED, TextFieldState()),
+    PetField.DatePetField(R.string.birth_date, PetFieldName.BIRTH_DATE, null),
+    PetField.SimplePetField(R.string.price, PetFieldName.PRICE, TextFieldState().number()),
+    PetField.AchievementPetField(R.string.achievements, emptyMap()),
+    PetField.SimplePetField(R.string.description, PetFieldName.DESCRIPTION, TextFieldState()),
+    PetField.SimplePetField(
+        R.string.weight,
+        PetFieldName.WEIGHT,
+        TextFieldState().number()
+    ),
+    PetField.SimplePetField(
+        R.string.height,
+        PetFieldName.HEIGHT,
+        TextFieldState().number()
+    ),
+    PetField.ListPetField(
+        R.string.vaccinations,
+        PetFieldName.VACCINATIONS,
+        emptyList()
+    )
+)
+
+internal fun getUnusedFields(usedFields: List<PetField>): List<PetField> {
+    val usedNames = usedFields.map { it.fieldName }
+    return allFields.filter { it.fieldName !in usedNames }
+}
 
 internal fun PetPresentationModel.editMode(editMode: Boolean): PetPresentationModel {
     return model?.toPetPresentationModel(editMode)
@@ -39,7 +80,7 @@ internal fun getDefaultPresentationModel(): PetPresentationModel {
         ),
         PetField.SimplePetField(R.string.breed, PetFieldName.BREED, TextFieldState()),
         PetField.DatePetField(R.string.birth_date, PetFieldName.BIRTH_DATE, null),
-        PetField.SimplePetField(R.string.price, PetFieldName.PRICE, TextFieldState())
+        PetField.SimplePetField(R.string.price, PetFieldName.PRICE, TextFieldState().number())
     )
 
     return PetPresentationModel(null, fields, null)
@@ -68,11 +109,22 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         )
     }
 
+    val priceField = if (price <= 0) {
+        TextFieldState("")
+    } else {
+        TextFieldState(price.toString())
+    }.number()
+
     fields.addAll(
         listOf(
             PetField.SimplePetField(R.string.breed, PetFieldName.BREED, TextFieldState(breed)),
             PetField.DatePetField(R.string.birth_date, PetFieldName.BIRTH_DATE, birthDate),
-            PetField.SimplePetField(R.string.price, PetFieldName.PRICE, TextFieldState(price))
+            PetField.SimplePetField(
+                R.string.price,
+                PetFieldName.PRICE,
+                if (!editMode && price < 0) priceField.textRes(R.string.zero_price) else priceField,
+                emptyCorrect = true
+            )
         )
     )
 
@@ -80,7 +132,8 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         fields.add(
             PetField.AchievementPetField(
                 R.string.achievements,
-                achievements.mapKeys { TextFieldState(it.key) })
+                achievements.mapKeys { TextFieldState(it.key) }
+            )
         )
     }
 
@@ -99,7 +152,7 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.SimplePetField(
                 R.string.weight,
                 PetFieldName.WEIGHT,
-                TextFieldState(weight.toString())
+                TextFieldState(weight.toString()).number()
             )
         )
     }
@@ -109,7 +162,7 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.SimplePetField(
                 R.string.height,
                 PetFieldName.HEIGHT,
-                TextFieldState(height.toString())
+                TextFieldState(height.toString()).number()
             )
         )
     }
@@ -146,7 +199,7 @@ internal fun PetPresentationModel.toPetFullModel(): PetFullModel {
         id = "",
         ownerId = "",
         name = "",
-        price = "",
+        price = -1,
         species = Species.CAT,
         breed = "",
         gender = Gender.MALE, state = PetCardState.OPEN
@@ -169,7 +222,7 @@ private fun PetFullModel.updateField(field: PetField.SimplePetField): PetFullMod
     val text = field.textField.text
     return when (field.fieldName) {
         PetFieldName.NAME -> copy(name = text)
-        PetFieldName.PRICE -> copy(price = text)
+        PetFieldName.PRICE -> copy(price = text.toIntOrNull() ?: -1)
         PetFieldName.BREED -> copy(breed = text)
         PetFieldName.HEIGHT -> copy(height = text.toInt())
         PetFieldName.WEIGHT -> copy(weight = text.toInt())

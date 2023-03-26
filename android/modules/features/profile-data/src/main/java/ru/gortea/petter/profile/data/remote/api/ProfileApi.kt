@@ -25,5 +25,5 @@ interface ProfileApi {
     suspend fun getUserById(@Path("id") id: String): UserModel
 
     @DELETE("api/files/users/{folder}/{file}")
-    fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
+    suspend fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
 }

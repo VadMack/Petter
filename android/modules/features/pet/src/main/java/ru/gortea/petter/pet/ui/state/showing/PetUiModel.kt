@@ -1,4 +1,4 @@
-package ru.gortea.petter.pet.ui.state
+package ru.gortea.petter.pet.ui.state.showing
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color

@@ -18,7 +18,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,9 +30,10 @@ import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.presentation.state.PetEnum
 import ru.gortea.petter.pet.presentation.state.PetField
 import ru.gortea.petter.pet.presentation.state.PetFieldName
-import ru.gortea.petter.pet.ui.state.PetFullUiModel
-import ru.gortea.petter.pet.ui.state.PetUiModel
-import ru.gortea.petter.pet.ui.state.PetUiState
+import ru.gortea.petter.pet.ui.mapper.iconTint
+import ru.gortea.petter.pet.ui.state.showing.PetFullUiModel
+import ru.gortea.petter.pet.ui.state.showing.PetUiModel
+import ru.gortea.petter.pet.ui.state.showing.PetUiState
 import ru.gortea.petter.theme.Male
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.ui_kit.avatar.Avatar
@@ -63,7 +63,7 @@ private fun PetScreen(
         topBar = {
             Toolbar(
                 startIcon = { BackIcon(backClicked) },
-                text = state.titleRes?.let { stringResource(it) } ?: "",
+                text = "",
                 endIcon = if (state.canDelete) {
                     {
                         ClickableIcon(
@@ -254,15 +254,10 @@ private fun PetScreenAchievementsField(field: PetField.AchievementPetField) {
                             style = MaterialTheme.typography.body2,
                             modifier = Modifier.weight(1f)
                         )
-                        val iconTint = when (level) {
-                            AchievementLevel.CHAMPION -> Color(0xFFF8EC91)
-                            AchievementLevel.WINNER -> Color(0xFFC0C0C0)
-                            AchievementLevel.PARTICIPANT -> Color.Transparent
-                        }
 
                         Icon(
                             icon = UiKitR.drawable.ic_award,
-                            tint = iconTint,
+                            tint = level.iconTint(),
                             size = 20.dp,
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -277,7 +272,6 @@ private fun PetScreenAchievementsField(field: PetField.AchievementPetField) {
 private fun PetScreen_Preview() {
     PetterAppTheme {
         val state = PetUiState(
-            titleRes = null,
             canDelete = true,
             canEdit = true,
             modelStatus = DataState.Content(
@@ -321,7 +315,7 @@ private fun PetScreen_Preview() {
                         PetField.AchievementPetField(
                             titleRes = R.string.achievements,
                             map = mapOf(
-                                TextFieldState("Мистер сапожек") to AchievementLevel.CHAMPION,
+                                TextFieldState("Мистер сапожек") to AchievementLevel.WINNER,
                                 TextFieldState("Азамат Мусагалиев") to AchievementLevel.PARTICIPANT
                             )
                         )

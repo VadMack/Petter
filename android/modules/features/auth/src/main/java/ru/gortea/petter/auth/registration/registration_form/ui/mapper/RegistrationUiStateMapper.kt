@@ -6,12 +6,13 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.Registr
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.ui_kit.button.ButtonState
+import ru.gortea.petter.ui_kit.text_field.email
 
 internal class RegistrationUiStateMapper : UiStateMapper<RegistrationState, RegistrationUiState> {
 
     override fun map(state: RegistrationState): RegistrationUiState {
         return RegistrationUiState(
-            emailState = state.email.toTextFieldState(),
+            emailState = state.email.toTextFieldState().email(),
             usernameState = state.username.toTextFieldState(),
             passwordState = state.password.toTextFieldState(),
             passwordConfirmState = state.passwordConfirm.toTextFieldState(),

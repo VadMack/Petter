@@ -2,7 +2,6 @@ package ru.gortea.petter.ui_kit.button
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -37,7 +36,7 @@ fun PrimaryButton(
 
     Button(
         onClick = { onClick() },
-        modifier = modifier.height(38.dp),
+        modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,

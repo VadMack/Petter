@@ -38,6 +38,10 @@ internal fun createPetStore(
             PetDeleteActor(deleteRepo),
             PetGetInitActor(getRepo),
             PetGetActor(getRepo)
+        ),
+        listOf(
+            PetEvent.InitApi,
+            PetUiEvent.LoadPet(petId)
         )
     )
 }

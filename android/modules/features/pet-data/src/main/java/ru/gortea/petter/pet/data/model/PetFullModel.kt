@@ -14,7 +14,7 @@ data class PetFullModel(
     val id: String,
     val ownerId: String,
     val name: String,
-    val price: String,
+    val price: Int,
     val species: Species,
     val breed: String,
     val gender: Gender,
@@ -25,7 +25,8 @@ data class PetFullModel(
     val vaccinations: List<String>? = null,
     val description: String? = null,
     val imagePaths: List<String>? = null,
-    val state: PetCardState
+    val state: PetCardState,
+    val liked: Boolean = false
 ) : Arguments {
 
     val photoPath: String?
