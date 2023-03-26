@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
@@ -44,8 +43,9 @@ import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.button2
 import ru.gortea.petter.ui_kit.avatar.Avatar
+import ru.gortea.petter.ui_kit.icon.ClickableIcon
+import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
-import ru.gortea.petter.ui_kit.toolbar.ClickableIcon
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import ru.gortea.petter.ui_kit.R as UiKitR
@@ -110,20 +110,9 @@ private fun ProfileRoot(
     modifier: Modifier
 ) {
     when (state.userState) {
-        is DataState.Loading, DataState.Empty -> ProfileLoading(modifier)
+        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
         is DataState.Content -> ProfileContent(state = state.userState.content, modifier = modifier)
         is DataState.Fail -> Unit // TODO add error state
-    }
-}
-
-@Composable
-private fun ProfileLoading(
-    modifier: Modifier
-) {
-    Box(modifier = modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = modifier.align(Alignment.Center)
-        )
     }
 }
 
@@ -140,8 +129,8 @@ private fun ProfileContent(
             image = state.avatar?.let {
                 rememberAsyncImagePainter(
                     it,
-                    placeholder = painterResource(ru.gortea.petter.ui_kit.R.drawable.ic_person_placeholder),
-                    error = painterResource(ru.gortea.petter.ui_kit.R.drawable.ic_person_placeholder)
+                    placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
+                    error = painterResource(UiKitR.drawable.ic_person_placeholder)
                 )
             },
             modifier = Modifier.padding(bottom = 16.dp)

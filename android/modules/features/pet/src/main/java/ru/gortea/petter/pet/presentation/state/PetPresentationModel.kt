@@ -9,13 +9,14 @@ import ru.gortea.petter.pet.data.model.constants.Species
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
 
 internal data class PetPresentationModel(
-    val photoPath: Uri?,
+    val photo: Uri?,
     val fields: List<PetField>,
     val model: PetFullModel?
 )
 
 internal fun PetPresentationModel.editMode(editMode: Boolean): PetPresentationModel {
-    return model?.toPetPresentationModel(editMode) ?: if (editMode) getDefaultPresentationModel() else error("Cannot edit new pet")
+    return model?.toPetPresentationModel(editMode)
+        ?: if (editMode) getDefaultPresentationModel() else error("Cannot edit new pet")
 }
 
 internal fun PetPresentationModel.updateField(field: PetField): PetPresentationModel {
@@ -54,12 +55,14 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
                 PetField.EnumPetField(
                     R.string.gender,
                     PetFieldName.GENDER,
-                    PetEnum(Gender.values().map(Gender::toPair))
+                    PetEnum(Gender.values().map(Gender::toPair)),
+                    gender.name
                 ),
                 PetField.EnumPetField(
                     R.string.species,
                     PetFieldName.SPECIES,
-                    PetEnum(Species.values().map(Species::toPair))
+                    PetEnum(Species.values().map(Species::toPair)),
+                    species.name
                 )
             )
         )
@@ -76,7 +79,7 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
     achievements?.let { achievements ->
         fields.add(
             PetField.AchievementPetField(
-                R.string.weight,
+                R.string.achievements,
                 achievements.mapKeys { TextFieldState(it.key) })
         )
     }
@@ -188,7 +191,7 @@ private fun PetFullModel.updateField(field: PetField.DatePetField): PetFullModel
 }
 
 private fun PetFullModel.updateField(field: PetField.EnumPetField): PetFullModel {
-    val text = field.selected
+    val text = field.selectedKey
     return when (field.fieldName) {
         PetFieldName.SPECIES -> copy(species = Species.valueOf(text))
         PetFieldName.GENDER -> copy(gender = Gender.valueOf(text))

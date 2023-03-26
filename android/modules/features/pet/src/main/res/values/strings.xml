@@ -3,6 +3,9 @@
     <string name="title_create">Новая анкета</string>
     <string name="title_edit">Редактирование анкеты</string>
 
+    <string name="button_edit">Изменить</string>
+    <string name="button_chat">Написать</string>
+
     <string name="name">Кличка</string>
 
     <string name="gender">Пол</string>

@@ -3,6 +3,7 @@ package ru.gortea.petter.pet.data.model
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import ru.gortea.petter.data.model.Arguments
+import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
@@ -20,7 +21,7 @@ data class PetFullModel(
     @Contextual val birthDate: LocalDate? = null,
     val height: Int? = null,
     val weight: Int? = null,
-    val achievements: Map<String, String>? = null,
+    val achievements: Map<String, AchievementLevel>? = null,
     val vaccinations: List<String>? = null,
     val description: String? = null,
     val imagePaths: List<String>? = null,

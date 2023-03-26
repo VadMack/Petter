@@ -86,7 +86,7 @@ internal class PetReducer(
     private fun MessageBuilder<State, Nothing, Command>.avatarClicked() {
         val dataState = state.petLoadingStatus
         if (dataState is DataState.Content) {
-            if (dataState.content.photoPath == null) {
+            if (dataState.content.photo == null) {
                 showImagePicker()
             } else {
                 showModalImageChooser()
@@ -97,7 +97,7 @@ internal class PetReducer(
     private fun MessageBuilder<State, Nothing, Command>.avatarDeleteClicked() {
         state {
             copy(
-                petLoadingStatus = petLoadingStatus.mapContentSync { it.copy(photoPath = null) }
+                petLoadingStatus = petLoadingStatus.mapContentSync { it.copy(photo = null) }
             )
         }
     }
@@ -105,7 +105,7 @@ internal class PetReducer(
     private fun MessageBuilder<State, Nothing, Command>.avatarChanged(photo: Uri) {
         state {
             copy(
-                petLoadingStatus = petLoadingStatus.mapContentSync { it.copy(photoPath = photo) }
+                petLoadingStatus = petLoadingStatus.mapContentSync { it.copy(photo = photo) }
             )
         }
     }

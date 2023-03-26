@@ -21,7 +21,7 @@ internal class PetUpdateActor(
     override fun process(commands: Flow<PetCommand>): Flow<PetEvent> {
         return commands.filterIsInstance<PetCommand.UpdatePet>()
             .mapLatest {
-                val updateModel = PetUpdateModel(it.model.photoPath?.toString(), it.model.toPetFullModel())
+                val updateModel = PetUpdateModel(it.model.photo?.toString(), it.model.toPetFullModel())
                 if (it.model.model == null) {
                     createRepository.invalidate(updateModel)
                 } else {
