@@ -25,18 +25,20 @@ public class AdController implements SecuredRestController {
   @PostMapping
   public ResponseEntity<AdGetDto> create(@AuthenticationPrincipal User user,
                                   @RequestBody AdCreateDdo dto) {
-    return ResponseEntity.ok(adService.create(dto, user.getId()));
+    return ResponseEntity.ok(adService.create(dto, user));
   }
 
   @GetMapping
-  public ResponseEntity<List<AdGetListDto>> getByProperties(AdFilterDto filter,
+  public ResponseEntity<List<AdGetListDto>> getByProperties(@AuthenticationPrincipal User user,
+                                                            AdFilterDto filter,
                                                             Pageable pageable) {
-    return ResponseEntity.ok(adService.getDtoByProperties(filter, pageable));
+    return ResponseEntity.ok(adService.getDtoByProperties(filter, pageable, user.getFavoriteAdIds()));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<AdGetDto> getById(@PathVariable String id) {
-    return ResponseEntity.ok(adService.getDtoById(id));
+  public ResponseEntity<AdGetDto> getById(@AuthenticationPrincipal User user,
+                                          @PathVariable String id) {
+    return ResponseEntity.ok(adService.getDtoById(id, user.getFavoriteAdIds()));
   }
 
   @PreAuthorize("@adService.isOwner(#user, #id)")

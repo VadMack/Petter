@@ -43,7 +43,7 @@ public class UserController {
 
   @Secured
   @GetMapping("/favorites")
-  public ResponseEntity<List<AdGetListDto>> getFavoriteAdsByIdUserId(@AuthenticationPrincipal User user) {
+  public ResponseEntity<List<AdGetListDto>> getFavoriteAds(@AuthenticationPrincipal User user) {
     return ResponseEntity.ok(userService.getFavoriteAds(user));
   }
 

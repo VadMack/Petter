@@ -32,17 +32,17 @@ public class AdService {
   private final ModelMapper modelMapper;
 
   @Transactional
-  public AdGetDto create(@NotNull AdCreateDdo dto, @NotNull String userId) {
+  public AdGetDto create(@NotNull AdCreateDdo dto, @NotNull User user) {
     Ad ad = dtoToEntity(dto);
-    ad.setOwnerId(userId);
+    ad.setOwnerId(user.getId());
     ad.setState(AdState.OPEN);
     Ad createdAd = adRepository.save(ad);
-    userService.addAd(createdAd.getId(), userId);
-    return entityToDto(createdAd);
+    userService.addAd(createdAd.getId(), user.getId());
+    return entityToDto(createdAd, user.getFavoriteAdIds());
   }
 
-  public @NotNull AdGetDto getDtoById(@NotNull String id) {
-    return entityToDto(getById(id));
+  public @NotNull AdGetDto getDtoById(@NotNull String id, @NotNull Set<String> favoriteAdIds) {
+    return entityToDto(getById(id), favoriteAdIds);
   }
 
   public @NotNull Ad getById(@NotNull String id) {
@@ -54,12 +54,14 @@ public class AdService {
     return adRepository.findById(id);
   }
 
-  public @NotNull List<AdGetListDto> getDtoByIdIn(@NotNull Collection<String> ids) {
-    return entityListToDto(adRepository.findByIdIn(ids));
+  public @NotNull List<AdGetListDto> getDtoByIdIn(@NotNull Set<String> ids) {
+    return entityListToDto(adRepository.findByIdIn(ids), ids);
   }
 
-  public @NotNull List<AdGetListDto> getDtoByProperties(@NotNull AdFilterDto filter, Pageable pageable) {
-    return entityListToDto(adRepository.findByProperties(filter, pageable));
+  public @NotNull List<AdGetListDto> getDtoByProperties(@NotNull AdFilterDto filter,
+                                                        Pageable pageable,
+                                                        @NotNull Set<String> favoriteAdIds) {
+    return entityListToDto(adRepository.findByProperties(filter, pageable), favoriteAdIds);
   }
 
   public void save(Ad ad) {
@@ -109,12 +111,14 @@ public class AdService {
     return modelMapper.map(dto, Ad.class);
   }
 
-  private AdGetDto entityToDto(@NotNull Ad entity) {
-    return modelMapper.map(entity, AdGetDto.class);
+  private AdGetDto entityToDto(@NotNull Ad entity, @NotNull Set<String> favoriteAdIds) {
+    AdGetDto dto = modelMapper.map(entity, AdGetDto.class);
+    dto.setLiked(favoriteAdIds.contains(dto.getId()));
+    return dto;
   }
 
-  private List<AdGetListDto> entityListToDto(@NotNull Collection<Ad> entities) {
-    return AdMapper.entityListToDto(entities);
+  private List<AdGetListDto> entityListToDto(@NotNull Collection<Ad> entities, @NotNull Set<String> favoriteAdIds) {
+    return AdMapper.entityListToDto(entities, favoriteAdIds);
   }
 
   public boolean isOwner(@NotNull User user, @NotNull String adId) {

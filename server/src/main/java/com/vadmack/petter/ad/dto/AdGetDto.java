@@ -28,4 +28,5 @@ public class AdGetDto {
   private String description;
   private Set<String> imagePaths = new HashSet<>();
   private AdState state;
+  private boolean liked = false;
 }

@@ -23,5 +23,6 @@ public class AdGetListDto {
   private boolean hasAchievements;
   private Set<String> imagePaths;
   private AdState state;
+  private boolean liked;
 }
 
