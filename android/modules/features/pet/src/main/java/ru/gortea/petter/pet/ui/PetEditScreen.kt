@@ -39,10 +39,12 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.di.PetComponent
+import ru.gortea.petter.pet.navigation.PetNavTarget
 import ru.gortea.petter.pet.presentation.PetStore
 import ru.gortea.petter.pet.presentation.PetUiEvent
 import ru.gortea.petter.pet.presentation.createPetStore
@@ -80,7 +82,8 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
 internal fun PetEditScreen(
-    id: String?
+    id: String?,
+    router: PetterRouter<PetNavTarget>
 ) {
     var launcherStore: PetStore? = null
     val launcher = rememberLauncherForActivityResult(PickVisualMedia()) { avatar ->
@@ -93,6 +96,7 @@ internal fun PetEditScreen(
         createPetStore(
             petId = id,
             component = component,
+            router = router,
             showModalImageChooser = { showModal = true },
             showImagePicker = { launcher.launch(PickVisualMediaRequest(ImageOnly)) }
         )

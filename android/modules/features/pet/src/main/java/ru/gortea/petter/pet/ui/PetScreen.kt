@@ -23,13 +23,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import ru.gortea.petter.arch.android.compose.collect
+import ru.gortea.petter.arch.android.compose.getComponent
+import ru.gortea.petter.arch.android.compose.storeHolder
+import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
+import ru.gortea.petter.pet.di.PetComponent
+import ru.gortea.petter.pet.navigation.PetNavTarget
+import ru.gortea.petter.pet.presentation.PetUiEvent
+import ru.gortea.petter.pet.presentation.createPetStore
 import ru.gortea.petter.pet.presentation.state.PetEnum
 import ru.gortea.petter.pet.presentation.state.PetField
 import ru.gortea.petter.pet.presentation.state.PetFieldName
+import ru.gortea.petter.pet.ui.mapper.PetUiStateMapper
 import ru.gortea.petter.pet.ui.mapper.iconTint
 import ru.gortea.petter.pet.ui.state.showing.PetFullUiModel
 import ru.gortea.petter.pet.ui.state.showing.PetUiModel
@@ -49,6 +59,31 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import ru.gortea.petter.ui_kit.R as UiKitR
+
+@Composable
+internal fun PetScreen(
+    id: String,
+    router: PetterRouter<PetNavTarget>,
+) {
+    val component = getComponent<PetComponent>()
+    val store by storeHolder(key = "Pet-$id") {
+        createPetStore(
+            petId = id,
+            component = component,
+            router = router
+        )
+    }
+
+    store.collect(PetUiStateMapper()) { state ->
+        PetScreen(
+            state = state,
+            backClicked = { store.dispatch(PetUiEvent.GoBack) },
+            deleteClicked = { store.dispatch(PetUiEvent.DeletePet) },
+            editClicked = { store.dispatch(PetUiEvent.EditPet) },
+            chatClicked = { store.dispatch(PetUiEvent.OpenChat) }
+        )
+    }
+}
 
 @VisibleForTesting
 @Composable

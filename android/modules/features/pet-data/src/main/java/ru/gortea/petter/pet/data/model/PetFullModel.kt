@@ -30,7 +30,7 @@ data class PetFullModel(
 ) : Arguments {
 
     val photoPath: String?
-        get() = imagePaths?.first()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = imagePaths?.first()?.let { avatar -> "http://10.0.2.2:8080/api/files/users/${avatar}" }
 
     val photoPathSegments: List<String>?
         get() = imagePaths?.first()?.split("/")

@@ -12,7 +12,6 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.navigation.parent.BackStackParentNode
 import ru.gortea.petter.profile.navigation.ProfileRootNode
 import ru.gortea.petter.root.BottomNavigationContainer
@@ -26,7 +25,7 @@ class ContentRootParentNode(
     buildContext = buildContext
 ) {
     private val showBottomBar = MutableStateFlow(true)
-    private val router = BottomNavigationRouter(PetterRouter(backStack, coroutineScope))
+    private val bottomRouter = BottomNavigationRouter(router)
 
     override fun resolve(navTarget: Target, buildContext: BuildContext): Node {
         return when (navTarget) {
@@ -51,7 +50,7 @@ class ContentRootParentNode(
                     )
                 )
             },
-            bottomBar = { if (showNavBar) BottomNavigationContainer(router) }
+            bottomBar = { if (showNavBar) BottomNavigationContainer(bottomRouter) }
         )
     }
 }

@@ -14,7 +14,7 @@ data class UserModel(
     @SerialName("avatarPath") val avatarPathShort: String?
 ) {
     val avatarPath: String?
-        get() = avatarPathShort?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = avatarPathShort?.let { avatar -> "http://10.0.2.2:8080/api/files/users/${avatar}" }
 
     val avatarPathSegments: List<String>?
         get() = avatarPathShort?.split("/")

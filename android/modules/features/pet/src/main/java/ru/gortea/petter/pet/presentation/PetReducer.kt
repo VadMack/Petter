@@ -5,7 +5,9 @@ import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.model.mapContentSync
+import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.data.model.constants.PetCardState
+import ru.gortea.petter.pet.navigation.PetNavTarget
 import ru.gortea.petter.pet.presentation.state.PetField
 import ru.gortea.petter.pet.presentation.state.editMode
 import ru.gortea.petter.pet.presentation.state.getDefaultPresentationModel
@@ -17,6 +19,7 @@ import ru.gortea.petter.pet.presentation.PetUiEvent as UiEvent
 import ru.gortea.petter.pet.presentation.state.PetState as State
 
 internal class PetReducer(
+    private val router: PetterRouter<PetNavTarget>,
     private val showModalImageChooser: () -> Unit,
     private val showImagePicker: () -> Unit
 ) : Reducer<State, Event, Nothing, Command>() {
@@ -57,6 +60,10 @@ internal class PetReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.updatePetStatus(event: Event.UpdatePetStatus) {
         state { copy(petUpdateStatus = event.state) }
+
+        if (event.state is DataState.Content) {
+            router.pop()
+        }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
@@ -66,6 +73,7 @@ internal class PetReducer(
             is UiEvent.EditField -> editField(event.field)
             is UiEvent.AddFields -> addFields(event.fields)
             is UiEvent.GoBack -> goBack()
+            is UiEvent.OpenChat -> Unit // todo open chat with owner
             is UiEvent.EditPet -> editPet()
             is UiEvent.HidePet -> hidePet()
             is UiEvent.ShowPet -> showPet()
@@ -148,7 +156,7 @@ internal class PetReducer(
     }
 
     private fun MessageBuilder<State, Nothing, Command>.goBack() {
-        // todo navigate back
+        router.pop()
 
         if (state.editMode && !state.isCreation) {
             state {
@@ -161,7 +169,11 @@ internal class PetReducer(
     }
 
     private fun MessageBuilder<State, Nothing, Command>.editPet() {
-        // todo navigate to edit
+        val status = state.petLoadingStatus
+
+        if (status is DataState.Content) {
+            router.navigateTo(PetNavTarget.EditPet(status.content.model?.id))
+        }
 
         state {
             copy(

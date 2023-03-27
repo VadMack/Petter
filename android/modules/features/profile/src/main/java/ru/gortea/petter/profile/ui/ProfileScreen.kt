@@ -1,6 +1,7 @@
 package ru.gortea.petter.profile.ui
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,12 +28,13 @@ import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.ProfileUiEvent
 import ru.gortea.petter.profile.presentation.createProfileStore
 import ru.gortea.petter.profile.ui.mapper.ProfileUiStateMapper
+import ru.gortea.petter.profile.ui.state.ProfileUiModel
 import ru.gortea.petter.profile.ui.state.ProfileUiState
-import ru.gortea.petter.profile.ui.state.ProfileUserModel
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.button2
 import ru.gortea.petter.ui_kit.avatar.Avatar
+import ru.gortea.petter.ui_kit.button.Fab
 import ru.gortea.petter.ui_kit.dropdown.Dropdown
 import ru.gortea.petter.ui_kit.dropdown.DropdownItem
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
@@ -59,7 +61,8 @@ internal fun ProfileScreen(
             state = state,
             backClicked = { store.dispatch(ProfileUiEvent.Back) },
             editClicked = { store.dispatch(ProfileUiEvent.EditProfile) },
-            logoutClicked = { store.dispatch(ProfileUiEvent.Logout) }
+            logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
+            addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) }
         )
     }
 }
@@ -71,6 +74,7 @@ private fun ProfileScreen(
     state: ProfileUiState,
     backClicked: () -> Unit,
     editClicked: () -> Unit,
+    addPetClicked: () -> Unit,
     logoutClicked: () -> Unit
 ) {
     Scaffold(
@@ -90,6 +94,7 @@ private fun ProfileScreen(
         content = { padding ->
             ProfileRoot(
                 state = state,
+                addPetClicked = addPetClicked,
                 modifier = Modifier.padding(padding)
             )
         }
@@ -99,46 +104,66 @@ private fun ProfileScreen(
 @Composable
 private fun ProfileRoot(
     state: ProfileUiState,
+    addPetClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (state.userState) {
         is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
-        is DataState.Content -> ProfileContent(state = state.userState.content, modifier = modifier)
+        is DataState.Content -> ProfileContent(
+            state = state.userState.content,
+            modifier = modifier,
+            addPetClicked = addPetClicked
+        )
         is DataState.Fail -> Unit // TODO add error state
     }
 }
 
 @Composable
 private fun ProfileContent(
-    state: ProfileUserModel,
+    state: ProfileUiModel,
+    addPetClicked: () -> Unit,
     modifier: Modifier
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Avatar(
-            image = state.avatar?.let {
-                rememberAsyncImagePainter(
-                    it,
-                    placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
-                    error = painterResource(UiKitR.drawable.ic_person_placeholder)
-                )
-            },
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Avatar(
+                image = state.avatar?.let {
+                    rememberAsyncImagePainter(
+                        it,
+                        placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
+                        error = painterResource(UiKitR.drawable.ic_person_placeholder)
+                    )
+                },
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
 
-        Text(
-            text = state.name,
-            style = MaterialTheme.typography.h3,
-            modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
-        )
-
-        state.address?.let { address ->
-            TextWithIcon(
-                text = address,
-                style = MaterialTheme.typography.button2.copy(color = Base600),
+            Text(
+                text = state.name,
+                style = MaterialTheme.typography.h3,
                 modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
+            )
+
+            state.address?.let { address ->
+                TextWithIcon(
+                    text = address,
+                    style = MaterialTheme.typography.button2.copy(color = Base600),
+                    modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
+                )
+            }
+        }
+
+        if (state.canAddPet) {
+            Fab(
+                text = stringResource(R.string.add),
+                leadingIcon = UiKitR.drawable.ic_plus,
+                onClick = addPetClicked,
+                modifier = Modifier.align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp)
             )
         }
     }
@@ -184,7 +209,8 @@ private fun ProfileScreen_Preview() {
             state = state,
             backClicked = {},
             editClicked = {},
-            logoutClicked = {}
+            logoutClicked = {},
+            addPetClicked = {}
         )
     }
 }
