@@ -46,9 +46,9 @@ class UserLocalRepository(
             country = address?.country ?: "",
             city = address?.city ?: "",
             street = address?.street ?: "",
-            houseNumber = address?.houseNumber ?: -1,
+            houseNumber = address?.houseNumber ?: "",
             metroStation = address?.metroStation ?: "",
-            avatarPath = avatarPathShort ?: ""
+            avatarPath = avatarPathShort
         )
     }
 

@@ -44,8 +44,7 @@ internal class ProfileEditReducer(
                 countryFieldState = user.address?.country?.let(::FieldState) ?: countryFieldState,
                 cityFieldState = user.address?.city?.let(::FieldState) ?: cityFieldState,
                 streetFieldState = user.address?.street?.let(::FieldState) ?: streetFieldState,
-                houseFieldState = user.address?.houseNumber?.toString()?.let(::FieldState)
-                    ?: houseFieldState
+                houseFieldState = user.address?.houseNumber?.let(::FieldState) ?: houseFieldState
             )
         }
     }
@@ -102,7 +101,7 @@ internal class ProfileEditReducer(
                 country = countryFieldState.text,
                 city = cityFieldState.text,
                 street = streetFieldState.text,
-                houseNumber = houseFieldState.text.toInt(),
+                houseNumber = houseFieldState.text,
                 metroStation = ""
             )
         )
