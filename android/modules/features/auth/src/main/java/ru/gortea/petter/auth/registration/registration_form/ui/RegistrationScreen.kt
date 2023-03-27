@@ -53,7 +53,7 @@ internal fun RegistrationScreen(
     router: Router<AuthorizationNavTarget>
 ) {
     val component: AuthorizationComponent = getComponent()
-    val store: RegistrationStore by storeHolder("Registration") {
+    val store: RegistrationStore by storeHolder {
         createRegistrationStore(component, router)
     }
 

@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import ru.gortea.petter.navigation.NavTarget
+import ru.gortea.petter.navigation.PetterRouter
 
 abstract class BackStackParentNode<T : NavTarget>(
     initialTarget: T,
@@ -18,7 +19,8 @@ abstract class BackStackParentNode<T : NavTarget>(
     )
 ) : ParentNode<T>(backStack, buildContext), Destroyable {
 
-    protected val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    protected val router = PetterRouter(backStack, coroutineScope)
 
     override fun destroy() {
         coroutineScope.cancel()

@@ -54,7 +54,7 @@ internal fun RegistrationConfirmScreen(
     finish: () -> Unit
 ) {
     val component: AuthorizationComponent = getComponent()
-    val store: RegistrationConfirmStore by storeHolder("RegistrationConfirm") {
+    val store: RegistrationConfirmStore by storeHolder {
         createRegistrationConfirmStore(
             component = component,
             email = email,
