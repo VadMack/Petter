@@ -52,6 +52,7 @@ class ProfileRootNode(
                 changeNavBarVisible(true)
                 router.pop()
             }
+            is PetRootNode -> changeNavBarVisible(true)
             is ProfileNode -> finish()
         }
     }
