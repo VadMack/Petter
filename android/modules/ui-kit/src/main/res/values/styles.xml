@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CalenderViewCustom" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorAccent">@color/calendar_accent</item>
+        <item name="colorOnPrimary">@color/calendar_onPrimary</item>
+        <item name="colorSurface">@color/calendar_surface</item>
+    </style>
+</resources>

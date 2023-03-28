@@ -5,22 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,14 +28,18 @@ import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.ProfileUiEvent
 import ru.gortea.petter.profile.presentation.createProfileStore
 import ru.gortea.petter.profile.ui.mapper.ProfileUiStateMapper
+import ru.gortea.petter.profile.ui.state.ProfileUiModel
 import ru.gortea.petter.profile.ui.state.ProfileUiState
-import ru.gortea.petter.profile.ui.state.ProfileUserModel
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.button2
 import ru.gortea.petter.ui_kit.avatar.Avatar
+import ru.gortea.petter.ui_kit.button.Fab
+import ru.gortea.petter.ui_kit.dropdown.Dropdown
+import ru.gortea.petter.ui_kit.dropdown.DropdownItem
+import ru.gortea.petter.ui_kit.icon.ClickableIcon
+import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
-import ru.gortea.petter.ui_kit.toolbar.ClickableIcon
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import ru.gortea.petter.ui_kit.R as UiKitR
@@ -67,7 +61,8 @@ internal fun ProfileScreen(
             state = state,
             backClicked = { store.dispatch(ProfileUiEvent.Back) },
             editClicked = { store.dispatch(ProfileUiEvent.EditProfile) },
-            logoutClicked = { store.dispatch(ProfileUiEvent.Logout) }
+            logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
+            addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) }
         )
     }
 }
@@ -79,6 +74,7 @@ private fun ProfileScreen(
     state: ProfileUiState,
     backClicked: () -> Unit,
     editClicked: () -> Unit,
+    addPetClicked: () -> Unit,
     logoutClicked: () -> Unit
 ) {
     Scaffold(
@@ -98,6 +94,7 @@ private fun ProfileScreen(
         content = { padding ->
             ProfileRoot(
                 state = state,
+                addPetClicked = addPetClicked,
                 modifier = Modifier.padding(padding)
             )
         }
@@ -107,57 +104,66 @@ private fun ProfileScreen(
 @Composable
 private fun ProfileRoot(
     state: ProfileUiState,
+    addPetClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (state.userState) {
-        is DataState.Loading, DataState.Empty -> ProfileLoading(modifier)
-        is DataState.Content -> ProfileContent(state = state.userState.content, modifier = modifier)
+        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
+        is DataState.Content -> ProfileContent(
+            state = state.userState.content,
+            modifier = modifier,
+            addPetClicked = addPetClicked
+        )
         is DataState.Fail -> Unit // TODO add error state
     }
 }
 
 @Composable
-private fun ProfileLoading(
-    modifier: Modifier
-) {
-    Box(modifier = modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
 private fun ProfileContent(
-    state: ProfileUserModel,
+    state: ProfileUiModel,
+    addPetClicked: () -> Unit,
     modifier: Modifier
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Avatar(
-            image = state.avatar?.let {
-                rememberAsyncImagePainter(
-                    it,
-                    placeholder = painterResource(ru.gortea.petter.ui_kit.R.drawable.ic_person_placeholder),
-                    error = painterResource(ru.gortea.petter.ui_kit.R.drawable.ic_person_placeholder)
-                )
-            },
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Avatar(
+                image = state.avatar?.let {
+                    rememberAsyncImagePainter(
+                        it,
+                        placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
+                        error = painterResource(UiKitR.drawable.ic_person_placeholder)
+                    )
+                },
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
 
-        Text(
-            text = state.name,
-            style = MaterialTheme.typography.h3,
-            modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
-        )
-
-        state.address?.let { address ->
-            TextWithIcon(
-                text = address,
-                style = MaterialTheme.typography.button2.copy(color = Base600),
+            Text(
+                text = state.name,
+                style = MaterialTheme.typography.h3,
                 modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
+            )
+
+            state.address?.let { address ->
+                TextWithIcon(
+                    text = address,
+                    style = MaterialTheme.typography.button2.copy(color = Base600),
+                    modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
+                )
+            }
+        }
+
+        if (state.canAddPet) {
+            Fab(
+                text = stringResource(R.string.add),
+                leadingIcon = UiKitR.drawable.ic_plus,
+                onClick = addPetClicked,
+                modifier = Modifier.align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp)
             )
         }
     }
@@ -168,38 +174,26 @@ private fun ProfileMenu(
     editClicked: () -> Unit,
     logoutClicked: () -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-        ClickableIcon(
-            icon = UiKitR.drawable.ic_popup,
-            size = 32.dp,
-            onClick = { showMenu = !showMenu }
+    Dropdown(
+        target = { showMenu ->
+            ClickableIcon(
+                icon = UiKitR.drawable.ic_popup,
+                size = 32.dp,
+                onClick = { showMenu.value = !showMenu.value }
+            )
+        },
+        items = listOf(
+            DropdownItem(
+                text = stringResource(R.string.profile_edit),
+                onSelected = editClicked
+            ),
+            DropdownItem(
+                text = stringResource(R.string.profile_logout),
+                onSelected = logoutClicked,
+                style = { MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.error) }
+            )
         )
-
-        DropdownMenu(
-            modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-            expanded = showMenu,
-            onDismissRequest = { showMenu = false }
-        ) {
-            DropdownMenuItem(
-                onClick = editClicked
-            ) {
-                Text(
-                    text = stringResource(R.string.profile_edit),
-                    style = MaterialTheme.typography.body2
-                )
-            }
-
-            DropdownMenuItem(
-                onClick = logoutClicked
-            ) {
-                Text(
-                    text = stringResource(R.string.profile_logout),
-                    style = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.error)
-                )
-            }
-        }
-    }
+    )
 }
 
 @Preview(showBackground = true)
@@ -215,7 +209,8 @@ private fun ProfileScreen_Preview() {
             state = state,
             backClicked = {},
             editClicked = {},
-            logoutClicked = {}
+            logoutClicked = {},
+            addPetClicked = {}
         )
     }
 }

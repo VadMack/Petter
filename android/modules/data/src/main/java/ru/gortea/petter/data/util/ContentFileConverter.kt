@@ -1,4 +1,4 @@
-package ru.gortea.petter.profile.data.util
+package ru.gortea.petter.data.util
 
 import java.io.File
 

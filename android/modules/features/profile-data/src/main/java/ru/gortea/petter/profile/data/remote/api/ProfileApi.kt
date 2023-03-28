@@ -2,6 +2,7 @@ package ru.gortea.petter.profile.data.remote.api
 
 import okhttp3.MultipartBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -22,4 +23,7 @@ interface ProfileApi {
 
     @GET("api/users/{id}")
     suspend fun getUserById(@Path("id") id: String): UserModel
+
+    @DELETE("api/files/users/{folder}/{file}")
+    suspend fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
 }

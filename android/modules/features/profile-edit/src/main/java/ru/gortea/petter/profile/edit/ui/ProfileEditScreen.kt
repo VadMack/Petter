@@ -15,13 +15,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.launch
 import ru.gortea.petter.arch.android.compose.collect
 import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
@@ -43,32 +41,28 @@ import ru.gortea.petter.profile.edit.ui.mapper.ProfileEditUiStateMapper
 import ru.gortea.petter.profile.edit.ui.state.ProfileEditUiState
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.ui_kit.avatar.EditAvatar
-import ru.gortea.petter.ui_kit.bottom_sheet.BottomSheetItem
 import ru.gortea.petter.ui_kit.button.ButtonState
 import ru.gortea.petter.ui_kit.button.PrimaryButton
-import ru.gortea.petter.ui_kit.separator.Separator
+import ru.gortea.petter.ui_kit.dialogs.bottom_sheet.BottomSheetDialog
+import ru.gortea.petter.ui_kit.dialogs.bottom_sheet.BottomSheetItem
 import ru.gortea.petter.ui_kit.text_field.TextField
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileEditScreen(isProfileCreate: Boolean, finish: () -> Unit) {
     var launcherStore: ProfileEditStore? = null
-    val coroutineScope = rememberCoroutineScope()
-    val modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val launcher = rememberLauncherForActivityResult(PickVisualMedia()) { avatar ->
         avatar?.let { launcherStore?.dispatch(ProfileEditUiEvent.AvatarChanged(it)) }
     }
+    var showModal by remember { mutableStateOf(false) }
 
     val component: ProfileEditComponent = getComponent()
     val store: ProfileEditStore by storeHolder {
         createProfileEditStore(
             component = component,
-            showModalImageChooser = {
-                coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Expanded) }
-            },
+            showModalImageChooser = { showModal = true },
             showImagePicker = {
                 launcher.launch(PickVisualMediaRequest(ImageOnly))
             },
@@ -81,7 +75,6 @@ fun ProfileEditScreen(isProfileCreate: Boolean, finish: () -> Unit) {
     store.collect(ProfileEditUiStateMapper()) { state ->
         ProfileEditScreen(
             isProfileCreate = isProfileCreate,
-            modalState = modalState,
             state = state,
             backClicked = { finish() },
             nameChanged = { store.dispatch(ProfileEditUiEvent.NameChanged(it)) },
@@ -90,82 +83,30 @@ fun ProfileEditScreen(isProfileCreate: Boolean, finish: () -> Unit) {
             streetChanged = { store.dispatch(ProfileEditUiEvent.StreetChanged(it)) },
             houseChanged = { store.dispatch(ProfileEditUiEvent.HouseChanged(it)) },
             avatarClicked = { store.dispatch(ProfileEditUiEvent.AvatarClicked) },
-            editAvatarClicked = {
-                store.dispatch(ProfileEditUiEvent.AvatarEditClicked)
-                coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Hidden) }
-            },
-            deleteAvatarClicked = {
-                store.dispatch(ProfileEditUiEvent.AvatarDeleteClicked)
-                coroutineScope.launch { modalState.animateTo(ModalBottomSheetValue.Hidden) }
-            },
             saveClicked = { store.dispatch(ProfileEditUiEvent.UpdateAccount) }
         )
+
+        if (showModal) {
+            BottomSheetDialog(
+                items = listOf(
+                    BottomSheetItem(
+                        text = stringResource(R.string.edit_avatar),
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.primary),
+                        onClick = { store.dispatch(ProfileEditUiEvent.AvatarEditClicked) }
+                    ),
+                    BottomSheetItem(
+                        text = stringResource(R.string.delete_avatar),
+                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.error),
+                        onClick = { store.dispatch(ProfileEditUiEvent.AvatarDeleteClicked) }
+                    )
+                ),
+                onDismiss = { showModal = false }
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @VisibleForTesting
-@Composable
-private fun ProfileEditScreen(
-    isProfileCreate: Boolean,
-    modalState: ModalBottomSheetState,
-    state: ProfileEditUiState,
-    backClicked: () -> Unit,
-    nameChanged: (String) -> Unit,
-    countryChanged: (String) -> Unit,
-    cityChanged: (String) -> Unit,
-    streetChanged: (String) -> Unit,
-    houseChanged: (String) -> Unit,
-    avatarClicked: () -> Unit,
-    editAvatarClicked: () -> Unit,
-    deleteAvatarClicked: () -> Unit,
-    saveClicked: () -> Unit
-) {
-    ModalBottomSheetLayout(
-        sheetState = modalState,
-        sheetContent = {
-            BottomSheetImageChooser(
-                editClicked = editAvatarClicked,
-                deleteClicked = deleteAvatarClicked
-            )
-        },
-        content = {
-            ProfileEditScreen(
-                isProfileCreate = isProfileCreate,
-                state = state,
-                backClicked = backClicked,
-                nameChanged = nameChanged,
-                countryChanged = countryChanged,
-                cityChanged = cityChanged,
-                streetChanged = streetChanged,
-                houseChanged = houseChanged,
-                avatarClicked = avatarClicked,
-                saveClicked = saveClicked
-            )
-        }
-    )
-}
-
-@Composable
-private fun BottomSheetImageChooser(
-    editClicked: () -> Unit,
-    deleteClicked: () -> Unit
-) {
-    BottomSheetItem(
-        text = stringResource(R.string.edit_avatar),
-        textColor = MaterialTheme.colors.primary,
-        onClick = editClicked
-    )
-
-    Separator()
-
-    BottomSheetItem(
-        text = stringResource(R.string.delete_avatar),
-        textColor = MaterialTheme.colors.error,
-        onClick = deleteClicked
-    )
-}
-
 @Composable
 private fun ProfileEditScreen(
     isProfileCreate: Boolean,
@@ -309,7 +250,6 @@ private fun FillAccountScreen_Preview() {
 
         ProfileEditScreen(
             isProfileCreate = true,
-            modalState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden),
             state = state,
             backClicked = {},
             nameChanged = {},
@@ -317,8 +257,6 @@ private fun FillAccountScreen_Preview() {
             cityChanged = {},
             streetChanged = {},
             houseChanged = {},
-            editAvatarClicked = {},
-            deleteAvatarClicked = {},
             avatarClicked = {},
             saveClicked = {}
         )

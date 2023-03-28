@@ -23,8 +23,6 @@ class PetterRootNode(
     buildContext = buildContext
 ) {
 
-    private val router = PetterRouter(backStack, coroutineScope)
-
     override fun resolve(navTarget: PetterRootTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
             is PetterRootTarget.Authorization -> AuthorizationRootNode(buildContext)

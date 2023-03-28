@@ -8,11 +8,11 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import ru.gortea.petter.data.MapSourceRepository
+import ru.gortea.petter.data.util.ContentFileConverter
 import ru.gortea.petter.profile.data.local.UserLocalRepository
 import ru.gortea.petter.profile.data.remote.api.ProfileApi
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateFullModel
-import ru.gortea.petter.profile.data.util.ContentFileConverter
 
 class UserUpdateRepository(
     private val api: ProfileApi,
@@ -29,7 +29,9 @@ class UserUpdateRepository(
             }
             avatarUpdate = async {
                 if (model.avatarModel.filePath == null) {
-                    // TODO Delete avatar
+                    userLocalRepository.getCurrentUser().avatarPathSegments?.let { (folder, file) ->
+                        api.deletePhoto(folder, file)
+                    }
                     return@async
                 }
 

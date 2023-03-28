@@ -1,4 +1,4 @@
-package ru.gortea.petter.ui_kit.toolbar
+package ru.gortea.petter.ui_kit.icon
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
@@ -12,20 +12,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ClickableIcon(
     @DrawableRes icon: Int,
-    size: Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    size: Dp = 24.dp,
+    tint: Color? = null
 ) {
     Box(
         modifier = Modifier
             .size(size)
             .clip(CircleShape)
-            .paint(painterResource(icon))
+            .paint(
+                painterResource(icon),
+                colorFilter = tint?.let { ColorFilter.tint(tint) }
+            )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),

@@ -13,33 +13,33 @@ import ru.gortea.petter.navigation.operation.restoreIfExists
 
 class PetterRouter<T : NavTarget>(
     private val backStack: BackStack<T>,
-    private val coroutineScope: CoroutineScope
+    private val parentBackStack: BackStack<*>?
 ) : Router<T> {
 
     @Composable
     fun visibleChildrenAsState() = backStack.visibleChildrenAsState()
 
     override fun updateRoot(target: T) {
-        coroutineScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             backStack.newRoot(target)
         }
     }
 
     override fun navigateTo(target: T) {
-        coroutineScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             backStack.push(target)
         }
     }
 
     override fun restoreIfExists(target: T) {
-        coroutineScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             backStack.restoreIfExists(target)
         }
     }
 
     override fun pop() {
-        coroutineScope.launch(Dispatchers.Main) {
-            backStack.pop()
+        CoroutineScope(Dispatchers.Main).launch {
+            parentBackStack?.pop() ?: backStack.pop()
         }
     }
 }

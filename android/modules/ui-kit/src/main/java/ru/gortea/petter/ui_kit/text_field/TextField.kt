@@ -3,25 +3,42 @@ package ru.gortea.petter.ui_kit.text_field
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import ru.gortea.petter.theme.*
+import ru.gortea.petter.theme.Base500
+import ru.gortea.petter.theme.Base600
+import ru.gortea.petter.theme.Base700
+import ru.gortea.petter.theme.PetterAppTheme
+import ru.gortea.petter.theme.body3
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun TextField(
     state: TextFieldState,
@@ -50,11 +67,8 @@ fun TextField(
     }
 
     val mergedTextStyle = MaterialTheme.typography.body1.merge(TextStyle(color = textColor))
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = modifier
-            .bringIntoViewRequester(bringIntoViewRequester)
     ) {
         label?.let {
             Label(
@@ -62,21 +76,15 @@ fun TextField(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
-
-        @OptIn(ExperimentalMaterialApi::class)
+        val keyboardController = LocalSoftwareKeyboardController.current
         BasicTextField(
-            value = state.text,
+            value = state.textRes?.let { stringResource(it) } ?: state.text,
             modifier = Modifier
                 .background(colors.backgroundColor(enabled).value, shape)
-                .fillMaxWidth()
-                .onFocusEvent { focusState ->
-                    if (focusState.isFocused) {
-                        coroutineScope.launch {
-                            bringIntoViewRequester.bringIntoView()
-                        }
-                    }
-                },
-            onValueChange = onValueChange,
+                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = state.keyboardType),
+            keyboardActions = KeyboardActions { keyboardController?.hide() },
+            onValueChange = { onValueChange(it) },
             enabled = enabled,
             readOnly = readOnly,
             textStyle = mergedTextStyle,

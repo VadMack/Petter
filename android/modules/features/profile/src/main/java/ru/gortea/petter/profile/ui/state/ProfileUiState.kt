@@ -4,5 +4,5 @@ import ru.gortea.petter.data.model.DataState
 
 internal data class ProfileUiState(
     val hasProfileMenu: Boolean,
-    val userState: DataState<ProfileUserModel>
+    val userState: DataState<ProfileUiModel>
 )

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_create">Новая анкета</string>
+    <string name="title_edit">Редактирование анкеты</string>
+
+    <string name="edit_avatar">Изменить</string>
+    <string name="delete_avatar">Удалить</string>
+
+    <string name="button_save">Сохранить</string>
+    <string name="button_hide">Скрыть</string>
+    <string name="button_show">Сделать видимым</string>
+    <string name="button_add">Добавить</string>
+    <string name="zero_price">По договоренности</string>
+
+    <string name="add_fields_title">Добавить поля</string>
+    <string name="add_fields_subtitle">Добавить поля</string>
+
+    <string name="level_champion">Победитель</string>
+    <string name="level_winner">Призер</string>
+    <string name="level_participant">Участник</string>
+
+    <string name="select_date">Выберите дату</string>
+
+    <string name="button_edit">Изменить</string>
+    <string name="button_chat">Написать</string>
+
+    <string name="name">Кличка</string>
+
+    <string name="gender">Пол</string>
+    <string name="gender_male">Мальчик</string>
+    <string name="gender_female">Девочка</string>
+
+    <string name="species">Категория</string>
+    <string name="species_dog">Собаки</string>
+    <string name="species_cat">Кошки</string>
+
+    <string name="breed">Порода</string>
+    <string name="birth_date">Дата рождения</string>
+    <string name="price">Цена (руб)</string>
+    <string name="achievements">Награды</string>
+    <string name="description">Описание</string>
+    <string name="weight">Вес (кг)</string>
+    <string name="height">Рост (см)</string>
+    <string name="vaccinations">Прививки</string>
+</resources>

@@ -8,7 +8,6 @@ import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.navigation.nodes.authorization.AuthorizationNode
 import ru.gortea.petter.auth.navigation.nodes.registration.RegistrationConfirmNode
 import ru.gortea.petter.auth.navigation.nodes.registration.RegistrationNode
-import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.navigation.parent.BackStackParentNode
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget as Target
 
@@ -18,8 +17,6 @@ class AuthorizationRootNode(
     initialTarget = Target.Authorization,
     buildContext = buildContext
 ) {
-
-    private val router = PetterRouter(backStack, coroutineScope)
 
     override fun resolve(navTarget: Target, buildContext: BuildContext): Node {
         return when (navTarget) {

@@ -1,6 +1,11 @@
 package ru.gortea.petter.ui_kit.toolbar
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -25,6 +30,7 @@ fun Toolbar(
         elevation = 0.dp,
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
+
         if (startIcon != null) {
             startIcon()
             Spacer(modifier = Modifier.width(8.dp))

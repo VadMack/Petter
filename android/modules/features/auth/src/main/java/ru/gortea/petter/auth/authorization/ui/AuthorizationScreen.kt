@@ -50,7 +50,7 @@ internal fun AuthorizationScreen(
     finish: () -> Unit
 ) {
     val component: AuthorizationComponent = getComponent()
-    val store: AuthStore by storeHolder(key = "AuthorizationScreen") {
+    val store: AuthStore by storeHolder {
         createAuthStore(component, router, finish)
     }
 

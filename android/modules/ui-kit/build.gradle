@@ -11,6 +11,8 @@ dependencies {
     api AndroidX.composeActivity
     api AndroidX.activityKtx
 
+    implementation AndroidX.material
+
     debugApi AndroidX.composeUiTooling
 
     api project(":modules:theme")
