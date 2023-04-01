@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import com.bumble.appyx.core.composable.visibleChildrenAsState
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.newRoot
-import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,12 +36,13 @@ class PetterRouter<T : NavTarget>(
         }
     }
 
-    override fun pop(current: Boolean) {
+    override fun pop() {
         CoroutineScope(Dispatchers.Main).launch {
-            if (current) {
-                backStack.pop()
+            val isCurrentEnabled = backStack.onBackPressedCallback.isEnabled
+            if (isCurrentEnabled) {
+                backStack.onBackPressedCallback.handleOnBackPressed()
             } else {
-                parentBackStack?.pop() ?: backStack.pop()
+                parentBackStack?.onBackPressedCallback?.handleOnBackPressed()
             }
         }
     }

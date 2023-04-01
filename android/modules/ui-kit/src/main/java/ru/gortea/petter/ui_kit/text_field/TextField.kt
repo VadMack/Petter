@@ -1,6 +1,5 @@
 package ru.gortea.petter.ui_kit.text_field
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,7 +36,7 @@ import ru.gortea.petter.theme.Base700
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.body3
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun TextField(
     state: TextFieldState,
@@ -78,7 +76,7 @@ fun TextField(
         }
         val keyboardController = LocalSoftwareKeyboardController.current
         BasicTextField(
-            value = state.textRes?.let { stringResource(it) } ?: state.text,
+            value = state.text.getText(),
             modifier = Modifier
                 .background(colors.backgroundColor(enabled).value, shape)
                 .fillMaxWidth(),
@@ -95,7 +93,7 @@ fun TextField(
             maxLines = maxLines,
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                    value = state.text,
+                    value = state.text.getText(),
                     visualTransformation = state.visualTransformation,
                     innerTextField = innerTextField,
                     placeholder = { Placeholder(text = placeholder) },
@@ -152,7 +150,7 @@ private fun TextField_Preview() {
                 state = state,
                 placeholder = "Input text",
                 label = "label",
-                onValueChange = { state = state.copy(text = it) },
+                onValueChange = { state = state.text(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)

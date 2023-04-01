@@ -3,6 +3,8 @@ package ru.gortea.petter.pet.presentation.state
 import androidx.annotation.StringRes
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
+import ru.gortea.petter.ui_kit.text_field.isEmpty
+import ru.gortea.petter.ui_kit.text_field.isNotEmpty
 import ru.gortea.petter.ui_kit.text_field.isNumber
 import java.time.LocalDate
 
@@ -18,15 +20,16 @@ internal sealed class PetField(
         override val fieldName: PetFieldName,
         val textField: TextFieldState,
         override val valid: Boolean = true,
-        val emptyCorrect: Boolean = false
+        val emptyCorrect: Boolean = false,
+        val hintRes: Int? = null
     ) : PetField(titleRes, fieldName, valid) {
 
         override fun validated(): PetField {
-            val isNumInvalid = textField.isNumber() && textField.text.toIntOrNull() == null
+            val isNumInvalid = textField.isNumber() && textField.text.getStringText().toIntOrNull() == null
             val invalid = if (emptyCorrect) {
-                textField.text.isNotEmpty() && isNumInvalid
+                textField.isNotEmpty() && isNumInvalid
             } else {
-                textField.text.isEmpty() || isNumInvalid
+                textField.isEmpty() || isNumInvalid
             }
 
             return copy(textField = textField.copy(isIncorrect = invalid), valid = !invalid)
@@ -56,7 +59,7 @@ internal sealed class PetField(
             var isValid = true
 
             val validated = map.mapKeys {
-                val invalid = it.key.text.isEmpty()
+                val invalid = it.key.isEmpty()
                 if (invalid) isValid = false
                 it.key.copy(isIncorrect = invalid)
             }
@@ -76,7 +79,7 @@ internal sealed class PetField(
             var isValid = true
 
             val validated = list.map {
-                val invalid = it.text.isEmpty()
+                val invalid = it.isEmpty()
                 if (invalid) isValid = false
                 it.copy(isIncorrect = invalid)
             }

@@ -1,0 +1,17 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+dependencies {
+    implementation Libs.coil
+
+    implementation project(":modules:features:profile-data")
+
+    implementation project(":modules:formatters")
+    implementation project(":modules:arch-android")
+    implementation project(":modules:data-paging-android")
+    implementation project(":modules:ui-kit")
+
+    api project(":modules:features:pet-list-data")
+}

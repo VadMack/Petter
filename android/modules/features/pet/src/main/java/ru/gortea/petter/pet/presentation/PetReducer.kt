@@ -9,7 +9,6 @@ import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.navigation.PetNavTarget
 import ru.gortea.petter.pet.presentation.state.PetField
-import ru.gortea.petter.pet.presentation.state.editMode
 import ru.gortea.petter.pet.presentation.state.getDefaultPresentationModel
 import ru.gortea.petter.pet.presentation.state.toPetPresentationModel
 import ru.gortea.petter.pet.presentation.state.updateField
@@ -155,17 +154,9 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.goBack() {
+    private fun goBack() {
         router.pop()
-
-        if (state.editMode && !state.isCreation) {
-            state {
-                copy(
-                    editMode = false,
-                    petLoadingStatus = petLoadingStatus.mapContentSync { it.editMode(false) }
-                )
-            }
-        }
+        // todo call method of connector interface to reload data or check if node is visible or not
     }
 
     private fun MessageBuilder<State, Nothing, Command>.editPet() {
@@ -173,13 +164,6 @@ internal class PetReducer(
 
         if (status is DataState.Content) {
             router.navigateTo(PetNavTarget.EditPet(status.content.model?.id))
-        }
-
-        state {
-            copy(
-                editMode = true,
-                petLoadingStatus = petLoadingStatus.mapContentSync { it.editMode(true) }
-            )
         }
     }
 

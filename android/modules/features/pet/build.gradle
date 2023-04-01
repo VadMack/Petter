@@ -8,6 +8,7 @@ dependencies {
     implementation project(":modules:features:pet-data")
     implementation project(":modules:features:profile-data")
 
+    implementation project(":modules:formatters")
     implementation project(":modules:arch-android")
     implementation project(":modules:navigation")
     implementation project(":modules:ui-kit")

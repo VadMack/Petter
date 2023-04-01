@@ -16,7 +16,8 @@ object Libs {
     }
 
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
-    const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serialization}"
+    const val serialization =
+        "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serialization}"
 
     const val dagger2 = "com.google.dagger:dagger:${Versions.dagger2}"
     const val dagger2Compiler = "com.google.dagger:dagger-compiler:${Versions.dagger2}"
@@ -28,13 +29,16 @@ object Libs {
     const val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
 
     const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
-    const val viewBinding = "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding}"
+    const val viewBinding =
+        "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding}"
 
     const val okHttp = "com.squareup.okhttp3:okhttp:${Versions.okHttp}"
-    const val okHttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.okHttp}"
+    const val okHttpLoggingInterceptor =
+        "com.squareup.okhttp3:logging-interceptor:${Versions.okHttp}"
 
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
-    const val retrofitSerializationConverter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.retrofitSerializationConverter}"
+    const val retrofitSerializationConverter =
+        "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.retrofitSerializationConverter}"
     const val retrofitGsonConverter = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
 
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
@@ -90,18 +94,20 @@ object AndroidX {
 
     const val composeUi = "androidx.compose.ui:ui:${Versions.composeUi}"
     const val composeMaterial = "androidx.compose.material:material:${Versions.composeMaterial}"
-    const val composeFoundation = "androidx.compose.foundation:foundation:${Versions.composeFoundation}"
+    const val composeFoundation =
+        "androidx.compose.foundation:foundation:${Versions.composeFoundation}"
     const val composePreview = "androidx.compose.ui:ui-tooling-preview:${Versions.composeUiTooling}"
     const val composeUiTooling = "androidx.compose.ui:ui-tooling:${Versions.composeUiTooling}"
     const val composeActivity = "androidx.activity:activity-compose:${Versions.composeActivity}"
-    const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.composeViewModel}"
+    const val composeViewModel =
+        "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.composeViewModel}"
 
     const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
     const val splashScreen = "androidx.core:core-splashscreen:${Versions.splashScreen}"
     const val fragmentKtx = "androidx.fragment:fragment-ktx:${Versions.fragmentKtx}"
     const val activityKtx = "androidx.activity:activity-ktx:${Versions.activityKtx}"
 
-        const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
+    const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
     const val material = "com.google.android.material:material:${Versions.material}"
     const val lifecycleRuntimeKtx =
         "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycleRuntimeKtx}"

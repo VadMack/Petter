@@ -21,17 +21,17 @@ data class PetFullModel(
     @Contextual val birthDate: LocalDate? = null,
     val height: Int? = null,
     val weight: Int? = null,
-    val achievements: Map<String, AchievementLevel>? = null,
-    val vaccinations: List<String>? = null,
+    val achievements: Map<String, AchievementLevel> = emptyMap(),
+    val vaccinations: List<String> = emptyList(),
     val description: String? = null,
-    val imagePaths: List<String>? = null,
+    val imagePaths: List<String> = emptyList(),
     val state: PetCardState,
     val liked: Boolean = false
 ) : Arguments {
 
     val photoPath: String?
-        get() = imagePaths?.first()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = imagePaths.firstOrNull()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
 
     val photoPathSegments: List<String>?
-        get() = imagePaths?.first()?.split("/")
+        get() = imagePaths.firstOrNull()?.split("/")
 }

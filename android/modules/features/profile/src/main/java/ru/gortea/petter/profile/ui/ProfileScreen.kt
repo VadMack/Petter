@@ -22,6 +22,8 @@ import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.pet.list.model.PetListKeyModel
+import ru.gortea.petter.pet.list.ui.PetList
 import ru.gortea.petter.profile.R
 import ru.gortea.petter.profile.di.ProfileComponent
 import ru.gortea.petter.profile.navigation.ProfileNavTarget
@@ -62,7 +64,8 @@ internal fun ProfileScreen(
             backClicked = { store.dispatch(ProfileUiEvent.Back) },
             editClicked = { store.dispatch(ProfileUiEvent.EditProfile) },
             logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
-            addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) }
+            addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) },
+            openPetClicked = { store.dispatch(ProfileUiEvent.OpenPet(it)) }
         )
     }
 }
@@ -75,6 +78,7 @@ private fun ProfileScreen(
     backClicked: () -> Unit,
     editClicked: () -> Unit,
     addPetClicked: () -> Unit,
+    openPetClicked: (String) -> Unit,
     logoutClicked: () -> Unit
 ) {
     Scaffold(
@@ -95,6 +99,7 @@ private fun ProfileScreen(
             ProfileRoot(
                 state = state,
                 addPetClicked = addPetClicked,
+                openPetClicked = openPetClicked,
                 modifier = Modifier.padding(padding)
             )
         }
@@ -105,6 +110,7 @@ private fun ProfileScreen(
 private fun ProfileRoot(
     state: ProfileUiState,
     addPetClicked: () -> Unit,
+    openPetClicked: (String) -> Unit,
     modifier: Modifier
 ) {
     when (state.userState) {
@@ -112,7 +118,8 @@ private fun ProfileRoot(
         is DataState.Content -> ProfileContent(
             state = state.userState.content,
             modifier = modifier,
-            addPetClicked = addPetClicked
+            addPetClicked = addPetClicked,
+            openPetClicked = openPetClicked
         )
         is DataState.Fail -> Unit // TODO add error state
     }
@@ -122,6 +129,7 @@ private fun ProfileRoot(
 private fun ProfileContent(
     state: ProfileUiModel,
     addPetClicked: () -> Unit,
+    openPetClicked: (String) -> Unit,
     modifier: Modifier
 ) {
     Box(
@@ -155,6 +163,12 @@ private fun ProfileContent(
                     modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
                 )
             }
+
+            PetList(
+                listKey = PetListKeyModel(ownerId = state.id),
+                holderKey = state.id,
+                openPetCard = openPetClicked
+            )
         }
 
         if (state.canAddPet) {
@@ -162,7 +176,8 @@ private fun ProfileContent(
                 text = stringResource(R.string.add),
                 leadingIcon = UiKitR.drawable.ic_plus,
                 onClick = addPetClicked,
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
                     .padding(end = 16.dp, bottom = 16.dp)
             )
         }
@@ -210,7 +225,8 @@ private fun ProfileScreen_Preview() {
             backClicked = {},
             editClicked = {},
             logoutClicked = {},
-            addPetClicked = {}
+            addPetClicked = {},
+            openPetClicked = {}
         )
     }
 }

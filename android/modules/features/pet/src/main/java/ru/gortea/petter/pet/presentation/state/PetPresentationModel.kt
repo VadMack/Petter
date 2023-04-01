@@ -8,7 +8,6 @@ import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
 import ru.gortea.petter.ui_kit.text_field.number
-import ru.gortea.petter.ui_kit.text_field.textRes
 
 internal data class PetPresentationModel(
     val photo: Uri?,
@@ -80,7 +79,13 @@ internal fun getDefaultPresentationModel(): PetPresentationModel {
         ),
         PetField.SimplePetField(R.string.breed, PetFieldName.BREED, TextFieldState()),
         PetField.DatePetField(R.string.birth_date, PetFieldName.BIRTH_DATE, null),
-        PetField.SimplePetField(R.string.price, PetFieldName.PRICE, TextFieldState().number())
+        PetField.SimplePetField(
+            R.string.price,
+            PetFieldName.PRICE,
+            TextFieldState().number(),
+            emptyCorrect = true,
+            hintRes = R.string.zero_price
+        )
     )
 
     return PetPresentationModel(null, fields, null)
@@ -109,10 +114,10 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         )
     }
 
-    val priceField = if (price <= 0) {
-        TextFieldState("")
-    } else {
-        TextFieldState(price.toString())
+    val priceField = when {
+        price <= 0 && !editMode -> TextFieldState(R.string.zero_price)
+        price <= 0 && editMode -> TextFieldState("")
+        else -> TextFieldState(price.toString())
     }.number()
 
     fields.addAll(
@@ -122,13 +127,14 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.SimplePetField(
                 R.string.price,
                 PetFieldName.PRICE,
-                if (!editMode && price < 0) priceField.textRes(R.string.zero_price) else priceField,
-                emptyCorrect = true
+                priceField,
+                emptyCorrect = true,
+                hintRes = R.string.zero_price
             )
         )
     )
 
-    achievements?.let { achievements ->
+    if (achievements.isNotEmpty()) {
         fields.add(
             PetField.AchievementPetField(
                 R.string.achievements,
@@ -167,7 +173,7 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         )
     }
 
-    vaccinations?.let { vaccinations ->
+    if (vaccinations.isNotEmpty()) {
         fields.add(
             PetField.ListPetField(
                 R.string.vaccinations,
@@ -219,7 +225,7 @@ internal fun PetPresentationModel.toPetFullModel(): PetFullModel {
 }
 
 private fun PetFullModel.updateField(field: PetField.SimplePetField): PetFullModel {
-    val text = field.textField.text
+    val text = field.textField.text.getStringText()
     return when (field.fieldName) {
         PetFieldName.NAME -> copy(name = text)
         PetFieldName.PRICE -> copy(price = text.toIntOrNull() ?: -1)
@@ -235,7 +241,7 @@ private fun PetFullModel.updateField(field: PetField.AchievementPetField): PetFu
     if (field.map.isEmpty()) return this
 
     return copy(
-        achievements = field.map.mapKeys { it.key.text }
+        achievements = field.map.mapKeys { it.key.text.getStringText() }
     )
 }
 
@@ -253,5 +259,5 @@ private fun PetFullModel.updateField(field: PetField.EnumPetField): PetFullModel
 }
 
 private fun PetFullModel.updateField(field: PetField.ListPetField): PetFullModel {
-    return copy(vaccinations = field.list.map { it.text })
+    return copy(vaccinations = field.list.map { it.text.getStringText() })
 }

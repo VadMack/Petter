@@ -41,6 +41,7 @@ internal class ProfileReducer(
             is UiEvent.Back -> router.pop()
             is UiEvent.Logout -> logout()
             is UiEvent.AddPet -> router.navigateTo(ProfileNavTarget.AddPet)
+            is UiEvent.OpenPet -> router.navigateTo(ProfileNavTarget.OpenPet(event.id))
         }
     }
 

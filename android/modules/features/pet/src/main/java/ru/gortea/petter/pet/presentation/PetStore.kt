@@ -19,6 +19,7 @@ internal typealias PetStore = MviStore<PetState, PetEvent, Nothing>
 
 internal fun createPetStore(
     petId: String?,
+    editMode: Boolean,
     component: PetComponent,
     router: PetterRouter<PetNavTarget>,
     showModalImageChooser: () -> Unit = {},
@@ -30,7 +31,7 @@ internal fun createPetStore(
     val getRepo = component.getPetRepository
 
     return TeaStore(
-        PetState(isCreation = petId == null),
+        PetState(isCreation = petId == null, editMode = editMode),
         PetReducer(router, showModalImageChooser, showImagePicker),
         listOf(
             IsMyPetActor(component.userRepository),

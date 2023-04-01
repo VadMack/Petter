@@ -35,6 +35,11 @@ class ProfileRootNode(
                 changeNavBarVisible(false)
                 PetRootNode(buildContext, null)
             }
+
+            is ProfileNavTarget.OpenPet -> {
+                changeNavBarVisible(false)
+                PetRootNode(buildContext, navTarget.id)
+            }
         }
     }
 
@@ -50,7 +55,7 @@ class ProfileRootNode(
         when (child) {
             is ProfileEditNode -> {
                 changeNavBarVisible(true)
-                router.pop(true)
+                router.pop()
             }
             is PetRootNode -> changeNavBarVisible(true)
             is ProfileNode -> finish()

@@ -4,7 +4,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +38,8 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.SimpleDateFormatter
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
@@ -57,6 +58,7 @@ import ru.gortea.petter.pet.ui.state.edit.PetEditFullUiModel
 import ru.gortea.petter.pet.ui.state.edit.PetEditUiState
 import ru.gortea.petter.theme.Base500
 import ru.gortea.petter.theme.PetterAppTheme
+import ru.gortea.petter.ui_kit.TextModel
 import ru.gortea.petter.ui_kit.avatar.EditAvatar
 import ru.gortea.petter.ui_kit.button.ButtonState
 import ru.gortea.petter.ui_kit.button.PrimaryButton
@@ -77,7 +79,6 @@ import ru.gortea.petter.ui_kit.text_field.TextFieldState
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
@@ -92,9 +93,12 @@ internal fun PetEditScreen(
     var showModal by remember { mutableStateOf(false) }
 
     val component = getComponent<PetComponent>()
-    val store by storeHolder(key = "Pet-$id") {
+    val dateFormatter = remember { component.dateFormatter }
+
+    val store by storeHolder {
         createPetStore(
             petId = id,
+            editMode = true,
             component = component,
             router = router,
             showModalImageChooser = { showModal = true },
@@ -106,6 +110,7 @@ internal fun PetEditScreen(
     store.collect(PetEditUiStateMapper()) { state ->
         PetEditScreen(
             state = state,
+            dateFormatter = dateFormatter,
             backClicked = { store.dispatch(PetUiEvent.GoBack) },
             saveClicked = { store.dispatch(PetUiEvent.UpdatePet) },
             showClicked = { store.dispatch(PetUiEvent.ShowPet) },
@@ -135,10 +140,10 @@ internal fun PetEditScreen(
     }
 }
 
-@VisibleForTesting
 @Composable
-private fun PetEditScreen(
+internal fun PetEditScreen(
     state: PetEditUiState,
+    dateFormatter: DateFormatter,
     backClicked: () -> Unit,
     saveClicked: () -> Unit,
     showClicked: () -> Unit,
@@ -157,6 +162,7 @@ private fun PetEditScreen(
     ) {
         PetEditScreenRoot(
             state = state,
+            dateFormatter = dateFormatter,
             saveClicked = saveClicked,
             showClicked = showClicked,
             hideClicked = hideClicked,
@@ -171,6 +177,7 @@ private fun PetEditScreen(
 @Composable
 private fun PetEditScreenRoot(
     state: PetEditUiState,
+    dateFormatter: DateFormatter,
     saveClicked: () -> Unit,
     showClicked: () -> Unit,
     hideClicked: () -> Unit,
@@ -185,6 +192,7 @@ private fun PetEditScreenRoot(
         is DataState.Content -> {
             PetEditScreenContent(
                 state = state.modelStatus.content,
+                dateFormatter = dateFormatter,
                 saveClicked = saveClicked,
                 showClicked = showClicked,
                 hideClicked = hideClicked,
@@ -201,6 +209,7 @@ private fun PetEditScreenRoot(
 @Composable
 private fun PetEditScreenContent(
     state: PetEditFullUiModel,
+    dateFormatter: DateFormatter,
     saveClicked: () -> Unit,
     showClicked: () -> Unit,
     hideClicked: () -> Unit,
@@ -263,7 +272,11 @@ private fun PetEditScreenContent(
                 when (it) {
                     is PetField.SimplePetField -> PetEditScreenSimpleField(it, fieldUpdated)
                     is PetField.EnumPetField -> PetEditScreenEnumField(it, fieldUpdated)
-                    is PetField.DatePetField -> PetEditScreenDateField(it, fieldUpdated)
+                    is PetField.DatePetField -> PetEditScreenDateField(
+                        it,
+                        dateFormatter,
+                        fieldUpdated
+                    )
                     is PetField.ListPetField -> PetEditScreenListField(it, fieldUpdated)
                     is PetField.AchievementPetField -> PetEditScreenAchievementsField(
                         it,
@@ -308,13 +321,13 @@ private fun PetEditScreenSimpleField(
         title = stringResource(field.titleRes),
         isValid = field.valid
     ) {
-
         TextField(
             state = field.textField,
             onValueChange = {
-                val newState = field.textField.copy(text = it, isIncorrect = false)
+                val newState = field.textField.copy(text = TextModel(it), isIncorrect = false)
                 fieldUpdated(field.copy(textField = newState).validated())
             },
+            placeholder = field.hintRes?.let { stringResource(it) } ?: "",
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -363,12 +376,17 @@ private fun PetEditScreenEnumField(
 }
 
 @Composable
-private fun PetEditScreenDateField(field: PetField.DatePetField, fieldUpdated: (PetField) -> Unit) {
+private fun PetEditScreenDateField(
+    field: PetField.DatePetField,
+    dateFormatter: DateFormatter,
+    fieldUpdated: (PetField) -> Unit
+) {
     PetDescriptionContainer(
         title = stringResource(field.titleRes),
         isValid = field.valid
     ) {
-        val formatted = field.date?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        val formatted = remember(field.date) { field.date?.let(dateFormatter::format) }
+
         var showDialog by remember { mutableStateOf(false) }
 
         if (showDialog) {
@@ -420,7 +438,7 @@ private fun PetEditScreenListField(field: PetField.ListPetField, fieldUpdated: (
                     TextField(
                         state = state,
                         onValueChange = {
-                            val newState = state.copy(text = it, isIncorrect = false)
+                            val newState = state.copy(text = TextModel(it), isIncorrect = false)
                             val newList = field.list.toMutableList()
                             newList[i] = newState
                             fieldUpdated(field.copy(list = newList).validated())
@@ -458,7 +476,10 @@ private fun PetEditScreenAchievementsField(
     field: PetField.AchievementPetField,
     fieldUpdated: (PetField) -> Unit
 ) {
-    PetDescriptionContainer(title = stringResource(field.titleRes)) {
+    PetDescriptionContainer(
+        title = stringResource(field.titleRes),
+        isValid = field.valid
+    ) {
 
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -475,7 +496,7 @@ private fun PetEditScreenAchievementsField(
                         TextField(
                             state = competition,
                             onValueChange = {
-                                val newState = competition.copy(text = it, isIncorrect = false)
+                                val newState = competition.copy(text = TextModel(it), isIncorrect = false)
                                 val newMap = field.map.toMutableMap()
                                 newMap.remove(competition)
                                 newMap[newState] = level
@@ -599,6 +620,7 @@ private fun PetEditScreen_Preview() {
 
         PetEditScreen(
             state = state,
+            dateFormatter = SimpleDateFormatter(),
             backClicked = {},
             saveClicked = {},
             showClicked = {},

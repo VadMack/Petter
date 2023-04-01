@@ -1,6 +1,5 @@
 package ru.gortea.petter.pet.ui
 
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,13 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,6 +28,8 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.SimpleDateFormatter
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
@@ -57,7 +59,6 @@ import ru.gortea.petter.ui_kit.text_field.TextFieldState
 import ru.gortea.petter.ui_kit.toolbar.BackIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
@@ -66,9 +67,11 @@ internal fun PetScreen(
     router: PetterRouter<PetNavTarget>,
 ) {
     val component = getComponent<PetComponent>()
-    val store by storeHolder(key = "Pet-$id") {
+    val dateFormatter = remember { component.dateFormatter }
+    val store by storeHolder {
         createPetStore(
             petId = id,
+            editMode = false,
             component = component,
             router = router
         )
@@ -77,6 +80,7 @@ internal fun PetScreen(
     store.collect(PetUiStateMapper()) { state ->
         PetScreen(
             state = state,
+            dateFormatter = dateFormatter,
             backClicked = { store.dispatch(PetUiEvent.GoBack) },
             deleteClicked = { store.dispatch(PetUiEvent.DeletePet) },
             editClicked = { store.dispatch(PetUiEvent.EditPet) },
@@ -85,10 +89,10 @@ internal fun PetScreen(
     }
 }
 
-@VisibleForTesting
 @Composable
-private fun PetScreen(
+internal fun PetScreen(
     state: PetUiState,
+    dateFormatter: DateFormatter,
     backClicked: () -> Unit,
     deleteClicked: () -> Unit,
     editClicked: () -> Unit,
@@ -113,6 +117,7 @@ private fun PetScreen(
     ) {
         PetScreenRoot(
             state = state,
+            dateFormatter = dateFormatter,
             editClicked = editClicked,
             chatClicked = chatClicked,
             modifier = Modifier.padding(it)
@@ -123,6 +128,7 @@ private fun PetScreen(
 @Composable
 private fun PetScreenRoot(
     state: PetUiState,
+    dateFormatter: DateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
     modifier: Modifier
@@ -132,6 +138,7 @@ private fun PetScreenRoot(
         is DataState.Loading -> LoadingPlaceholder(modifier)
         is DataState.Content -> PetScreenContent(
             state = state.modelStatus.content,
+            dateFormatter = dateFormatter,
             editClicked = editClicked,
             chatClicked = chatClicked,
             modifier = modifier
@@ -143,6 +150,7 @@ private fun PetScreenRoot(
 @Composable
 private fun PetScreenContent(
     state: PetFullUiModel,
+    dateFormatter: DateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
     modifier: Modifier
@@ -150,6 +158,7 @@ private fun PetScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -196,19 +205,21 @@ private fun PetScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(
+        Column(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(items = state.fields, key = { it.fieldName }) {
+            state.fields.forEach {
                 when (it) {
                     is PetField.SimplePetField -> PetScreenSimpleField(it)
                     is PetField.EnumPetField -> PetScreenEnumField(it)
-                    is PetField.DatePetField -> PetScreenDateField(it)
+                    is PetField.DatePetField -> PetScreenDateField(it, dateFormatter)
                     is PetField.ListPetField -> PetScreenListField(it)
                     is PetField.AchievementPetField -> PetScreenAchievementsField(it)
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -217,7 +228,7 @@ private fun PetScreenSimpleField(field: PetField.SimplePetField) {
     PetDescriptionContainer(title = stringResource(field.titleRes)) {
 
         Text(
-            text = field.textField.text,
+            text = field.textField.text.getText(),
             style = MaterialTheme.typography.body2,
             modifier = Modifier.fillMaxWidth()
         )
@@ -237,9 +248,9 @@ private fun PetScreenEnumField(field: PetField.EnumPetField) {
 }
 
 @Composable
-private fun PetScreenDateField(field: PetField.DatePetField) {
+private fun PetScreenDateField(field: PetField.DatePetField, dateFormatter: DateFormatter) {
     PetDescriptionContainer(title = stringResource(field.titleRes)) {
-        val formatted = field.date!!.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        val formatted = remember(field.date) { dateFormatter.format(field.date!!) }
 
         Text(
             text = formatted,
@@ -259,7 +270,7 @@ private fun PetScreenListField(field: PetField.ListPetField) {
         ) {
             field.list.forEach {
                 Text(
-                    text = it.text,
+                    text = it.text.getText(),
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -285,7 +296,7 @@ private fun PetScreenAchievementsField(field: PetField.AchievementPetField) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = competition.text,
+                            text = competition.text.getText(),
                             style = MaterialTheme.typography.body2,
                             modifier = Modifier.weight(1f)
                         )
@@ -361,6 +372,7 @@ private fun PetScreen_Preview() {
 
         PetScreen(
             state = state,
+            dateFormatter = SimpleDateFormatter(),
             backClicked = {},
             deleteClicked = {},
             editClicked = {},
