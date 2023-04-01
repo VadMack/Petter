@@ -37,9 +37,13 @@ class PetterRouter<T : NavTarget>(
         }
     }
 
-    override fun pop() {
+    override fun pop(current: Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
-            parentBackStack?.pop() ?: backStack.pop()
+            if (current) {
+                backStack.pop()
+            } else {
+                parentBackStack?.pop() ?: backStack.pop()
+            }
         }
     }
 }

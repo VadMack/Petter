@@ -50,7 +50,7 @@ class ProfileRootNode(
         when (child) {
             is ProfileEditNode -> {
                 changeNavBarVisible(true)
-                router.pop()
+                router.pop(true)
             }
             is PetRootNode -> changeNavBarVisible(true)
             is ProfileNode -> finish()
