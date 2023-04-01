@@ -15,6 +15,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +66,7 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 internal fun PetScreen(
     id: String,
     router: PetterRouter<PetNavTarget>,
+    needReload: Boolean
 ) {
     val component = getComponent<PetComponent>()
     val dateFormatter = remember { component.dateFormatter }
@@ -86,6 +88,10 @@ internal fun PetScreen(
             editClicked = { store.dispatch(PetUiEvent.EditPet) },
             chatClicked = { store.dispatch(PetUiEvent.OpenChat) }
         )
+    }
+    
+    LaunchedEffect(needReload) {
+        store.dispatch(PetUiEvent.LoadPet(id))
     }
 }
 
