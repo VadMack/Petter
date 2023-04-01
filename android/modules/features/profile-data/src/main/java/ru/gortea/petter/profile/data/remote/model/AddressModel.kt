@@ -16,6 +16,7 @@ data class AddressModel(
             country.appendIfNotEmpty(this)
             city.appendIfNotEmpty(this)
             street.appendIfNotEmpty(this)
+            houseNumber.appendIfNotEmpty(this)
             metroStation.appendIfNotEmpty(this)
         }
 
