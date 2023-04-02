@@ -1,6 +1,7 @@
 package com.vadmack.petter.ad;
 
 import com.vadmack.petter.app.model.MongoModel;
+import com.vadmack.petter.app.model.Address;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -29,4 +30,5 @@ public class Ad extends MongoModel {
   private Set<String> imagePaths = new HashSet<>();
   private AdState state;
   private String ownerId;
+  private Address address;
 }

@@ -29,6 +29,7 @@ public class AdMapper {
               .imagePaths(ad.getImagePaths())
               .state(ad.getState())
               .liked(favoriteAdIds.contains(ad.getId()))
+              .address(ad.getAddress())
               .build();
       result.add(dto);
     });

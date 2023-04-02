@@ -1,5 +1,6 @@
 package com.vadmack.petter.user;
 
+import com.vadmack.petter.app.model.Address;
 import com.vadmack.petter.app.model.MongoModel;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;

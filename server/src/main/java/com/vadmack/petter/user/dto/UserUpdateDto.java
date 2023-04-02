@@ -1,7 +1,7 @@
 package com.vadmack.petter.user.dto;
 
 import com.vadmack.petter.app.model.ModelUpdateDto;
-import com.vadmack.petter.user.Address;
+import com.vadmack.petter.app.model.Address;
 import lombok.Data;
 
 @Data

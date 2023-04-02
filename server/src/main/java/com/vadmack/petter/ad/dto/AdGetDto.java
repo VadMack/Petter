@@ -4,6 +4,7 @@ import com.vadmack.petter.ad.AdState;
 import com.vadmack.petter.ad.CompetitionStatus;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
+import com.vadmack.petter.app.model.Address;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -29,4 +30,5 @@ public class AdGetDto {
   private Set<String> imagePaths = new HashSet<>();
   private AdState state;
   private boolean liked = false;
+  private Address address;
 }

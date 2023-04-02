@@ -3,6 +3,7 @@ package com.vadmack.petter.ad.dto;
 import com.vadmack.petter.ad.AdState;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
+import com.vadmack.petter.app.model.Address;
 import lombok.Builder;
 import lombok.Data;
 
@@ -24,5 +25,6 @@ public class AdGetListDto {
   private Set<String> imagePaths;
   private AdState state;
   private boolean liked;
+  private Address address;
 }
 

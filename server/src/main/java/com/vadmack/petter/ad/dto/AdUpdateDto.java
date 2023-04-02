@@ -5,6 +5,7 @@ import com.vadmack.petter.ad.CompetitionStatus;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
 import com.vadmack.petter.app.model.ModelUpdateDto;
+import com.vadmack.petter.app.model.Address;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -25,4 +26,5 @@ public class AdUpdateDto implements ModelUpdateDto {
   private Set<String> vaccinations;
   private String description;
   private AdState state;
+  private Address address;
 }

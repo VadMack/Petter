@@ -3,6 +3,7 @@ package com.vadmack.petter.ad.dto;
 import com.vadmack.petter.ad.CompetitionStatus;
 import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
+import com.vadmack.petter.app.model.Address;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -22,4 +23,5 @@ public class AdCreateDdo {
   private Map<String, CompetitionStatus> achievements;
   private Set<String> vaccinations;
   private String description;
+  private Address address;
 }

@@ -36,6 +36,9 @@ public class AdService {
     Ad ad = dtoToEntity(dto);
     ad.setOwnerId(user.getId());
     ad.setState(AdState.OPEN);
+    if (dto.getAddress() == null) {
+      ad.setAddress(user.getAddress());
+    }
     Ad createdAd = adRepository.save(ad);
     userService.addAd(createdAd.getId(), user.getId());
     return entityToDto(createdAd, user.getFavoriteAdIds());
