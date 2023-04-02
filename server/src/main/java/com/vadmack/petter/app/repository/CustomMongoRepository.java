@@ -33,7 +33,14 @@ public abstract class CustomMongoRepository {
     final List<Criteria> criteria = new ArrayList<>();
 
     handleBean(filter,
-            (String propertyName, Object value) -> criteria.add(Criteria.where(propertyName).is(value)),
+            (String propertyName, Object value) -> {
+      if (propertyName.startsWith("min")) {
+        criteria.add(Criteria.where(propertyName.substring(3)).gte(value));
+      } else if (propertyName.startsWith("max")) {
+        criteria.add(Criteria.where(propertyName.substring(3)).lte(value));
+      } else {
+        criteria.add(Criteria.where(propertyName).is(value));
+      } },
             "An error occurred during findByProperties() method");
 
     if (!criteria.isEmpty())

@@ -13,4 +13,7 @@ public class AdFilterDto implements ModelFilter {
   private Species species;
   private String breed;
   private Gender gender;
+
+  private Integer minPrice;
+  private Integer maxPrice;
 }
