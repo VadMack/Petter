@@ -90,6 +90,8 @@ fun PetList(
     LaunchedEffect(command) {
         when (command) {
             is PetListNavCommand.InvalidateList -> store.dispatch(PetListUiEvent.Invalidate(listKey))
+            is PetListNavCommand.PetDisliked -> store.dispatch(PetListUiEvent.DislikePet(command.id))
+            is PetListNavCommand.PetLiked -> store.dispatch(PetListUiEvent.LikePet(command.id))
         }
     }
 
@@ -228,7 +230,8 @@ private fun PetListItem(
                     listOf(
                         TextModel(item.breed) to UiKitR.drawable.ic_paw,
                         TextModel(item.age) to UiKitR.drawable.ic_birthday,
-                        item.price to UiKitR.drawable.ic_cash
+                        item.price to UiKitR.drawable.ic_cash,
+                        TextModel(item.address) to UiKitR.drawable.ic_marker
                     ).forEach { (text, icon) ->
                         TextWithIcon(
                             text = text.getText(),
@@ -355,7 +358,8 @@ private fun PetListItem_Preview() {
                 age = "20.05.2001",
                 price = TextModel("По договоренности"),
                 likeState = LikeState.LIKED,
-                hideState = HideState.NOT_AVAILABLE
+                hideState = HideState.NOT_AVAILABLE,
+                address = ""
             ),
             clicked = {},
             likeClicked = {},
@@ -381,7 +385,8 @@ private fun PetList_Preview() {
                 age = "20.05.2001",
                 price = TextModel("По договоренности"),
                 likeState = LikeState.LIKED,
-                hideState = HideState.NOT_AVAILABLE
+                hideState = HideState.NOT_AVAILABLE,
+                address = ""
             ),
             PetListItem(
                 id = "1",
@@ -394,7 +399,8 @@ private fun PetList_Preview() {
                 age = "20.05.2001",
                 price = TextModel("По договоренности"),
                 likeState = LikeState.LIKED,
-                hideState = HideState.HIDDEN
+                hideState = HideState.HIDDEN,
+                address = ""
             )
         )
 

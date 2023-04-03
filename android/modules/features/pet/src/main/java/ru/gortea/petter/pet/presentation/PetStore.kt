@@ -11,6 +11,7 @@ import ru.gortea.petter.pet.presentation.actors.PetDeleteActor
 import ru.gortea.petter.pet.presentation.actors.PetDeleteInitActor
 import ru.gortea.petter.pet.presentation.actors.PetGetActor
 import ru.gortea.petter.pet.presentation.actors.PetGetInitActor
+import ru.gortea.petter.pet.presentation.actors.PetLikeActor
 import ru.gortea.petter.pet.presentation.actors.PetUpdateActor
 import ru.gortea.petter.pet.presentation.actors.PetUpdateInitActor
 import ru.gortea.petter.pet.presentation.state.PetState
@@ -41,7 +42,8 @@ internal fun createPetStore(
             PetDeleteInitActor(deleteRepo),
             PetDeleteActor(deleteRepo),
             PetGetInitActor(getRepo),
-            PetGetActor(getRepo)
+            PetGetActor(getRepo),
+            PetLikeActor(component.petLikeRepository)
         ),
         listOf(
             PetEvent.InitApi,

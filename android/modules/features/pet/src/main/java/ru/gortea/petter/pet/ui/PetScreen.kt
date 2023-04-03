@@ -45,8 +45,10 @@ import ru.gortea.petter.pet.presentation.state.PetFieldName
 import ru.gortea.petter.pet.ui.mapper.PetUiStateMapper
 import ru.gortea.petter.pet.ui.mapper.iconTint
 import ru.gortea.petter.pet.ui.state.showing.PetFullUiModel
+import ru.gortea.petter.pet.ui.state.showing.PetLikeStatus
 import ru.gortea.petter.pet.ui.state.showing.PetUiModel
 import ru.gortea.petter.pet.ui.state.showing.PetUiState
+import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.Male
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.ui_kit.avatar.Avatar
@@ -85,6 +87,8 @@ internal fun PetScreen(
             dateFormatter = dateFormatter,
             backClicked = { store.dispatch(PetUiEvent.GoBack) },
             deleteClicked = { store.dispatch(PetUiEvent.DeletePet) },
+            likeClicked = { store.dispatch(PetUiEvent.LikePet) },
+            unlikeClicked = { store.dispatch(PetUiEvent.UnlikePet) },
             editClicked = { store.dispatch(PetUiEvent.EditPet) },
             chatClicked = { store.dispatch(PetUiEvent.OpenChat) }
         )
@@ -101,6 +105,8 @@ internal fun PetScreen(
     dateFormatter: DateFormatter,
     backClicked: () -> Unit,
     deleteClicked: () -> Unit,
+    likeClicked: () -> Unit,
+    unlikeClicked: () -> Unit,
     editClicked: () -> Unit,
     chatClicked: () -> Unit
 ) {
@@ -109,15 +115,7 @@ internal fun PetScreen(
             Toolbar(
                 startIcon = { BackIcon(backClicked) },
                 text = "",
-                endIcon = if (state.canDelete) {
-                    {
-                        ClickableIcon(
-                            icon = UiKitR.drawable.ic_delete,
-                            onClick = deleteClicked,
-                            tint = MaterialTheme.colors.error
-                        )
-                    }
-                } else null
+                endIcon = createEndIcon(state, deleteClicked, likeClicked, unlikeClicked)
             )
         }
     ) {
@@ -128,6 +126,59 @@ internal fun PetScreen(
             chatClicked = chatClicked,
             modifier = Modifier.padding(it)
         )
+    }
+}
+
+private fun createEndIcon(
+    state: PetUiState,
+    deleteClicked: () -> Unit,
+    likeClicked: () -> Unit,
+    unlikeClicked: () -> Unit
+): (@Composable () -> Unit)? {
+    if (!state.canDelete && state.likeStatus == PetLikeStatus.NOT_AVAILABLE) return null
+
+    return when {
+        state.canDelete -> {
+            {
+                ClickableIcon(
+                    icon = UiKitR.drawable.ic_delete,
+                    onClick = deleteClicked,
+                    tint = MaterialTheme.colors.error
+                )
+            }
+        }
+        else -> {
+            {
+                Like(
+                    likeState = state.likeStatus,
+                    likeClicked = { likeClicked() },
+                    unlikeClicked = { unlikeClicked() }
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun Like(
+    likeState: PetLikeStatus,
+    likeClicked: () -> Unit,
+    unlikeClicked: () -> Unit
+) {
+    when (likeState) {
+        PetLikeStatus.LIKED -> ClickableIcon(
+            icon = UiKitR.drawable.ic_liked,
+            onClick = unlikeClicked,
+            size = 22.dp
+        )
+        PetLikeStatus.UNLIKED -> ClickableIcon(
+            icon = UiKitR.drawable.ic_unliked,
+            tint = Base600,
+            onClick = likeClicked,
+            size = 22.dp
+        )
+        PetLikeStatus.NOT_AVAILABLE -> Unit
     }
 }
 
@@ -332,6 +383,7 @@ private fun PetScreen_Preview() {
         val state = PetUiState(
             canDelete = true,
             canEdit = true,
+            likeStatus = PetLikeStatus.NOT_AVAILABLE,
             modelStatus = DataState.Content(
                 PetFullUiModel(
                     photo = null,
@@ -388,6 +440,8 @@ private fun PetScreen_Preview() {
             dateFormatter = SimpleDateFormatter(),
             backClicked = {},
             deleteClicked = {},
+            likeClicked = {},
+            unlikeClicked = {},
             editClicked = {},
             chatClicked = {}
         )

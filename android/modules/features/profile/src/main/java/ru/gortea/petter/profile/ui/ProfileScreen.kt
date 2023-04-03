@@ -187,14 +187,9 @@ private fun ProfileContent(
                 )
             }
 
-            val listCommand = when (command) {
-                is PetNavCommand.PetUpdated -> PetListNavCommand.InvalidateList
-                else -> NavCommand.Empty
-            }
-
             PetList(
                 listKey = PetListKeyModel(ownerId = state.id),
-                command = listCommand,
+                command = command.mapToPetListNavCommand(),
                 openPetCard = openPetClicked
             )
         }
@@ -209,6 +204,18 @@ private fun ProfileContent(
                     .padding(end = 16.dp, bottom = 16.dp)
             )
         }
+    }
+}
+
+private fun NavCommand.mapToPetListNavCommand(): NavCommand {
+    return when (this) {
+        is PetNavCommand.PetUpdated -> PetListNavCommand.InvalidateList
+        is PetNavCommand.PetLikedChanged -> if (liked) {
+            PetListNavCommand.PetLiked(id)
+        } else {
+            PetListNavCommand.PetDisliked(id)
+        }
+        else -> NavCommand.Empty
     }
 }
 
