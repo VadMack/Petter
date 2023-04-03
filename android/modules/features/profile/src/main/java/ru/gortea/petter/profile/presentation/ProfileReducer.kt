@@ -42,6 +42,8 @@ internal class ProfileReducer(
             is UiEvent.Logout -> logout()
             is UiEvent.AddPet -> router.navigateTo(ProfileNavTarget.AddPet)
             is UiEvent.OpenPet -> router.navigateTo(ProfileNavTarget.OpenPet(event.id))
+            is UiEvent.OpenMyPets -> state { copy(petsListState = PetsListState.MINE) }
+            is UiEvent.OpenFavourites -> state { copy(petsListState = PetsListState.FAVOURITES) }
         }
     }
 

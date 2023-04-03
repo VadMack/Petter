@@ -14,6 +14,9 @@ internal sealed interface ProfileUiEvent : ProfileEvent {
     class LoadUser(val id: String) : ProfileUiEvent
     class OpenPet(val id: String) : ProfileUiEvent
 
+    object OpenMyPets : ProfileUiEvent
+    object OpenFavourites : ProfileUiEvent
+
     object AddPet : ProfileUiEvent
     object EditProfile : ProfileUiEvent
     object Logout : ProfileUiEvent

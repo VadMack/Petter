@@ -1,9 +1,12 @@
 package ru.gortea.petter.profile.ui
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -34,6 +37,7 @@ import ru.gortea.petter.profile.R
 import ru.gortea.petter.profile.di.ProfileComponent
 import ru.gortea.petter.profile.edit.navigation.commands.ProfileEditNavCommand
 import ru.gortea.petter.profile.navigation.ProfileNavTarget
+import ru.gortea.petter.profile.presentation.PetsListState
 import ru.gortea.petter.profile.presentation.ProfileUiEvent
 import ru.gortea.petter.profile.presentation.createProfileStore
 import ru.gortea.petter.profile.ui.mapper.ProfileUiStateMapper
@@ -47,6 +51,7 @@ import ru.gortea.petter.ui_kit.button.Fab
 import ru.gortea.petter.ui_kit.dropdown.Dropdown
 import ru.gortea.petter.ui_kit.dropdown.DropdownItem
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
+import ru.gortea.petter.ui_kit.icon.Icon
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
@@ -71,6 +76,8 @@ internal fun ProfileScreen(
             state = state,
             command = command,
             backClicked = { store.dispatch(ProfileUiEvent.Back) },
+            myListClicked = { store.dispatch(ProfileUiEvent.OpenMyPets) },
+            favouritesClicked = { store.dispatch(ProfileUiEvent.OpenFavourites) },
             editClicked = { store.dispatch(ProfileUiEvent.EditProfile) },
             logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
             addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) },
@@ -95,6 +102,8 @@ private fun ProfileScreen(
     state: ProfileUiState,
     command: NavCommand,
     backClicked: () -> Unit,
+    myListClicked: () -> Unit,
+    favouritesClicked: () -> Unit,
     editClicked: () -> Unit,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
@@ -118,6 +127,8 @@ private fun ProfileScreen(
             ProfileRoot(
                 state = state,
                 command = command,
+                myListClicked = myListClicked,
+                favouritesClicked = favouritesClicked,
                 addPetClicked = addPetClicked,
                 openPetClicked = openPetClicked,
                 modifier = Modifier.padding(padding)
@@ -130,6 +141,8 @@ private fun ProfileScreen(
 private fun ProfileRoot(
     state: ProfileUiState,
     command: NavCommand,
+    myListClicked: () -> Unit,
+    favouritesClicked: () -> Unit,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
     modifier: Modifier
@@ -140,6 +153,8 @@ private fun ProfileRoot(
             state = state.userState.content,
             command = command,
             modifier = modifier,
+            myListClicked = myListClicked,
+            favouritesClicked = favouritesClicked,
             addPetClicked = addPetClicked,
             openPetClicked = openPetClicked
         )
@@ -151,6 +166,8 @@ private fun ProfileRoot(
 private fun ProfileContent(
     state: ProfileUiModel,
     command: NavCommand,
+    myListClicked: () -> Unit,
+    favouritesClicked: () -> Unit,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
     modifier: Modifier
@@ -187,11 +204,41 @@ private fun ProfileContent(
                 )
             }
 
-            PetList(
-                listKey = PetListKeyModel(ownerId = state.id),
-                command = command.mapToPetListNavCommand(),
-                openPetCard = openPetClicked
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 24.dp, bottom = 6.dp)
+            ) {
+                if (state.isFavouritesAvailable) {
+                    ListSelectorMenu(
+                        model = state,
+                        myListClicked = myListClicked,
+                        favouritesClicked = favouritesClicked
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.pets),
+                        style = MaterialTheme.typography.h3
+                    )
+                }
+            }
+
+            when (state.petsListState) {
+                PetsListState.MINE -> {
+                    PetList(
+                        listKey = PetListKeyModel(ownerId = state.id),
+                        command = command.mapToPetListNavCommand(),
+                        openPetCard = openPetClicked
+                    )
+                }
+                PetsListState.FAVOURITES -> {
+                    PetList(
+                        listKey = PetListKeyModel(ownerId = state.id, favourites = true),
+                        command = command.mapToPetListNavCommand(),
+                        openPetCard = openPetClicked
+                    )
+                }
+            }
         }
 
         if (state.canAddPet) {
@@ -217,6 +264,55 @@ private fun NavCommand.mapToPetListNavCommand(): NavCommand {
         }
         else -> NavCommand.Empty
     }
+}
+
+@Composable
+private fun ListSelectorMenu(
+    model: ProfileUiModel,
+    myListClicked: () -> Unit,
+    favouritesClicked: () -> Unit
+) {
+    val currentItem = when (model.petsListState) {
+        PetsListState.MINE -> stringResource(R.string.my_pets)
+        PetsListState.FAVOURITES -> stringResource(R.string.favourites)
+    }
+
+    val items = when (model.petsListState) {
+        PetsListState.MINE -> listOf(
+            DropdownItem(
+                text = stringResource(R.string.favourites),
+                onSelected = favouritesClicked
+            )
+        )
+        PetsListState.FAVOURITES -> listOf(
+            DropdownItem(
+                text = stringResource(R.string.my_pets),
+                onSelected = myListClicked
+            )
+        )
+    }
+
+    Dropdown(
+        target = { showMenu ->
+            TextWithIcon(
+                text = currentItem,
+                trailingIcon = {
+                    if (showMenu.value) {
+                        Icon(icon = UiKitR.drawable.ic_up, size = 24.dp)
+                    } else {
+                        Icon(icon = UiKitR.drawable.ic_down, size = 24.dp)
+                    }
+                },
+                style = MaterialTheme.typography.h3,
+                modifier = Modifier.clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null,
+                    onClick = { showMenu.value = !showMenu.value }
+                )
+            )
+        },
+        items = items
+    )
 }
 
 @Composable
@@ -259,6 +355,8 @@ private fun ProfileScreen_Preview() {
             state = state,
             command = NavCommand.Empty,
             backClicked = {},
+            myListClicked = {},
+            favouritesClicked = {},
             editClicked = {},
             logoutClicked = {},
             addPetClicked = {},

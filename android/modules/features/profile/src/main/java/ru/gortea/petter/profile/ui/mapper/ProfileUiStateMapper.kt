@@ -18,7 +18,9 @@ internal class ProfileUiStateMapper : UiStateMapper<ProfileState, ProfileUiState
                     avatar = it.avatarPath?.let(Uri::parse),
                     name = it.displayName ?: "",
                     address = it.address?.toString(),
-                    canAddPet = state.isCurrentUser
+                    canAddPet = state.isCurrentUser,
+                    isFavouritesAvailable = state.isCurrentUser,
+                    petsListState = state.petsListState
                 )
             }
         )
