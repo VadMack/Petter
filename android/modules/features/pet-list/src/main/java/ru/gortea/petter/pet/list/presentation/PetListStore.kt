@@ -5,6 +5,7 @@ import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.pet.list.di.PetListComponent
 import ru.gortea.petter.pet.list.presentation.actors.PetListInitActor
 import ru.gortea.petter.pet.list.presentation.actors.PetListInvalidateActor
+import ru.gortea.petter.pet.list.presentation.actors.PetListLikeActor
 import ru.gortea.petter.pet.list.presentation.actors.PetListLoadPageActor
 import ru.gortea.petter.pet.list.presentation.actors.PetListUserActor
 
@@ -23,6 +24,7 @@ internal fun createPetListStore(
         actors = listOf(
             PetListInitActor(listRepo),
             PetListInvalidateActor(listRepo),
+            PetListLikeActor(component.petLikeRepository),
             PetListLoadPageActor(listRepo),
             PetListUserActor(component.userLocalRepository)
         ),

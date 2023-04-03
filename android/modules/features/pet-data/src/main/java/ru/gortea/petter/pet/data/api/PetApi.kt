@@ -31,4 +31,7 @@ interface PetApi {
 
     @DELETE("api/files/users/{folder}/{file}")
     suspend fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
+
+    @PUT("api/ads/{id}/like")
+    suspend fun changeLikeStatus(@Path("id") id: String)
 }

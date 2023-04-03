@@ -80,8 +80,8 @@ fun PetList(
         PetList(
             state = state,
             clicked = { store.dispatch(PetListUiEvent.OpenPet(it.id)) },
-            likeClicked = { /* Todo */ },
-            unlikeClicked = { /* Todo */ },
+            likeClicked = { store.dispatch(PetListUiEvent.LikePet(it.id)) },
+            unlikeClicked = { store.dispatch(PetListUiEvent.DislikePet(it.id)) },
             reloadPage = { store.dispatch(PetListUiEvent.ReloadPage) },
             loadPage = { store.dispatch(PetListUiEvent.LoadPage) }
         )
