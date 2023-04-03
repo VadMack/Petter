@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -52,6 +53,7 @@ import ru.gortea.petter.pet.list.ui.state.model.LikeState
 import ru.gortea.petter.pet.list.ui.state.model.PetListItem
 import ru.gortea.petter.theme.Accent600
 import ru.gortea.petter.theme.Base100
+import ru.gortea.petter.theme.Base500
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.Male
 import ru.gortea.petter.theme.PetterAppTheme
@@ -113,15 +115,45 @@ private fun PetList(
     when (state.dataState) {
         is Initial.Empty, is Initial.Loading -> LoadingPlaceholder()
         is Initial.Fail -> Unit // Todo add error placeholder
-        is Paged -> PetListPaged(
-            state = state.dataState,
-            offset = state.offset,
-            clicked = clicked,
-            likeClicked = likeClicked,
-            unlikeClicked = unlikeClicked,
-            reloadPage = reloadPage,
-            loadPage = loadPage
+        is Paged -> {
+            if (state.dataState.content.isEmpty()) {
+                EmptyPlaceholder()
+            } else {
+                PetListPaged(
+                    state = state.dataState,
+                    offset = state.offset,
+                    clicked = clicked,
+                    likeClicked = likeClicked,
+                    unlikeClicked = unlikeClicked,
+                    reloadPage = reloadPage,
+                    loadPage = loadPage
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyPlaceholder() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Icon(
+            icon = UiKitR.drawable.ic_paw_outline,
+            tint = Base500,
+            size = 90.dp,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
+
+        Text(
+            text = stringResource(R.string.empty_list),
+            style = MaterialTheme.typography.h3.copy(Base500),
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 
@@ -231,7 +263,10 @@ private fun PetListItem(
                         TextModel(item.breed) to UiKitR.drawable.ic_paw,
                         TextModel(item.age) to UiKitR.drawable.ic_birthday,
                         item.price to UiKitR.drawable.ic_cash,
-                        item.address?.let { TextModel(it) to UiKitR.drawable.ic_marker }
+                        item.address?.let {
+                            if (it.isNotEmpty()) TextModel(it) to UiKitR.drawable.ic_marker
+                            else null
+                        }
                     ).forEach { (text, icon) ->
                         TextWithIcon(
                             text = text.getText(),
@@ -359,7 +394,7 @@ private fun PetListItem_Preview() {
                 price = TextModel("По договоренности"),
                 likeState = LikeState.LIKED,
                 hideState = HideState.NOT_AVAILABLE,
-                address = ""
+                address = null
             ),
             clicked = {},
             likeClicked = {},
@@ -400,7 +435,7 @@ private fun PetList_Preview() {
                 price = TextModel("По договоренности"),
                 likeState = LikeState.LIKED,
                 hideState = HideState.HIDDEN,
-                address = ""
+                address = null
             )
         )
 

@@ -200,12 +200,20 @@ private fun ProfileContent(
                 TextWithIcon(
                     text = address,
                     style = MaterialTheme.typography.button2.copy(color = Base600),
+                    leadingIcon = {
+                        Icon(
+                            icon = UiKitR.drawable.ic_marker,
+                            tint = Base600,
+                            size = 18.dp
+                        )
+                    },
                     modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
                 )
             }
 
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(top = 24.dp, bottom = 6.dp)
             ) {

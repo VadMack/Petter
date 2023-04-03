@@ -2,4 +2,5 @@
 <resources>
     <string name="zero_price">По договоренности</string>
     <string name="reload">Попробовать снова</string>
+    <string name="empty_list">К сожалению, список пуст</string>
 </resources>
