@@ -60,6 +60,7 @@ import ru.gortea.petter.ui_kit.avatar.Avatar
 import ru.gortea.petter.ui_kit.button.TextButton
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
 import ru.gortea.petter.ui_kit.R as UiKitR
 
@@ -81,8 +82,6 @@ fun PetList(
             clicked = { store.dispatch(PetListUiEvent.OpenPet(it.id)) },
             likeClicked = { /* Todo */ },
             unlikeClicked = { /* Todo */ },
-            hideClicked = { /* Todo */ },
-            showClicked = { /* Todo */ },
             reloadPage = { store.dispatch(PetListUiEvent.ReloadPage) },
             loadPage = { store.dispatch(PetListUiEvent.LoadPage) }
         )
@@ -106,13 +105,11 @@ private fun PetList(
     clicked: (PetListItem) -> Unit,
     likeClicked: (PetListItem) -> Unit,
     unlikeClicked: (PetListItem) -> Unit,
-    hideClicked: (PetListItem) -> Unit,
-    showClicked: (PetListItem) -> Unit,
     reloadPage: () -> Unit,
     loadPage: () -> Unit
 ) {
     when (state.dataState) {
-        is Initial.Empty, is Initial.Loading -> PetListInitLoading()
+        is Initial.Empty, is Initial.Loading -> LoadingPlaceholder()
         is Initial.Fail -> Unit // Todo add error placeholder
         is Paged -> PetListPaged(
             state = state.dataState,
@@ -120,19 +117,8 @@ private fun PetList(
             clicked = clicked,
             likeClicked = likeClicked,
             unlikeClicked = unlikeClicked,
-            hideClicked = hideClicked,
-            showClicked = showClicked,
             reloadPage = reloadPage,
             loadPage = loadPage
-        )
-    }
-}
-
-@Composable
-private fun PetListInitLoading() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier.align(Alignment.Center)
         )
     }
 }
@@ -144,8 +130,6 @@ private fun PetListPaged(
     clicked: (PetListItem) -> Unit,
     likeClicked: (PetListItem) -> Unit,
     unlikeClicked: (PetListItem) -> Unit,
-    hideClicked: (PetListItem) -> Unit,
-    showClicked: (PetListItem) -> Unit,
     reloadPage: () -> Unit,
     loadPage: () -> Unit
 ) {
@@ -164,8 +148,6 @@ private fun PetListPaged(
                 clicked = clicked,
                 likeClicked = likeClicked,
                 unlikeClicked = unlikeClicked,
-                hideClicked = hideClicked,
-                showClicked = showClicked,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -212,8 +194,6 @@ private fun PetListItem(
     clicked: (PetListItem) -> Unit,
     likeClicked: (PetListItem) -> Unit,
     unlikeClicked: (PetListItem) -> Unit,
-    hideClicked: (PetListItem) -> Unit,
-    showClicked: (PetListItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -240,9 +220,7 @@ private fun PetListItem(
                 NameRow(
                     item = item,
                     likeClicked = likeClicked,
-                    unlikeClicked = unlikeClicked,
-                    hideClicked = hideClicked,
-                    showClicked = showClicked
+                    unlikeClicked = unlikeClicked
                 )
 
                 ProvideTextStyle(value = MaterialTheme.typography.body2.copy(color = Base600)) {
@@ -282,9 +260,7 @@ private fun PetListItem(
 private fun NameRow(
     item: PetListItem,
     likeClicked: (PetListItem) -> Unit,
-    unlikeClicked: (PetListItem) -> Unit,
-    hideClicked: (PetListItem) -> Unit,
-    showClicked: (PetListItem) -> Unit
+    unlikeClicked: (PetListItem) -> Unit
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         TextWithIcon(
@@ -309,11 +285,6 @@ private fun NameRow(
                 likeClicked = { likeClicked(item) },
                 unlikeClicked = { unlikeClicked(item) }
             )
-            item.hideState != HideState.NOT_AVAILABLE -> Hide(
-                hideState = item.hideState,
-                hideClicked = { hideClicked(item) },
-                showClicked = { showClicked(item) }
-            )
         }
     }
 }
@@ -337,29 +308,6 @@ private fun Like(
             size = 22.dp
         )
         LikeState.NOT_AVAILABLE -> Unit
-    }
-}
-
-@Composable
-private fun Hide(
-    hideState: HideState,
-    hideClicked: () -> Unit,
-    showClicked: () -> Unit
-) {
-    when (hideState) {
-        HideState.OPENED -> ClickableIcon(
-            icon = UiKitR.drawable.ic_opened,
-            tint = Base600,
-            onClick = hideClicked,
-            size = 22.dp
-        )
-        HideState.HIDDEN -> ClickableIcon(
-            icon = UiKitR.drawable.ic_hidden,
-            tint = Base600,
-            onClick = showClicked,
-            size = 22.dp
-        )
-        HideState.NOT_AVAILABLE -> Unit
     }
 }
 
@@ -412,8 +360,6 @@ private fun PetListItem_Preview() {
             clicked = {},
             likeClicked = {},
             unlikeClicked = {},
-            hideClicked = {},
-            showClicked = {},
             modifier = Modifier.padding(8.dp)
         )
     }
@@ -459,8 +405,6 @@ private fun PetList_Preview() {
             clicked = {},
             likeClicked = {},
             unlikeClicked = {},
-            hideClicked = {},
-            showClicked = {},
             reloadPage = {},
             loadPage = {}
         )
