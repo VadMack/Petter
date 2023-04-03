@@ -227,11 +227,11 @@ private fun PetListItem(
 
                 ProvideTextStyle(value = MaterialTheme.typography.body2.copy(color = Base600)) {
 
-                    listOf(
+                    listOfNotNull(
                         TextModel(item.breed) to UiKitR.drawable.ic_paw,
                         TextModel(item.age) to UiKitR.drawable.ic_birthday,
                         item.price to UiKitR.drawable.ic_cash,
-                        TextModel(item.address) to UiKitR.drawable.ic_marker
+                        item.address?.let { TextModel(it) to UiKitR.drawable.ic_marker }
                     ).forEach { (text, icon) ->
                         TextWithIcon(
                             text = text.getText(),

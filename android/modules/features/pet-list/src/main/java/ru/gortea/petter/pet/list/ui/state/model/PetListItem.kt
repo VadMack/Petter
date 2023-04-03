@@ -15,6 +15,7 @@ internal data class PetListItem(
     val breed: String,
     val age: String,
     val price: TextModel,
+    val address: String?,
     val likeState: LikeState,
     val hideState: HideState
 )

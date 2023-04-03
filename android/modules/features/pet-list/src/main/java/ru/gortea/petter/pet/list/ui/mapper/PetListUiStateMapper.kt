@@ -39,7 +39,8 @@ internal class PetListUiStateMapper(
                         model.price.toString()
                     ),
                     likeState = model.likeState(state.currentUserId),
-                    hideState = model.hideState(state.currentUserId)
+                    hideState = model.hideState(state.currentUserId),
+                    address = model.address?.toString()
                 )
             },
             offset = state.pageSize * 2

@@ -20,6 +20,7 @@ data class PetListItemModel(
     val hasAchievements: Boolean,
     val imagePaths: List<String>?,
     val state: PetCardState,
+    val address: AddressModel? = null,
     val liked: Boolean
 ) {
     val photoPath: String?
