@@ -9,6 +9,7 @@ dependencies {
     implementation project(":modules:features:profile-data")
 
     implementation project(":modules:formatters")
+    implementation project(":modules:navigation")
     implementation project(":modules:arch-android")
     implementation project(":modules:data-paging-android")
     implementation project(":modules:ui-kit")

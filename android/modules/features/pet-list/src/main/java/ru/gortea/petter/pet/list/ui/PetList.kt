@@ -22,10 +22,10 @@ import androidx.compose.material.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,9 +38,11 @@ import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.paging.android.rememberPagingState
 import ru.gortea.petter.data.paging.model.PagingDataState.Initial
 import ru.gortea.petter.data.paging.model.PagingDataState.Paged
+import ru.gortea.petter.navigation.NavCommand
 import ru.gortea.petter.pet.list.R
 import ru.gortea.petter.pet.list.di.PetListComponent
 import ru.gortea.petter.pet.list.model.PetListKeyModel
+import ru.gortea.petter.pet.list.navigation.commands.PetListNavCommand
 import ru.gortea.petter.pet.list.presentation.PetListUiEvent
 import ru.gortea.petter.pet.list.presentation.createPetListStore
 import ru.gortea.petter.pet.list.ui.mapper.PetListUiStateMapper
@@ -49,6 +51,7 @@ import ru.gortea.petter.pet.list.ui.state.model.HideState
 import ru.gortea.petter.pet.list.ui.state.model.LikeState
 import ru.gortea.petter.pet.list.ui.state.model.PetListItem
 import ru.gortea.petter.theme.Accent600
+import ru.gortea.petter.theme.Base100
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.Male
 import ru.gortea.petter.theme.PetterAppTheme
@@ -63,12 +66,14 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 @Composable
 fun PetList(
     listKey: PetListKeyModel,
-    holderKey: String,
+    command: NavCommand,
     openPetCard: (String) -> Unit
 ) {
     val component = getComponent<PetListComponent>()
     val formatter = remember { component.dateFormatter }
-    val store by storeHolder(holderKey) { createPetListStore(component, listKey.pageSize, openPetCard) }
+    val store by storeHolder {
+        createPetListStore(component, listKey.pageSize, openPetCard)
+    }
 
     store.collect(PetListUiStateMapper(formatter)) { state ->
         PetList(
@@ -83,8 +88,15 @@ fun PetList(
         )
     }
 
-    LaunchedEffect(listKey) {
+    LaunchedEffect(command) {
+        when (command) {
+            is PetListNavCommand.InvalidateList -> store.dispatch(PetListUiEvent.Invalidate(listKey))
+        }
+    }
+
+    rememberSaveable(listKey) {
         store.dispatch(PetListUiEvent.Invalidate(listKey))
+        true
     }
 }
 
@@ -257,9 +269,9 @@ private fun PetListItem(
         }
 
         if (item.hideState == HideState.HIDDEN) {
-            Box(
-                modifier = modifier
-                    .background(Color.White.copy(alpha = 0.7f), RoundedCornerShape(16.dp))
+            Spacer(
+                modifier = Modifier
+                    .background(Base100.copy(alpha = 0.6f), RoundedCornerShape(16.dp))
                     .fillMaxSize()
             )
         }
@@ -436,7 +448,7 @@ private fun PetList_Preview() {
                 age = "20.05.2001",
                 price = TextModel("По договоренности"),
                 likeState = LikeState.LIKED,
-                hideState = HideState.NOT_AVAILABLE
+                hideState = HideState.HIDDEN
             )
         )
 

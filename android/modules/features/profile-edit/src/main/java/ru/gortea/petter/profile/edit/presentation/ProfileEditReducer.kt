@@ -8,11 +8,13 @@ import ru.gortea.petter.arch.android.util.text
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.model.isContent
+import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.profile.data.remote.model.AddressModel
 import ru.gortea.petter.profile.data.remote.model.AvatarModel
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateFullModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateModel
+import ru.gortea.petter.profile.edit.navigation.commands.ProfileEditNavCommand.ProfileUpdated
 import ru.gortea.petter.profile.edit.presentation.validation.reason.ProfileEditFailedReason
 import ru.gortea.petter.profile.edit.presentation.ProfileEditCommand as Command
 import ru.gortea.petter.profile.edit.presentation.ProfileEditEvent as Event
@@ -20,6 +22,7 @@ import ru.gortea.petter.profile.edit.presentation.ProfileEditState as State
 import ru.gortea.petter.profile.edit.presentation.ProfileEditUiEvent as UiEvent
 
 internal class ProfileEditReducer(
+    private val router: PetterRouter<*>,
     private val showModalImageChooser: () -> Unit,
     private val showImagePicker: () -> Unit,
     private val finish: () -> Unit
@@ -53,6 +56,7 @@ internal class ProfileEditReducer(
         state { copy(userUpdateStatus = state) }
 
         if (state.isContent) {
+            router.sendCommand(ProfileUpdated)
             finish()
         }
     }

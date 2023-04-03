@@ -11,7 +11,7 @@ import ru.gortea.petter.profile.data.remote.model.GetUserModel
 import ru.gortea.petter.profile.presentation.ProfileCommand
 import ru.gortea.petter.profile.presentation.ProfileEvent
 
-internal class ProfileInitGetUserActor(
+internal class ProfileLoadUserActor(
     private val repository: GetUserRepository
 ) : Actor<ProfileCommand, ProfileEvent> {
 

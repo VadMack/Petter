@@ -4,10 +4,12 @@ import android.net.Uri
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isContent
 import ru.gortea.petter.data.model.mapContentSync
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.navigation.PetNavTarget
+import ru.gortea.petter.pet.navigation.commands.PetNavCommand
 import ru.gortea.petter.pet.presentation.state.PetField
 import ru.gortea.petter.pet.presentation.state.getDefaultPresentationModel
 import ru.gortea.petter.pet.presentation.state.toPetPresentationModel
@@ -41,6 +43,11 @@ internal class PetReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.deletePetStatus(event: Event.DeletePetStatus) {
         state { copy(petDeleteStatus = event.state) }
+
+        if (event.state.isContent) {
+            router.sendCommand(PetNavCommand.PetUpdated)
+            router.pop()
+        }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.loadPetStatus(event: Event.LoadPetStatus) {
@@ -61,6 +68,7 @@ internal class PetReducer(
         state { copy(petUpdateStatus = event.state) }
 
         if (event.state is DataState.Content) {
+            router.sendCommand(PetNavCommand.PetUpdated)
             router.pop()
         }
     }
@@ -156,7 +164,6 @@ internal class PetReducer(
 
     private fun goBack() {
         router.pop()
-        // todo call method of connector interface to reload data or check if node is visible or not
     }
 
     private fun MessageBuilder<State, Nothing, Command>.editPet() {

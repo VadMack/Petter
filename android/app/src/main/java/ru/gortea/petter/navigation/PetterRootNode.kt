@@ -11,7 +11,7 @@ import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.auth.navigation.AuthorizationRootNode
 import ru.gortea.petter.main.di.MainActivityComponent
-import ru.gortea.petter.navigation.parent.BackStackParentNode
+import ru.gortea.petter.navigation.node.parent.BackStackParentNode
 import ru.gortea.petter.navigation.target.PetterRootTarget
 import ru.gortea.petter.profile.edit.navigation.ProfileEditNode
 import ru.gortea.petter.root.navigation.node.ContentRootParentNode
@@ -27,7 +27,11 @@ class PetterRootNode(
         return when (navTarget) {
             is PetterRootTarget.Authorization -> AuthorizationRootNode(buildContext)
             is PetterRootTarget.Content -> ContentRootParentNode(buildContext)
-            is PetterRootTarget.UserEdit -> ProfileEditNode(buildContext, isProfileCreate = true)
+            is PetterRootTarget.UserEdit -> ProfileEditNode(
+                buildContext = buildContext,
+                isProfileCreate = true,
+                router = router
+            )
         }
     }
 

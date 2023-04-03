@@ -89,7 +89,7 @@ internal fun PetScreen(
             chatClicked = { store.dispatch(PetUiEvent.OpenChat) }
         )
     }
-    
+
     LaunchedEffect(needReload) {
         store.dispatch(PetUiEvent.LoadPet(id))
     }
@@ -142,13 +142,19 @@ private fun PetScreenRoot(
     when (state.modelStatus) {
         is DataState.Empty -> Unit
         is DataState.Loading -> LoadingPlaceholder(modifier)
-        is DataState.Content -> PetScreenContent(
-            state = state.modelStatus.content,
-            dateFormatter = dateFormatter,
-            editClicked = editClicked,
-            chatClicked = chatClicked,
-            modifier = modifier
-        )
+        is DataState.Content -> {
+            if (state.isDeleteLoading) {
+                LoadingPlaceholder(modifier)
+            } else {
+                PetScreenContent(
+                    state = state.modelStatus.content,
+                    dateFormatter = dateFormatter,
+                    editClicked = editClicked,
+                    chatClicked = chatClicked,
+                    modifier = modifier
+                )
+            }
+        }
         is DataState.Fail -> Unit // Todo add error placeholder
     }
 }
@@ -373,7 +379,8 @@ private fun PetScreen_Preview() {
                         )
                     )
                 )
-            )
+            ),
+            isDeleteLoading = false
         )
 
         PetScreen(

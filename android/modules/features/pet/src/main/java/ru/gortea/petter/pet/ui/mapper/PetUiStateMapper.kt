@@ -2,6 +2,8 @@ package ru.gortea.petter.pet.ui.mapper
 
 import androidx.compose.ui.graphics.Color
 import ru.gortea.petter.arch.UiStateMapper
+import ru.gortea.petter.data.model.isContent
+import ru.gortea.petter.data.model.isLoading
 import ru.gortea.petter.data.model.mapContentSync
 import ru.gortea.petter.pet.data.model.PetFullModel
 import ru.gortea.petter.pet.data.model.constants.Gender
@@ -31,7 +33,8 @@ internal class PetUiStateMapper : UiStateMapper<PetState, PetUiState> {
                     ),
                     canEdit = state.editAvailable
                 )
-            }
+            },
+            isDeleteLoading = state.petDeleteStatus.run { isLoading || isContent }
         )
     }
 

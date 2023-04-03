@@ -9,6 +9,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,11 +24,15 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.navigation.NavCommand
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.list.model.PetListKeyModel
+import ru.gortea.petter.pet.list.navigation.commands.PetListNavCommand
 import ru.gortea.petter.pet.list.ui.PetList
+import ru.gortea.petter.pet.navigation.commands.PetNavCommand
 import ru.gortea.petter.profile.R
 import ru.gortea.petter.profile.di.ProfileComponent
+import ru.gortea.petter.profile.edit.navigation.commands.ProfileEditNavCommand
 import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.ProfileUiEvent
 import ru.gortea.petter.profile.presentation.createProfileStore
@@ -53,6 +60,7 @@ internal fun ProfileScreen(
     router: PetterRouter<ProfileNavTarget>,
     finish: () -> Unit
 ) {
+    val command by router.commands.collectAsState()
     val component: ProfileComponent = getComponent()
 
     val store by storeHolder { createProfileStore(id, component, router, finish) }
@@ -61,12 +69,22 @@ internal fun ProfileScreen(
         ProfileScreen(
             canGoBack = canGoBack,
             state = state,
+            command = command,
             backClicked = { store.dispatch(ProfileUiEvent.Back) },
             editClicked = { store.dispatch(ProfileUiEvent.EditProfile) },
             logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
             addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) },
             openPetClicked = { store.dispatch(ProfileUiEvent.OpenPet(it)) }
         )
+    }
+
+    LaunchedEffect(command) {
+        when (command) {
+            is ProfileEditNavCommand.ProfileUpdated -> {
+                store.dispatch(ProfileUiEvent.LoadUser(id))
+                router.sendCommand(NavCommand.Empty)
+            }
+        }
     }
 }
 
@@ -75,6 +93,7 @@ internal fun ProfileScreen(
 private fun ProfileScreen(
     canGoBack: Boolean,
     state: ProfileUiState,
+    command: NavCommand,
     backClicked: () -> Unit,
     editClicked: () -> Unit,
     addPetClicked: () -> Unit,
@@ -98,6 +117,7 @@ private fun ProfileScreen(
         content = { padding ->
             ProfileRoot(
                 state = state,
+                command = command,
                 addPetClicked = addPetClicked,
                 openPetClicked = openPetClicked,
                 modifier = Modifier.padding(padding)
@@ -109,6 +129,7 @@ private fun ProfileScreen(
 @Composable
 private fun ProfileRoot(
     state: ProfileUiState,
+    command: NavCommand,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
     modifier: Modifier
@@ -117,6 +138,7 @@ private fun ProfileRoot(
         is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
         is DataState.Content -> ProfileContent(
             state = state.userState.content,
+            command = command,
             modifier = modifier,
             addPetClicked = addPetClicked,
             openPetClicked = openPetClicked
@@ -128,6 +150,7 @@ private fun ProfileRoot(
 @Composable
 private fun ProfileContent(
     state: ProfileUiModel,
+    command: NavCommand,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
     modifier: Modifier
@@ -164,9 +187,14 @@ private fun ProfileContent(
                 )
             }
 
+            val listCommand = when (command) {
+                is PetNavCommand.PetUpdated -> PetListNavCommand.InvalidateList
+                else -> NavCommand.Empty
+            }
+
             PetList(
                 listKey = PetListKeyModel(ownerId = state.id),
-                holderKey = state.id,
+                command = listCommand,
                 openPetCard = openPetClicked
             )
         }
@@ -222,6 +250,7 @@ private fun ProfileScreen_Preview() {
         ProfileScreen(
             canGoBack = false,
             state = state,
+            command = NavCommand.Empty,
             backClicked = {},
             editClicked = {},
             logoutClicked = {},

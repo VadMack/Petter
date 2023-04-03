@@ -12,7 +12,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.gortea.petter.navigation.parent.BackStackParentNode
+import ru.gortea.petter.navigation.node.parent.BackStackParentNode
 import ru.gortea.petter.profile.navigation.ProfileRootNode
 import ru.gortea.petter.root.BottomNavigationContainer
 import ru.gortea.petter.root.navigation.BottomNavigationRouter
