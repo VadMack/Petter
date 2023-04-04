@@ -9,6 +9,7 @@ dependencies {
     implementation AndroidX.composeUi
     implementation AndroidX.composeMaterial
 
+    implementation project(":modules:features:home")
     implementation project(":modules:features:profile")
 
     implementation project(":modules:navigation")

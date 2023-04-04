@@ -40,8 +40,11 @@ dependencies {
 
     implementation project(":modules:features:pet")
     implementation project(":modules:features:pet-data")
+    implementation project(":modules:features:pet-list")
+    implementation project(":modules:features:pet-list-data")
 
     implementation project(":modules:arch-android")
+    implementation project(":modules:formatters")
     implementation project(":modules:navigation")
     implementation project(":modules:network")
     implementation project(":modules:token-storage")

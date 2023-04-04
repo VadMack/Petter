@@ -11,6 +11,7 @@ import ru.gortea.petter.pet.presentation.actors.PetDeleteActor
 import ru.gortea.petter.pet.presentation.actors.PetDeleteInitActor
 import ru.gortea.petter.pet.presentation.actors.PetGetActor
 import ru.gortea.petter.pet.presentation.actors.PetGetInitActor
+import ru.gortea.petter.pet.presentation.actors.PetLikeActor
 import ru.gortea.petter.pet.presentation.actors.PetUpdateActor
 import ru.gortea.petter.pet.presentation.actors.PetUpdateInitActor
 import ru.gortea.petter.pet.presentation.state.PetState
@@ -19,6 +20,7 @@ internal typealias PetStore = MviStore<PetState, PetEvent, Nothing>
 
 internal fun createPetStore(
     petId: String?,
+    editMode: Boolean,
     component: PetComponent,
     router: PetterRouter<PetNavTarget>,
     showModalImageChooser: () -> Unit = {},
@@ -30,7 +32,7 @@ internal fun createPetStore(
     val getRepo = component.getPetRepository
 
     return TeaStore(
-        PetState(isCreation = petId == null),
+        PetState(isCreation = petId == null, editMode = editMode),
         PetReducer(router, showModalImageChooser, showImagePicker),
         listOf(
             IsMyPetActor(component.userRepository),
@@ -40,7 +42,8 @@ internal fun createPetStore(
             PetDeleteInitActor(deleteRepo),
             PetDeleteActor(deleteRepo),
             PetGetInitActor(getRepo),
-            PetGetActor(getRepo)
+            PetGetActor(getRepo),
+            PetLikeActor(component.petLikeRepository)
         ),
         listOf(
             PetEvent.InitApi,

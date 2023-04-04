@@ -1,0 +1,15 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+}
+
+dependencies {
+    implementation project(":modules:features:pet")
+    implementation project(":modules:features:pet-list")
+
+    implementation project(":modules:arch-android")
+    implementation project(":modules:navigation")
+
+    implementation project(":modules:ui-kit")
+}

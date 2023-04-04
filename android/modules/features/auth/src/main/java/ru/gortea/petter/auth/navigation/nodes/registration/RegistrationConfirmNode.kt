@@ -3,10 +3,10 @@ package ru.gortea.petter.auth.navigation.nodes.registration
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.modality.BuildContext
-import com.bumble.appyx.core.node.Node
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.registration.registration_confirm.ui.RegistrationConfirmScreen
 import ru.gortea.petter.navigation.Router
+import ru.gortea.petter.navigation.node.ViewModelNode
 
 internal class RegistrationConfirmNode(
     val buildContext: BuildContext,
@@ -15,7 +15,7 @@ internal class RegistrationConfirmNode(
     val username: String,
     val pwd: String,
     private val router: Router<AuthorizationNavTarget>
-) : Node(buildContext) {
+) : ViewModelNode(buildContext) {
 
     @Composable
     override fun View(modifier: Modifier) {

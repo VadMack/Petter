@@ -11,13 +11,22 @@ class GetUserRepository(
     private val userLocalRepository: UserLocalRepository
 ) : SourceRepository<UserModel>(
     source = {
-        val getUserModel = it as GetUserModel
+        val model = it as GetUserModel
         val currentUser = userLocalRepository.getCurrentUser()
 
-        if (getUserModel.id.isEmpty() || currentUser.id == getUserModel.id) {
-            currentUser
-        } else {
-            api.getUserById(getUserModel.id)
+        val user = when {
+            model.forceRemote -> {
+                val id = model.id.ifEmpty { currentUser.id }
+                api.getUserById(id)
+            }
+            model.id.isEmpty() || currentUser.id == model.id -> currentUser
+            else -> api.getUserById(model.id)
         }
+
+        if (model.forceRemote && model.id == currentUser.id) {
+            userLocalRepository.updateCurrentUser(user)
+        }
+
+        user
     }
 )

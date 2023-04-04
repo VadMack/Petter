@@ -8,6 +8,7 @@ import ru.gortea.petter.network.createApi
 import ru.gortea.petter.pet.data.CreatePetRepository
 import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.data.GetPetRepository
+import ru.gortea.petter.pet.data.PetLikeRepository
 import ru.gortea.petter.pet.data.UpdatePetRepository
 import ru.gortea.petter.pet.data.api.PetApi
 
@@ -43,5 +44,10 @@ class FeaturePetDataModule {
     @Provides
     fun provideDeletePetRepository(api: PetApi): DeletePetRepository {
         return DeletePetRepository(api)
+    }
+
+    @Provides
+    fun provideLikePetRepository(api: PetApi): PetLikeRepository {
+        return PetLikeRepository(api)
     }
 }

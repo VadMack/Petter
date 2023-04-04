@@ -6,8 +6,8 @@ import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.profile.di.ProfileComponent
 import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.actors.ProfileCheckCurrentUserActor
-import ru.gortea.petter.profile.presentation.actors.ProfileGetUserActor
-import ru.gortea.petter.profile.presentation.actors.ProfileInitGetUserActor
+import ru.gortea.petter.profile.presentation.actors.ProfileInitLoadUserActor
+import ru.gortea.petter.profile.presentation.actors.ProfileLoadUserActor
 
 internal typealias ProfileStore = MviStore<ProfileState, ProfileEvent, Nothing>
 
@@ -26,8 +26,8 @@ internal fun createProfileStore(
         ProfileState(),
         ProfileReducer(logoutController, router, finish),
         listOf(
-            ProfileInitGetUserActor(getUserRepository),
-            ProfileGetUserActor(getUserRepository),
+            ProfileInitLoadUserActor(getUserRepository),
+            ProfileLoadUserActor(getUserRepository),
             ProfileCheckCurrentUserActor(userLocalRepository)
         ),
         listOf(

@@ -1,7 +1,7 @@
 package ru.gortea.petter.pet.ui
 
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,13 +9,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,6 +34,8 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.SimpleDateFormatter
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
@@ -42,8 +50,10 @@ import ru.gortea.petter.pet.presentation.state.PetFieldName
 import ru.gortea.petter.pet.ui.mapper.PetUiStateMapper
 import ru.gortea.petter.pet.ui.mapper.iconTint
 import ru.gortea.petter.pet.ui.state.showing.PetFullUiModel
+import ru.gortea.petter.pet.ui.state.showing.PetLikeStatus
 import ru.gortea.petter.pet.ui.state.showing.PetUiModel
 import ru.gortea.petter.pet.ui.state.showing.PetUiState
+import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.Male
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.ui_kit.avatar.Avatar
@@ -51,24 +61,27 @@ import ru.gortea.petter.ui_kit.button.PrimaryButton
 import ru.gortea.petter.ui_kit.containers.PetDescriptionContainer
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.ErrorPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
 import ru.gortea.petter.ui_kit.toolbar.BackIcon
 import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
 internal fun PetScreen(
     id: String,
     router: PetterRouter<PetNavTarget>,
+    needReload: Boolean
 ) {
     val component = getComponent<PetComponent>()
-    val store by storeHolder(key = "Pet-$id") {
+    val dateFormatter = remember { component.dateFormatter }
+    val store by storeHolder {
         createPetStore(
             petId = id,
+            editMode = false,
             component = component,
             router = router
         )
@@ -77,138 +90,236 @@ internal fun PetScreen(
     store.collect(PetUiStateMapper()) { state ->
         PetScreen(
             state = state,
+            dateFormatter = dateFormatter,
             backClicked = { store.dispatch(PetUiEvent.GoBack) },
             deleteClicked = { store.dispatch(PetUiEvent.DeletePet) },
+            likeClicked = { store.dispatch(PetUiEvent.LikePet) },
+            unlikeClicked = { store.dispatch(PetUiEvent.UnlikePet) },
             editClicked = { store.dispatch(PetUiEvent.EditPet) },
-            chatClicked = { store.dispatch(PetUiEvent.OpenChat) }
+            chatClicked = { store.dispatch(PetUiEvent.OpenChat) },
+            reloadClicked = { store.dispatch(PetUiEvent.LoadPet(id)) }
         )
+    }
+
+    LaunchedEffect(needReload) {
+        store.dispatch(PetUiEvent.LoadPet(id))
     }
 }
 
-@VisibleForTesting
 @Composable
-private fun PetScreen(
+internal fun PetScreen(
     state: PetUiState,
+    dateFormatter: DateFormatter,
     backClicked: () -> Unit,
     deleteClicked: () -> Unit,
+    likeClicked: () -> Unit,
+    unlikeClicked: () -> Unit,
     editClicked: () -> Unit,
-    chatClicked: () -> Unit
+    chatClicked: () -> Unit,
+    reloadClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
             Toolbar(
                 startIcon = { BackIcon(backClicked) },
                 text = "",
-                endIcon = if (state.canDelete) {
-                    {
-                        ClickableIcon(
-                            icon = UiKitR.drawable.ic_delete,
-                            onClick = deleteClicked,
-                            tint = MaterialTheme.colors.error
-                        )
-                    }
-                } else null
+                endIcon = createEndIcon(state, deleteClicked, likeClicked, unlikeClicked)
             )
         }
     ) {
         PetScreenRoot(
             state = state,
+            dateFormatter = dateFormatter,
             editClicked = editClicked,
             chatClicked = chatClicked,
+            reloadClicked = reloadClicked,
             modifier = Modifier.padding(it)
         )
+    }
+}
+
+private fun createEndIcon(
+    state: PetUiState,
+    deleteClicked: () -> Unit,
+    likeClicked: () -> Unit,
+    unlikeClicked: () -> Unit
+): (@Composable () -> Unit)? {
+    if (!state.canDelete && state.likeStatus == PetLikeStatus.NOT_AVAILABLE) return null
+
+    return when {
+        state.canDelete -> {
+            {
+                ClickableIcon(
+                    icon = UiKitR.drawable.ic_delete,
+                    onClick = deleteClicked,
+                    tint = MaterialTheme.colors.error
+                )
+            }
+        }
+        else -> {
+            {
+                Like(
+                    likeState = state.likeStatus,
+                    likeClicked = { likeClicked() },
+                    unlikeClicked = { unlikeClicked() }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun Like(
+    likeState: PetLikeStatus,
+    likeClicked: () -> Unit,
+    unlikeClicked: () -> Unit
+) {
+    when (likeState) {
+        PetLikeStatus.LIKED -> ClickableIcon(
+            icon = UiKitR.drawable.ic_liked,
+            onClick = unlikeClicked,
+            size = 22.dp
+        )
+        PetLikeStatus.UNLIKED -> ClickableIcon(
+            icon = UiKitR.drawable.ic_unliked,
+            tint = Base600,
+            onClick = likeClicked,
+            size = 22.dp
+        )
+        PetLikeStatus.NOT_AVAILABLE -> Unit
     }
 }
 
 @Composable
 private fun PetScreenRoot(
     state: PetUiState,
+    dateFormatter: DateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
+    reloadClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (state.modelStatus) {
         is DataState.Empty -> Unit
-        is DataState.Loading -> LoadingPlaceholder(modifier)
-        is DataState.Content -> PetScreenContent(
+        is DataState.Content -> {
+            if (state.isDeleteLoading) {
+                LoadingPlaceholder(modifier)
+            } else {
+                PetScreenContent(
+                    state = state.modelStatus.content,
+                    refreshing = false,
+                    dateFormatter = dateFormatter,
+                    editClicked = editClicked,
+                    chatClicked = chatClicked,
+                    reloadClicked = reloadClicked,
+                    modifier = modifier
+                )
+            }
+        }
+        is DataState.Loading.WithContent -> PetScreenContent(
             state = state.modelStatus.content,
+            refreshing = true,
+            dateFormatter = dateFormatter,
             editClicked = editClicked,
             chatClicked = chatClicked,
+            reloadClicked = reloadClicked,
             modifier = modifier
         )
-        is DataState.Fail -> Unit // Todo add error placeholder
+        is DataState.Loading -> LoadingPlaceholder(modifier)
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PetScreenContent(
     state: PetFullUiModel,
+    refreshing: Boolean,
+    dateFormatter: DateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
+    reloadClicked: () -> Unit,
     modifier: Modifier
 ) {
-    Column(
+    val pullRefreshState = rememberPullRefreshState(refreshing, reloadClicked)
+
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .pullRefresh(pullRefreshState)
     ) {
-        Avatar(
-            image = state.photo?.let {
-                rememberAsyncImagePainter(
-                    it,
-                    placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
-                    error = painterResource(UiKitR.drawable.ic_pet_placeholder)
-                )
-            },
-            placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
-            size = 158.dp,
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        TextWithIcon(
-            text = state.model.name,
-            style = MaterialTheme.typography.h3,
-            trailingIcon = {
-                Icon(
-                    icon = state.model.genderIcon,
-                    tint = state.model.genderTint,
-                    size = 18.dp
-                )
-            },
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        if (state.canEdit) {
-            PrimaryButton(
-                text = stringResource(R.string.button_edit),
-                onClick = editClicked,
-                modifier = Modifier.fillMaxWidth()
-            )
-        } else {
-            PrimaryButton(
-                text = stringResource(R.string.button_chat),
-                onClick = chatClicked,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(items = state.fields, key = { it.fieldName }) {
-                when (it) {
-                    is PetField.SimplePetField -> PetScreenSimpleField(it)
-                    is PetField.EnumPetField -> PetScreenEnumField(it)
-                    is PetField.DatePetField -> PetScreenDateField(it)
-                    is PetField.ListPetField -> PetScreenListField(it)
-                    is PetField.AchievementPetField -> PetScreenAchievementsField(it)
+            Avatar(
+                image = state.photo?.let {
+                    rememberAsyncImagePainter(
+                        it,
+                        placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
+                        error = painterResource(UiKitR.drawable.ic_pet_placeholder)
+                    )
+                },
+                placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
+                size = 158.dp,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            TextWithIcon(
+                text = state.model.name,
+                style = MaterialTheme.typography.h3,
+                trailingIcon = {
+                    Icon(
+                        icon = state.model.genderIcon,
+                        tint = state.model.genderTint,
+                        size = 18.dp
+                    )
+                },
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            if (state.canEdit) {
+                PrimaryButton(
+                    text = stringResource(R.string.button_edit),
+                    onClick = editClicked,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else {
+                PrimaryButton(
+                    text = stringResource(R.string.button_chat),
+                    onClick = chatClicked,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                state.fields.forEach {
+                    when (it) {
+                        is PetField.SimplePetField -> PetScreenSimpleField(it)
+                        is PetField.EnumPetField -> PetScreenEnumField(it)
+                        is PetField.DatePetField -> PetScreenDateField(it, dateFormatter)
+                        is PetField.ListPetField -> PetScreenListField(it)
+                        is PetField.AchievementPetField -> PetScreenAchievementsField(it)
+                    }
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
+
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -217,7 +328,7 @@ private fun PetScreenSimpleField(field: PetField.SimplePetField) {
     PetDescriptionContainer(title = stringResource(field.titleRes)) {
 
         Text(
-            text = field.textField.text,
+            text = field.textField.text.getText(),
             style = MaterialTheme.typography.body2,
             modifier = Modifier.fillMaxWidth()
         )
@@ -237,9 +348,9 @@ private fun PetScreenEnumField(field: PetField.EnumPetField) {
 }
 
 @Composable
-private fun PetScreenDateField(field: PetField.DatePetField) {
+private fun PetScreenDateField(field: PetField.DatePetField, dateFormatter: DateFormatter) {
     PetDescriptionContainer(title = stringResource(field.titleRes)) {
-        val formatted = field.date!!.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        val formatted = remember(field.date) { dateFormatter.format(field.date!!) }
 
         Text(
             text = formatted,
@@ -259,7 +370,7 @@ private fun PetScreenListField(field: PetField.ListPetField) {
         ) {
             field.list.forEach {
                 Text(
-                    text = it.text,
+                    text = it.text.getText(),
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -285,7 +396,7 @@ private fun PetScreenAchievementsField(field: PetField.AchievementPetField) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = competition.text,
+                            text = competition.text.getText(),
                             style = MaterialTheme.typography.body2,
                             modifier = Modifier.weight(1f)
                         )
@@ -309,6 +420,7 @@ private fun PetScreen_Preview() {
         val state = PetUiState(
             canDelete = true,
             canEdit = true,
+            likeStatus = PetLikeStatus.NOT_AVAILABLE,
             modelStatus = DataState.Content(
                 PetFullUiModel(
                     photo = null,
@@ -356,15 +468,20 @@ private fun PetScreen_Preview() {
                         )
                     )
                 )
-            )
+            ),
+            isDeleteLoading = false
         )
 
         PetScreen(
             state = state,
+            dateFormatter = SimpleDateFormatter(),
             backClicked = {},
             deleteClicked = {},
+            likeClicked = {},
+            unlikeClicked = {},
             editClicked = {},
-            chatClicked = {}
+            chatClicked = {},
+            reloadClicked = {}
         )
     }
 }

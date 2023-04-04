@@ -4,12 +4,13 @@ import android.net.Uri
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isContent
 import ru.gortea.petter.data.model.mapContentSync
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.navigation.PetNavTarget
+import ru.gortea.petter.pet.navigation.commands.PetNavCommand
 import ru.gortea.petter.pet.presentation.state.PetField
-import ru.gortea.petter.pet.presentation.state.editMode
 import ru.gortea.petter.pet.presentation.state.getDefaultPresentationModel
 import ru.gortea.petter.pet.presentation.state.toPetPresentationModel
 import ru.gortea.petter.pet.presentation.state.updateField
@@ -32,7 +33,7 @@ internal class PetReducer(
                 Command.InitPetCreate,
                 Command.InitPetDelete
             )
-            is Event.IsMyPet -> state { copy(editAvailable = event.isMyPet) }
+            is Event.IsMyPet -> state { copy(isMine = event.isMyPet) }
             is Event.LoadPetStatus -> loadPetStatus(event)
             is Event.UpdatePetStatus -> updatePetStatus(event)
             is Event.DeletePetStatus -> deletePetStatus(event)
@@ -42,6 +43,11 @@ internal class PetReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.deletePetStatus(event: Event.DeletePetStatus) {
         state { copy(petDeleteStatus = event.state) }
+
+        if (event.state.isContent) {
+            router.sendCommand(PetNavCommand.PetUpdated)
+            router.pop()
+        }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.loadPetStatus(event: Event.LoadPetStatus) {
@@ -62,6 +68,7 @@ internal class PetReducer(
         state { copy(petUpdateStatus = event.state) }
 
         if (event.state is DataState.Content) {
+            router.sendCommand(PetNavCommand.PetUpdated)
             router.pop()
         }
     }
@@ -78,11 +85,45 @@ internal class PetReducer(
             is UiEvent.HidePet -> hidePet()
             is UiEvent.ShowPet -> showPet()
             is UiEvent.DeletePet -> deletePet()
+            is UiEvent.LikePet -> likePet()
+            is UiEvent.UnlikePet -> dislikePet()
             is UiEvent.AvatarChanged -> avatarChanged(event.uri)
             is UiEvent.AvatarClicked -> avatarClicked()
             is UiEvent.AvatarDeleteClicked -> avatarDeleteClicked()
             is UiEvent.AvatarEditClicked -> showImagePicker()
         }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.likePet() {
+        val dataState = state.petLoadingStatus
+        if (dataState is DataState.Content) {
+            dataState.content.model?.id?.let {
+                commands(Command.ChangeLikeStatus(it, true))
+                router.sendCommand(PetNavCommand.PetLikedChanged(it, true))
+            }
+        }
+
+        state { changeLiked(true) }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.dislikePet() {
+        val dataState = state.petLoadingStatus
+        if (dataState is DataState.Content) {
+            dataState.content.model?.id?.let {
+                commands(Command.ChangeLikeStatus(it, false))
+                router.sendCommand(PetNavCommand.PetLikedChanged(it, false))
+            }
+        }
+
+        state { changeLiked(false) }
+    }
+
+    private fun State.changeLiked(liked: Boolean): State {
+        val newStatus = petLoadingStatus.mapContentSync {
+            val newModel = it.model?.copy(liked = liked)
+            it.copy(model = newModel)
+        }
+        return copy(petLoadingStatus = newStatus)
     }
 
     private fun MessageBuilder<State, Nothing, Command>.addFields(fields: List<PetField>) {
@@ -155,17 +196,8 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.goBack() {
+    private fun goBack() {
         router.pop()
-
-        if (state.editMode && !state.isCreation) {
-            state {
-                copy(
-                    editMode = false,
-                    petLoadingStatus = petLoadingStatus.mapContentSync { it.editMode(false) }
-                )
-            }
-        }
     }
 
     private fun MessageBuilder<State, Nothing, Command>.editPet() {
@@ -173,13 +205,6 @@ internal class PetReducer(
 
         if (status is DataState.Content) {
             router.navigateTo(PetNavTarget.EditPet(status.content.model?.id))
-        }
-
-        state {
-            copy(
-                editMode = true,
-                petLoadingStatus = petLoadingStatus.mapContentSync { it.editMode(true) }
-            )
         }
     }
 

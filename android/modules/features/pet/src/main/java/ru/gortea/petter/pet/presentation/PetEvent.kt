@@ -29,6 +29,8 @@ internal sealed interface PetUiEvent : PetEvent {
     object OpenChat : PetUiEvent
     object GoBack : PetUiEvent
     object DeletePet : PetUiEvent
+    object LikePet : PetUiEvent
+    object UnlikePet : PetUiEvent
     object ShowPet : PetUiEvent
     object HidePet : PetUiEvent
     object EditPet : PetUiEvent

@@ -8,4 +8,6 @@
     <string name="cancel">Отмена</string>
 
     <string name="logo_desc">Логотип</string>
+    <string name="loading_error">Не удалось загрузить</string>
+    <string name="reload">Попробовать снова</string>
 </resources>

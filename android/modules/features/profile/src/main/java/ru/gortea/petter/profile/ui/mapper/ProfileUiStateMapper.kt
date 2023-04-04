@@ -14,10 +14,13 @@ internal class ProfileUiStateMapper : UiStateMapper<ProfileState, ProfileUiState
             hasProfileMenu = state.isCurrentUser,
             userState = state.userModelStatus.mapContentSync {
                 ProfileUiModel(
+                    id = it.id,
                     avatar = it.avatarPath?.let(Uri::parse),
                     name = it.displayName ?: "",
                     address = it.address?.toString(),
-                    canAddPet = state.isCurrentUser
+                    canAddPet = state.isCurrentUser,
+                    isFavouritesAvailable = state.isCurrentUser,
+                    petsListState = state.petsListState
                 )
             }
         )

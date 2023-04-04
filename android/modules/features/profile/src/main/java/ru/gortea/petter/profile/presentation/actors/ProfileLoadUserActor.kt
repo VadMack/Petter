@@ -11,13 +11,13 @@ import ru.gortea.petter.profile.data.remote.model.GetUserModel
 import ru.gortea.petter.profile.presentation.ProfileCommand
 import ru.gortea.petter.profile.presentation.ProfileEvent
 
-internal class ProfileInitGetUserActor(
+internal class ProfileLoadUserActor(
     private val repository: GetUserRepository
 ) : Actor<ProfileCommand, ProfileEvent> {
 
     override fun process(commands: Flow<ProfileCommand>): Flow<ProfileEvent> {
         return commands.filterIsInstance<ProfileCommand.LoadUser>()
-            .mapLatest { repository.invalidate(GetUserModel(it.id)) }
+            .mapLatest { repository.invalidate(GetUserModel(it.id, it.forceRemote)) }
             .flatMapMerge { emptyFlow() }
     }
 }

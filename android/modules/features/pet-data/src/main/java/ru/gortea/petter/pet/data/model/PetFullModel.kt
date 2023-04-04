@@ -7,6 +7,7 @@ import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
+import ru.gortea.petter.profile.data.remote.model.AddressModel
 import java.time.LocalDate
 
 @Serializable
@@ -24,14 +25,15 @@ data class PetFullModel(
     val achievements: Map<String, AchievementLevel>? = null,
     val vaccinations: List<String>? = null,
     val description: String? = null,
-    val imagePaths: List<String>? = null,
+    val imagePaths: List<String> = emptyList(),
     val state: PetCardState,
-    val liked: Boolean = false
+    val liked: Boolean = false,
+    val address: AddressModel? = null
 ) : Arguments {
 
     val photoPath: String?
-        get() = imagePaths?.first()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = imagePaths.firstOrNull()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
 
     val photoPathSegments: List<String>?
-        get() = imagePaths?.first()?.split("/")
+        get() = imagePaths.firstOrNull()?.split("/")
 }

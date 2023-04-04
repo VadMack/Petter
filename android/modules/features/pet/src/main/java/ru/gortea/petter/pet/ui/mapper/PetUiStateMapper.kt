@@ -2,11 +2,15 @@ package ru.gortea.petter.pet.ui.mapper
 
 import androidx.compose.ui.graphics.Color
 import ru.gortea.petter.arch.UiStateMapper
+import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isContent
+import ru.gortea.petter.data.model.isLoading
 import ru.gortea.petter.data.model.mapContentSync
 import ru.gortea.petter.pet.data.model.PetFullModel
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.presentation.state.PetState
 import ru.gortea.petter.pet.ui.state.showing.PetFullUiModel
+import ru.gortea.petter.pet.ui.state.showing.PetLikeStatus
 import ru.gortea.petter.pet.ui.state.showing.PetUiModel
 import ru.gortea.petter.pet.ui.state.showing.PetUiState
 import ru.gortea.petter.theme.Female
@@ -17,8 +21,9 @@ internal class PetUiStateMapper : UiStateMapper<PetState, PetUiState> {
 
     override fun map(state: PetState): PetUiState {
         return PetUiState(
-            canDelete = state.editAvailable,
-            canEdit = state.editAvailable,
+            canDelete = state.isMine,
+            canEdit = state.isMine,
+            likeStatus = state.toLikeStatus(),
             modelStatus = state.petLoadingStatus.mapContentSync {
                 val model = requireNotNull(it.model)
                 PetFullUiModel(
@@ -29,10 +34,23 @@ internal class PetUiStateMapper : UiStateMapper<PetState, PetUiState> {
                         genderTint = model.genderTint(),
                         name = model.name
                     ),
-                    canEdit = state.editAvailable
+                    canEdit = state.isMine
                 )
-            }
+            },
+            isDeleteLoading = state.petDeleteStatus.run { isLoading || isContent }
         )
+    }
+
+    private fun PetState.toLikeStatus(): PetLikeStatus {
+        if (petLoadingStatus !is DataState.Content) return PetLikeStatus.NOT_AVAILABLE
+
+        val model = petLoadingStatus.content.model ?: return PetLikeStatus.NOT_AVAILABLE
+
+        return when {
+            isMine -> PetLikeStatus.NOT_AVAILABLE
+            model.liked -> PetLikeStatus.LIKED
+            else -> PetLikeStatus.UNLIKED
+        }
     }
 
     private fun PetFullModel.genderIcon(): Int {

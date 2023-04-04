@@ -12,4 +12,7 @@ sealed class ProfileNavTarget : NavTarget {
 
     @Parcelize
     internal object AddPet : ProfileNavTarget()
+
+    @Parcelize
+    internal class OpenPet(val id: String) : ProfileNavTarget()
 }
