@@ -52,6 +52,7 @@ import ru.gortea.petter.ui_kit.dropdown.Dropdown
 import ru.gortea.petter.ui_kit.dropdown.DropdownItem
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.ErrorPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
 import ru.gortea.petter.ui_kit.toolbar.CloseIcon
@@ -81,7 +82,8 @@ internal fun ProfileScreen(
             editClicked = { store.dispatch(ProfileUiEvent.EditProfile) },
             logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
             addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) },
-            openPetClicked = { store.dispatch(ProfileUiEvent.OpenPet(it)) }
+            openPetClicked = { store.dispatch(ProfileUiEvent.OpenPet(it)) },
+            reloadClicked = { store.dispatch(ProfileUiEvent.LoadUser(id)) }
         )
     }
 
@@ -107,7 +109,8 @@ private fun ProfileScreen(
     editClicked: () -> Unit,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
-    logoutClicked: () -> Unit
+    logoutClicked: () -> Unit,
+    reloadClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -131,6 +134,7 @@ private fun ProfileScreen(
                 favouritesClicked = favouritesClicked,
                 addPetClicked = addPetClicked,
                 openPetClicked = openPetClicked,
+                reloadClicked = reloadClicked,
                 modifier = Modifier.padding(padding)
             )
         }
@@ -145,6 +149,7 @@ private fun ProfileRoot(
     favouritesClicked: () -> Unit,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
+    reloadClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (state.userState) {
@@ -158,7 +163,7 @@ private fun ProfileRoot(
             addPetClicked = addPetClicked,
             openPetClicked = openPetClicked
         )
-        is DataState.Fail -> Unit // TODO add error state
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
 
@@ -368,7 +373,8 @@ private fun ProfileScreen_Preview() {
             editClicked = {},
             logoutClicked = {},
             addPetClicked = {},
-            openPetClicked = {}
+            openPetClicked = {},
+            reloadClicked = {}
         )
     }
 }

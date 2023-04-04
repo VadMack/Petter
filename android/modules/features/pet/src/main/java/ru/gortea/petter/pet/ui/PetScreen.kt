@@ -56,6 +56,7 @@ import ru.gortea.petter.ui_kit.button.PrimaryButton
 import ru.gortea.petter.ui_kit.containers.PetDescriptionContainer
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.ErrorPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
@@ -90,7 +91,8 @@ internal fun PetScreen(
             likeClicked = { store.dispatch(PetUiEvent.LikePet) },
             unlikeClicked = { store.dispatch(PetUiEvent.UnlikePet) },
             editClicked = { store.dispatch(PetUiEvent.EditPet) },
-            chatClicked = { store.dispatch(PetUiEvent.OpenChat) }
+            chatClicked = { store.dispatch(PetUiEvent.OpenChat) },
+            reloadClicked = { store.dispatch(PetUiEvent.LoadPet(id)) }
         )
     }
 
@@ -108,7 +110,8 @@ internal fun PetScreen(
     likeClicked: () -> Unit,
     unlikeClicked: () -> Unit,
     editClicked: () -> Unit,
-    chatClicked: () -> Unit
+    chatClicked: () -> Unit,
+    reloadClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -124,6 +127,7 @@ internal fun PetScreen(
             dateFormatter = dateFormatter,
             editClicked = editClicked,
             chatClicked = chatClicked,
+            reloadClicked = reloadClicked,
             modifier = Modifier.padding(it)
         )
     }
@@ -188,6 +192,7 @@ private fun PetScreenRoot(
     dateFormatter: DateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
+    reloadClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (state.modelStatus) {
@@ -206,7 +211,7 @@ private fun PetScreenRoot(
                 )
             }
         }
-        is DataState.Fail -> Unit // Todo add error placeholder
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
 
@@ -443,7 +448,8 @@ private fun PetScreen_Preview() {
             likeClicked = {},
             unlikeClicked = {},
             editClicked = {},
-            chatClicked = {}
+            chatClicked = {},
+            reloadClicked = {}
         )
     }
 }

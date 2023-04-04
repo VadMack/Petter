@@ -73,6 +73,7 @@ import ru.gortea.petter.ui_kit.dropdown.Dropdown
 import ru.gortea.petter.ui_kit.dropdown.DropdownItem
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.ErrorPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text_field.TextField
 import ru.gortea.petter.ui_kit.text_field.TextFieldState
@@ -116,6 +117,7 @@ internal fun PetEditScreen(
             showClicked = { store.dispatch(PetUiEvent.ShowPet) },
             hideClicked = { store.dispatch(PetUiEvent.HidePet) },
             avatarClicked = { store.dispatch(PetUiEvent.AvatarClicked) },
+            reloadClicked = { store.dispatch(PetUiEvent.LoadPet(id)) },
             fieldUpdated = { store.dispatch(PetUiEvent.EditField(it)) },
             fieldsAdded = { store.dispatch(PetUiEvent.AddFields(it)) }
         )
@@ -149,6 +151,7 @@ internal fun PetEditScreen(
     showClicked: () -> Unit,
     hideClicked: () -> Unit,
     avatarClicked: () -> Unit,
+    reloadClicked: () -> Unit,
     fieldUpdated: (PetField) -> Unit,
     fieldsAdded: (List<PetField>) -> Unit
 ) {
@@ -167,6 +170,7 @@ internal fun PetEditScreen(
             showClicked = showClicked,
             hideClicked = hideClicked,
             avatarClicked = avatarClicked,
+            reloadClicked = reloadClicked,
             fieldUpdated = fieldUpdated,
             fieldsAdded = fieldsAdded,
             modifier = Modifier.padding(it)
@@ -184,6 +188,7 @@ private fun PetEditScreenRoot(
     avatarClicked: () -> Unit,
     fieldUpdated: (PetField) -> Unit,
     fieldsAdded: (List<PetField>) -> Unit,
+    reloadClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (state.modelStatus) {
@@ -202,7 +207,7 @@ private fun PetEditScreenRoot(
                 modifier = modifier
             )
         }
-        is DataState.Fail -> Unit // Todo add error placeholder
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
 
@@ -627,7 +632,8 @@ private fun PetEditScreen_Preview() {
             hideClicked = {},
             avatarClicked = {},
             fieldUpdated = {},
-            fieldsAdded = {}
+            fieldsAdded = {},
+            reloadClicked = {}
         )
     }
 }

@@ -62,6 +62,7 @@ import ru.gortea.petter.ui_kit.avatar.Avatar
 import ru.gortea.petter.ui_kit.button.TextButton
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.ErrorPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text.TextWithIcon
 import ru.gortea.petter.ui_kit.R as UiKitR
@@ -114,7 +115,7 @@ private fun PetList(
 ) {
     when (state.dataState) {
         is Initial.Empty, is Initial.Loading -> LoadingPlaceholder()
-        is Initial.Fail -> Unit // Todo add error placeholder
+        is Initial.Fail -> ErrorPlaceholder(reloadPage)
         is Paged -> {
             if (state.dataState.content.isEmpty()) {
                 EmptyPlaceholder()
@@ -149,7 +150,7 @@ private fun EmptyPlaceholder() {
 
         Text(
             text = stringResource(R.string.empty_list),
-            style = MaterialTheme.typography.h3.copy(Base500),
+            style = MaterialTheme.typography.body1.copy(Base500),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         
@@ -199,7 +200,7 @@ private fun PetListLoadingItem() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
         CircularProgressIndicator(
             modifier = Modifier.align(Alignment.Center)
@@ -212,7 +213,7 @@ private fun PetListErrorItem(reloadClicked: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
         TextButton(
             text = stringResource(R.string.reload),
@@ -439,7 +440,7 @@ private fun PetList_Preview() {
             )
         )
 
-        val state = PetListUiState(dataState = Paged.Content(items), offset = 1)
+        val state = PetListUiState(dataState = Paged.Fail(items, Throwable()), offset = 1)
 
         PetList(
             state = state,
