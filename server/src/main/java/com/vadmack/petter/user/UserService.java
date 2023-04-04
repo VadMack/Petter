@@ -147,6 +147,10 @@ public class UserService {
     userRepository.addFavouriteAdId(adId, userId);
   }
 
+  public void removeFavoriteAd(@NotNull String adId, @NotNull String userId) {
+    userRepository.removeFavouriteAdId(adId, userId);
+  }
+
   private User dtoToEntity(@NotNull UserCreateDto dto) {
     return modelMapper.map(dto, User.class);
   }

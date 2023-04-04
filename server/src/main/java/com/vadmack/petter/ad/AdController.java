@@ -59,9 +59,10 @@ public class AdController implements SecuredRestController {
   }
 
   @PutMapping("/{id}/like")
-  public ResponseEntity<?> like(@AuthenticationPrincipal User user,
-                                @PathVariable String id) {
-    adService.like(id, user.getId());
+  public ResponseEntity<?> changeLikeStatus(@AuthenticationPrincipal User user,
+                                            @PathVariable String id,
+                                            @RequestParam boolean enable) {
+    adService.changeLikeStatus(id, enable, user.getId());
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 

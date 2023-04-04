@@ -8,5 +8,7 @@ public interface UserRepositoryCustom {
 
   void addFavouriteAdId(String adId, String userId);
 
+  void removeFavouriteAdId(String adId, String userId);
+
   void updateById(UserUpdateDto updates, String userId);
 }

@@ -76,9 +76,13 @@ public class AdService {
   }
 
   @Transactional
-  public void like(@NotNull String adId, @NotNull String userId) {
+  public void changeLikeStatus(@NotNull String adId, boolean enable, @NotNull String userId) {
     getById(adId);
-    userService.addFavoriteAd(adId, userId);
+    if (enable) {
+      userService.addFavoriteAd(adId, userId);
+    } else {
+      userService.removeFavoriteAd(adId, userId);
+    }
   }
 
   @Transactional

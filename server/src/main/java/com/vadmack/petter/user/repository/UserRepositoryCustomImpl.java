@@ -15,20 +15,30 @@ public class UserRepositoryCustomImpl extends CustomMongoRepository implements U
   public void addAdId(String adId, String userId) {
     Update update = new Update();
     update.addToSet("adIds", adId);
-    Criteria criteria = Criteria.where("_id").is(userId);
-    mongoTemplate.updateFirst(Query.query(criteria), update, User.class);
+    updateFirstByUserId(update, userId);
   }
 
   @Override
   public void addFavouriteAdId(String adId, String userId) {
     Update update = new Update();
     update.addToSet("favoriteAdIds", adId);
-    Criteria criteria = Criteria.where("_id").is(userId);
-    mongoTemplate.updateFirst(Query.query(criteria), update, User.class);
+    updateFirstByUserId(update, userId);
+  }
+
+  @Override
+  public void removeFavouriteAdId(String adId, String userId) {
+    Update update = new Update();
+    update.pull("favoriteAdIds", adId);
+    updateFirstByUserId(update, userId);
   }
 
   @Override
   public void updateById(UserUpdateDto dto, String userId) {
     super.updateById(dto, userId, User.class);
+  }
+
+  private void updateFirstByUserId(Update update, String userId) {
+    Criteria criteria = Criteria.where("_id").is(userId);
+    mongoTemplate.updateFirst(Query.query(criteria), update, User.class);
   }
 }
