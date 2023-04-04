@@ -163,9 +163,9 @@ private fun ProfileRoot(
     modifier: Modifier
 ) {
     when (state.userState) {
-        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
-        is DataState.Content -> ProfileContent(
+        is DataState.Loading.WithContent -> ProfileContent(
             state = state.userState.content,
+            refreshing = true,
             command = command,
             modifier = modifier,
             myListClicked = myListClicked,
@@ -174,6 +174,18 @@ private fun ProfileRoot(
             openPetClicked = openPetClicked,
             refresh = refresh
         )
+        is DataState.Content -> ProfileContent(
+            state = state.userState.content,
+            refreshing = false,
+            command = command,
+            modifier = modifier,
+            myListClicked = myListClicked,
+            favouritesClicked = favouritesClicked,
+            addPetClicked = addPetClicked,
+            openPetClicked = openPetClicked,
+            refresh = refresh
+        )
+        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
         is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
@@ -182,6 +194,7 @@ private fun ProfileRoot(
 @Composable
 private fun ProfileContent(
     state: ProfileUiModel,
+    refreshing: Boolean,
     command: NavCommand,
     myListClicked: () -> Unit,
     favouritesClicked: () -> Unit,
@@ -190,7 +203,7 @@ private fun ProfileContent(
     refresh: () -> Unit,
     modifier: Modifier
 ) {
-    val pullRefreshState = rememberPullRefreshState(false, refresh)
+    val pullRefreshState = rememberPullRefreshState(refreshing, refresh)
 
     Box(
         modifier = modifier
@@ -290,7 +303,7 @@ private fun ProfileContent(
         }
 
         PullRefreshIndicator(
-            refreshing = false,
+            refreshing = refreshing,
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter)
         )
