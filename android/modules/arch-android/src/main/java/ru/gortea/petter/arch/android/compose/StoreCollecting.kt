@@ -16,3 +16,12 @@ inline fun <State : Any, UiState : Any, Action : Any> MviStore<State, *, Action>
     val state by stateFlow.collectAsState()
     stateRender(stateMapper.map(state))
 }
+
+@SuppressLint("ComposableNaming")
+@Composable
+inline fun <State : Any, Action : Any> MviStore<State, *, Action>.collect(
+    stateRender: @Composable (State) -> Unit
+) {
+    val state by stateFlow.collectAsState()
+    stateRender(state)
+}

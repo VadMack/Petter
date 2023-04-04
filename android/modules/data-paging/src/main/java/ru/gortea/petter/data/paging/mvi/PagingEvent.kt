@@ -11,6 +11,6 @@ internal sealed interface PagingEvent {
     sealed interface User : PagingEvent {
         object LoadPage: User
 
-        class Invalidate<T: PageState>(val args: T) : User
+        class Invalidate<T: PageState>(val args: T, val refresh: Boolean) : User
     }
 }

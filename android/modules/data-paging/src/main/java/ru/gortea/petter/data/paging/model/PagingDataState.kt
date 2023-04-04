@@ -12,6 +12,7 @@ sealed class PagingDataState<out T>(open val content: List<T>) {
     }
 
     sealed class Paged<T>(override val content: List<T>) : PagingDataState<T>(content) {
+        data class Refresh<T>(override val content: List<T>) : Paged<T>(content)
 
         data class Loading<T>(override val content: List<T>) : Paged<T>(content)
 
@@ -29,6 +30,7 @@ inline fun<T, R> PagingDataState<T>.mapContent(mapper: (T) -> R): PagingDataStat
         is PagingDataState.Initial -> this
         is PagingDataState.Paged.Content -> PagingDataState.Paged.Content(content.map(mapper))
         is PagingDataState.Paged.Loading -> PagingDataState.Paged.Loading(content.map(mapper))
+        is PagingDataState.Paged.Refresh -> PagingDataState.Paged.Refresh(content.map(mapper))
         is PagingDataState.Paged.Fail -> PagingDataState.Paged.Fail(content.map(mapper), reason)
     }
 }

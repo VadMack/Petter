@@ -20,16 +20,20 @@ class PetListRepository(
             favourites = key.favourites,
             page = state.page,
             pageSize = state.pageSize,
+            state = key.state,
             ownerId = key.ownerId,
+            excludeMe = key.excludeMe,
             species = key.species,
             breed = key.breed,
-            gender = key.gender
+            gender = key.gender,
+            minPrice = key.minPrice,
+            maxPrice = key.maxPrice
         )
     }
 ) {
-    fun invalidate(args: PetListKey) {
+    fun invalidate(args: PetListKey, refresh: Boolean = false) {
         val pageState = PetListPageState(petListKey = args, pageSize = args.pageSize)
 
-        super.invalidate(pageState)
+        super.invalidate(pageState, refresh)
     }
 }

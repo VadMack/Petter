@@ -27,7 +27,7 @@ internal class PagingReducer<T : PageState>(
     private fun MessageBuilder<State<T>, Nothing, Command>.handleInternalEvent(event: Internal) {
         when (event) {
             is Internal.LoadingComplete<*> -> state {
-                val prevList = dataState.content
+                val prevList = if (dataState is Paged.Refresh) emptyList() else dataState.content
                 val lastPage = event.data.size != pageState.pageSize
                 copy(
                     pageState = if (lastPage) pageState else nextPageMapper(pageState),
@@ -57,7 +57,7 @@ internal class PagingReducer<T : PageState>(
 
                 copy(
                     pageState = invalidatePage,
-                    dataState = Initial.Loading
+                    dataState = if (event.refresh) Paged.Refresh(dataState.content) else Initial.Loading
                 )
             }
             is User.LoadPage -> state {

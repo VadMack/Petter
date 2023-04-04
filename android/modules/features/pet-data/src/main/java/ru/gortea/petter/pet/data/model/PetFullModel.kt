@@ -7,6 +7,7 @@ import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
+import ru.gortea.petter.profile.data.remote.model.AddressModel
 import java.time.LocalDate
 
 @Serializable
@@ -21,12 +22,13 @@ data class PetFullModel(
     @Contextual val birthDate: LocalDate? = null,
     val height: Int? = null,
     val weight: Int? = null,
-    val achievements: Map<String, AchievementLevel> = emptyMap(),
-    val vaccinations: List<String> = emptyList(),
+    val achievements: Map<String, AchievementLevel>? = null,
+    val vaccinations: List<String>? = null,
     val description: String? = null,
     val imagePaths: List<String> = emptyList(),
     val state: PetCardState,
-    val liked: Boolean = false
+    val liked: Boolean = false,
+    val address: AddressModel? = null
 ) : Arguments {
 
     val photoPath: String?

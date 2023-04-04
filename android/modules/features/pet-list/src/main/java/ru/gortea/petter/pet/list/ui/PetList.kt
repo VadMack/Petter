@@ -17,9 +17,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -70,8 +74,10 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 @Composable
 fun PetList(
     listKey: PetListKeyModel,
-    command: NavCommand,
-    openPetCard: (String) -> Unit
+    openPetCard: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    command: NavCommand = NavCommand.Empty,
+    pullToRefreshEnabled: Boolean = false
 ) {
     val component = getComponent<PetListComponent>()
     val formatter = remember { component.dateFormatter }
@@ -82,11 +88,14 @@ fun PetList(
     store.collect(PetListUiStateMapper(formatter)) { state ->
         PetList(
             state = state,
+            pullToRefreshEnabled = pullToRefreshEnabled,
             clicked = { store.dispatch(PetListUiEvent.OpenPet(it.id)) },
             likeClicked = { store.dispatch(PetListUiEvent.LikePet(it.id)) },
             unlikeClicked = { store.dispatch(PetListUiEvent.DislikePet(it.id)) },
             reloadPage = { store.dispatch(PetListUiEvent.ReloadPage) },
-            loadPage = { store.dispatch(PetListUiEvent.LoadPage) }
+            loadPage = { store.dispatch(PetListUiEvent.LoadPage) },
+            refresh = { store.dispatch(PetListUiEvent.Refresh(listKey)) },
+            modifier = modifier
         )
     }
 
@@ -107,18 +116,31 @@ fun PetList(
 @Composable
 private fun PetList(
     state: PetListUiState,
+    pullToRefreshEnabled: Boolean,
     clicked: (PetListItem) -> Unit,
     likeClicked: (PetListItem) -> Unit,
     unlikeClicked: (PetListItem) -> Unit,
     reloadPage: () -> Unit,
-    loadPage: () -> Unit
+    loadPage: () -> Unit,
+    refresh: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     when (state.dataState) {
-        is Initial.Empty, is Initial.Loading -> LoadingPlaceholder()
-        is Initial.Fail -> ErrorPlaceholder(reloadPage)
+        is Initial.Empty, is Initial.Loading -> LoadingPlaceholder(modifier)
+        is Initial.Fail -> ErrorPlaceholder(reloadPage, modifier)
         is Paged -> {
-            if (state.dataState.content.isEmpty()) {
-                EmptyPlaceholder()
+            if (pullToRefreshEnabled) {
+                ContentWithPtr(
+                    state = state.dataState,
+                    offset = state.offset,
+                    clicked = clicked,
+                    likeClicked = likeClicked,
+                    unlikeClicked = unlikeClicked,
+                    reloadPage = reloadPage,
+                    loadPage = loadPage,
+                    refresh = refresh,
+                    modifier = modifier
+                )
             } else {
                 PetListPaged(
                     state = state.dataState,
@@ -127,19 +149,108 @@ private fun PetList(
                     likeClicked = likeClicked,
                     unlikeClicked = unlikeClicked,
                     reloadPage = reloadPage,
-                    loadPage = loadPage
+                    loadPage = loadPage,
+                    modifier = modifier
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun EmptyPlaceholder() {
+private fun ContentWithPtr(
+    state: Paged<PetListItem>,
+    offset: Int,
+    clicked: (PetListItem) -> Unit,
+    likeClicked: (PetListItem) -> Unit,
+    unlikeClicked: (PetListItem) -> Unit,
+    reloadPage: () -> Unit,
+    loadPage: () -> Unit,
+    refresh: () -> Unit,
+    modifier: Modifier
+) {
+    val refreshing = state is Paged.Refresh
+    val pullRefreshState = rememberPullRefreshState(refreshing, refresh)
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        PetListPaged(
+            state = state,
+            offset = offset,
+            clicked = clicked,
+            likeClicked = likeClicked,
+            unlikeClicked = unlikeClicked,
+            reloadPage = reloadPage,
+            loadPage = loadPage,
+            modifier = Modifier
+        )
+
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+    }
+}
+
+@Composable
+private fun PetListPaged(
+    state: Paged<PetListItem>,
+    offset: Int,
+    clicked: (PetListItem) -> Unit,
+    likeClicked: (PetListItem) -> Unit,
+    unlikeClicked: (PetListItem) -> Unit,
+    reloadPage: () -> Unit,
+    loadPage: () -> Unit,
+    modifier: Modifier
+) {
+    LazyColumn(
+        state = rememberPagingState(loadPage, state, offset),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier.fillMaxSize()
+    ) {
+        if (state.content.isEmpty()) {
+            item {
+                EmptyPlaceholder(modifier = Modifier.fillParentMaxSize())
+            }
+        } else {
+            item {
+                Spacer(modifier = Modifier.height(6.dp))
+            }
+
+            items(items = state.content, key = { it.id }) { item ->
+                PetListItem(
+                    item = item,
+                    clicked = clicked,
+                    likeClicked = likeClicked,
+                    unlikeClicked = unlikeClicked,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
+            when (state) {
+                is Paged.Content, is Paged.Refresh -> item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                is Paged.Loading -> item { PetListLoadingItem() }
+                is Paged.Fail -> item { PetListErrorItem(reloadPage) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyPlaceholder(
+    modifier: Modifier = Modifier
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         Icon(
             icon = UiKitR.drawable.ic_paw_outline,
@@ -153,45 +264,8 @@ private fun EmptyPlaceholder() {
             style = MaterialTheme.typography.body1.copy(Base500),
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         Spacer(modifier = Modifier.height(50.dp))
-    }
-}
-
-@Composable
-private fun PetListPaged(
-    state: Paged<PetListItem>,
-    offset: Int,
-    clicked: (PetListItem) -> Unit,
-    likeClicked: (PetListItem) -> Unit,
-    unlikeClicked: (PetListItem) -> Unit,
-    reloadPage: () -> Unit,
-    loadPage: () -> Unit
-) {
-    LazyColumn(
-        state = rememberPagingState(loadPage, state, offset),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(6.dp))
-        }
-
-        items(items = state.content, key = { it.id }) { item ->
-            PetListItem(
-                item = item,
-                clicked = clicked,
-                likeClicked = likeClicked,
-                unlikeClicked = unlikeClicked,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
-
-        when (state) {
-            is Paged.Content -> item { Spacer(modifier = Modifier.height(16.dp)) }
-            is Paged.Loading -> item { PetListLoadingItem() }
-            is Paged.Fail -> item { PetListErrorItem(reloadPage) }
-        }
     }
 }
 
@@ -444,11 +518,13 @@ private fun PetList_Preview() {
 
         PetList(
             state = state,
+            pullToRefreshEnabled = false,
             clicked = {},
             likeClicked = {},
             unlikeClicked = {},
             reloadPage = {},
-            loadPage = {}
+            loadPage = {},
+            refresh = {}
         )
     }
 }

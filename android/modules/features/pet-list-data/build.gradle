@@ -8,6 +8,6 @@ dependencies {
     implementation Libs.coroutines
     implementation Libs.retrofit
 
-    api project(":modules:features:pet-data")
+    implementation project(":modules:features:pet-data")
     api project(":modules:data-paging")
 }

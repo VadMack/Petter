@@ -1,6 +1,7 @@
 package ru.gortea.petter.pet.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -163,7 +168,6 @@ private fun createEndIcon(
     }
 }
 
-
 @Composable
 private fun Like(
     likeState: PetLikeStatus,
@@ -197,97 +201,125 @@ private fun PetScreenRoot(
 ) {
     when (state.modelStatus) {
         is DataState.Empty -> Unit
-        is DataState.Loading -> LoadingPlaceholder(modifier)
         is DataState.Content -> {
             if (state.isDeleteLoading) {
                 LoadingPlaceholder(modifier)
             } else {
                 PetScreenContent(
                     state = state.modelStatus.content,
+                    refreshing = false,
                     dateFormatter = dateFormatter,
                     editClicked = editClicked,
                     chatClicked = chatClicked,
+                    reloadClicked = reloadClicked,
                     modifier = modifier
                 )
             }
         }
+        is DataState.Loading.WithContent -> PetScreenContent(
+            state = state.modelStatus.content,
+            refreshing = true,
+            dateFormatter = dateFormatter,
+            editClicked = editClicked,
+            chatClicked = chatClicked,
+            reloadClicked = reloadClicked,
+            modifier = modifier
+        )
+        is DataState.Loading -> LoadingPlaceholder(modifier)
         is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PetScreenContent(
     state: PetFullUiModel,
+    refreshing: Boolean,
     dateFormatter: DateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
+    reloadClicked: () -> Unit,
     modifier: Modifier
 ) {
-    Column(
+    val pullRefreshState = rememberPullRefreshState(refreshing, reloadClicked)
+
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .pullRefresh(pullRefreshState)
     ) {
-        Avatar(
-            image = state.photo?.let {
-                rememberAsyncImagePainter(
-                    it,
-                    placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
-                    error = painterResource(UiKitR.drawable.ic_pet_placeholder)
-                )
-            },
-            placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
-            size = 158.dp,
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        TextWithIcon(
-            text = state.model.name,
-            style = MaterialTheme.typography.h3,
-            trailingIcon = {
-                Icon(
-                    icon = state.model.genderIcon,
-                    tint = state.model.genderTint,
-                    size = 18.dp
-                )
-            },
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        if (state.canEdit) {
-            PrimaryButton(
-                text = stringResource(R.string.button_edit),
-                onClick = editClicked,
-                modifier = Modifier.fillMaxWidth()
-            )
-        } else {
-            PrimaryButton(
-                text = stringResource(R.string.button_chat),
-                onClick = chatClicked,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            state.fields.forEach {
-                when (it) {
-                    is PetField.SimplePetField -> PetScreenSimpleField(it)
-                    is PetField.EnumPetField -> PetScreenEnumField(it)
-                    is PetField.DatePetField -> PetScreenDateField(it, dateFormatter)
-                    is PetField.ListPetField -> PetScreenListField(it)
-                    is PetField.AchievementPetField -> PetScreenAchievementsField(it)
+            Avatar(
+                image = state.photo?.let {
+                    rememberAsyncImagePainter(
+                        it,
+                        placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
+                        error = painterResource(UiKitR.drawable.ic_pet_placeholder)
+                    )
+                },
+                placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
+                size = 158.dp,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            TextWithIcon(
+                text = state.model.name,
+                style = MaterialTheme.typography.h3,
+                trailingIcon = {
+                    Icon(
+                        icon = state.model.genderIcon,
+                        tint = state.model.genderTint,
+                        size = 18.dp
+                    )
+                },
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            if (state.canEdit) {
+                PrimaryButton(
+                    text = stringResource(R.string.button_edit),
+                    onClick = editClicked,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else {
+                PrimaryButton(
+                    text = stringResource(R.string.button_chat),
+                    onClick = chatClicked,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                state.fields.forEach {
+                    when (it) {
+                        is PetField.SimplePetField -> PetScreenSimpleField(it)
+                        is PetField.EnumPetField -> PetScreenEnumField(it)
+                        is PetField.DatePetField -> PetScreenDateField(it, dateFormatter)
+                        is PetField.ListPetField -> PetScreenListField(it)
+                        is PetField.AchievementPetField -> PetScreenAchievementsField(it)
+                    }
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 

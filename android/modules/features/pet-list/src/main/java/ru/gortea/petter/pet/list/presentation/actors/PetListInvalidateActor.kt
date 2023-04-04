@@ -16,7 +16,7 @@ internal class PetListInvalidateActor(
 
     override fun process(commands: Flow<PetListCommand>): Flow<PetListEvent> {
         return commands.filterIsInstance<PetListCommand.Invalidate>()
-            .mapLatest { petListRepository.invalidate(it.key) }
+            .mapLatest { petListRepository.invalidate(it.key, it.refresh) }
             .flatMapMerge { emptyFlow() }
     }
 }

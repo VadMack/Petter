@@ -54,11 +54,6 @@ internal fun getUnusedFields(usedFields: List<PetField>): List<PetField> {
     return allFields.filter { it.fieldName !in usedNames }
 }
 
-internal fun PetPresentationModel.editMode(editMode: Boolean): PetPresentationModel {
-    return model?.toPetPresentationModel(editMode)
-        ?: if (editMode) getDefaultPresentationModel() else error("Cannot edit new pet")
-}
-
 internal fun PetPresentationModel.updateField(field: PetField): PetPresentationModel {
     val newFields = fields.map { if (it.fieldName == field.fieldName) field else it }
     return copy(fields = newFields)
@@ -134,11 +129,12 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         )
     )
 
-    if (achievements.isNotEmpty()) {
+    val awards = achievements
+    if (!awards.isNullOrEmpty()) {
         fields.add(
             PetField.AchievementPetField(
                 R.string.achievements,
-                achievements.mapKeys { TextFieldState(it.key) }
+                awards.mapKeys { TextFieldState(it.key) }
             )
         )
     }
@@ -173,12 +169,13 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         )
     }
 
-    if (vaccinations.isNotEmpty()) {
+    val vaccines = vaccinations
+    if (!vaccines.isNullOrEmpty()) {
         fields.add(
             PetField.ListPetField(
                 R.string.vaccinations,
                 PetFieldName.VACCINATIONS,
-                vaccinations.map { TextFieldState(it) }
+                vaccines.map { TextFieldState(it) }
             )
         )
     }

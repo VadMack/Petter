@@ -17,7 +17,7 @@ internal class ProfileLoadUserActor(
 
     override fun process(commands: Flow<ProfileCommand>): Flow<ProfileEvent> {
         return commands.filterIsInstance<ProfileCommand.LoadUser>()
-            .mapLatest { repository.invalidate(GetUserModel(it.id)) }
+            .mapLatest { repository.invalidate(GetUserModel(it.id, it.forceRemote)) }
             .flatMapMerge { emptyFlow() }
     }
 }

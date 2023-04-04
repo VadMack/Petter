@@ -14,5 +14,7 @@ dependencies {
     implementation project(":modules:data-paging-android")
     implementation project(":modules:ui-kit")
 
-    api project(":modules:features:pet-list-data")
+    implementation project(":modules:features:pet-list-data")
+
+    api project(":modules:features:pet-data")
 }

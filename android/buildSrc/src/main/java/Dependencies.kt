@@ -11,7 +11,7 @@ object Libs {
         const val retrofitSerializationConverter = "0.8.0"
         const val leakCanary = "2.9.1"
         const val dagger2 = "2.17"
-        const val appyx = "1.0.5"
+        const val appyx = "1.1.1"
         const val room = "2.5.0"
     }
 
@@ -85,7 +85,7 @@ object AndroidX {
         const val lifecycleViewModelKtx = "2.4.1"
         const val lifecycleExtensions = "2.2.0"
         const val composeUi = "1.3.3"
-        const val composeMaterial = "1.3.1"
+        const val composeMaterial = "1.4.0"
         const val composeFoundation = "1.3.1"
         const val composeUiTooling = "1.3.2"
         const val composeActivity = "1.6.1"

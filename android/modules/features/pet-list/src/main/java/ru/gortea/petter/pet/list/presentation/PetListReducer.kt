@@ -5,8 +5,8 @@ import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.paging.model.PagingDataState
 import ru.gortea.petter.data.paging.model.isFail
 import ru.gortea.petter.data.paging.model.mapContent
-import ru.gortea.petter.pet.list.data.model.PetListKey
 import ru.gortea.petter.pet.list.model.PetListKeyModel
+import ru.gortea.petter.pet.list.model.toDataKey
 import ru.gortea.petter.pet.list.presentation.PetListCommand as Command
 import ru.gortea.petter.pet.list.presentation.PetListEvent as Event
 import ru.gortea.petter.pet.list.presentation.PetListState as State
@@ -28,6 +28,7 @@ internal class PetListReducer(
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.Invalidate -> invalidate(event.key)
+            is UiEvent.Refresh -> refresh(event.key)
             is UiEvent.LoadPage -> loadPage()
             is UiEvent.ReloadPage -> reloadPage()
             is UiEvent.LikePet -> likePet(event.id)
@@ -37,15 +38,13 @@ internal class PetListReducer(
     }
 
     private fun MessageBuilder<State, Nothing, Command>.invalidate(key: PetListKeyModel) {
-        val dataKey = PetListKey(
-            favourites = key.favourites,
-            ownerId = key.ownerId,
-            species = key.species,
-            breed = key.breed,
-            gender = key.gender,
-            pageSize = key.pageSize
-        )
+        val dataKey = key.toDataKey()
         commands(Command.Invalidate(dataKey))
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.refresh(key: PetListKeyModel) {
+        val dataKey = key.toDataKey()
+        commands(Command.Invalidate(dataKey, refresh = true))
     }
 
     private fun MessageBuilder<State, Nothing, Command>.loadPage() {

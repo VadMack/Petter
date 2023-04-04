@@ -27,4 +27,3 @@ fun File.isModule(): Boolean {
     val isKtsModule = File(this, "build.gradle.kts").exists()
     return isGroovyModule || isKtsModule
 }
-include(":modules:data-paging-android")

@@ -14,6 +14,7 @@ internal sealed interface PetListEvent {
 
 internal sealed interface PetListUiEvent : PetListEvent {
     class Invalidate(val key: PetListKeyModel) : PetListUiEvent
+    class Refresh(val key: PetListKeyModel) : PetListUiEvent
     class OpenPet(val id: String) : PetListUiEvent
     class LikePet(val id: String) : PetListUiEvent
     class DislikePet(val id: String) : PetListUiEvent

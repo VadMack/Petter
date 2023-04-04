@@ -36,8 +36,8 @@ open class SourcePagingRepository<S : PageState, T>(
 
     private fun stateMapper(state: PagingState<S>) = state.dataState as PagingDataState<T>
 
-    override fun invalidate(args: S) {
-        store.dispatch(PagingEvent.User.Invalidate(args))
+    override fun invalidate(args: S, refresh: Boolean) {
+        store.dispatch(PagingEvent.User.Invalidate(args, refresh))
     }
 
     override fun loadPage() {

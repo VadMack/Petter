@@ -8,9 +8,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -83,7 +89,8 @@ internal fun ProfileScreen(
             logoutClicked = { store.dispatch(ProfileUiEvent.Logout) },
             addPetClicked = { store.dispatch(ProfileUiEvent.AddPet) },
             openPetClicked = { store.dispatch(ProfileUiEvent.OpenPet(it)) },
-            reloadClicked = { store.dispatch(ProfileUiEvent.LoadUser(id)) }
+            reloadClicked = { store.dispatch(ProfileUiEvent.LoadUser(id)) },
+            refresh = { store.dispatch(ProfileUiEvent.InvalidateUser(id)) }
         )
     }
 
@@ -110,7 +117,8 @@ private fun ProfileScreen(
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
     logoutClicked: () -> Unit,
-    reloadClicked: () -> Unit
+    reloadClicked: () -> Unit,
+    refresh: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -135,6 +143,7 @@ private fun ProfileScreen(
                 addPetClicked = addPetClicked,
                 openPetClicked = openPetClicked,
                 reloadClicked = reloadClicked,
+                refresh = refresh,
                 modifier = Modifier.padding(padding)
             )
         }
@@ -150,6 +159,7 @@ private fun ProfileRoot(
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
     reloadClicked: () -> Unit,
+    refresh: () -> Unit,
     modifier: Modifier
 ) {
     when (state.userState) {
@@ -161,12 +171,14 @@ private fun ProfileRoot(
             myListClicked = myListClicked,
             favouritesClicked = favouritesClicked,
             addPetClicked = addPetClicked,
-            openPetClicked = openPetClicked
+            openPetClicked = openPetClicked,
+            refresh = refresh
         )
         is DataState.Fail -> ErrorPlaceholder(reloadClicked)
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ProfileContent(
     state: ProfileUiModel,
@@ -175,64 +187,76 @@ private fun ProfileContent(
     favouritesClicked: () -> Unit,
     addPetClicked: () -> Unit,
     openPetClicked: (String) -> Unit,
+    refresh: () -> Unit,
     modifier: Modifier
 ) {
+    val pullRefreshState = rememberPullRefreshState(false, refresh)
+
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            Avatar(
-                image = state.avatar?.let {
-                    rememberAsyncImagePainter(
-                        it,
-                        placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
-                        error = painterResource(UiKitR.drawable.ic_person_placeholder)
-                    )
-                },
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            Text(
-                text = state.name,
-                style = MaterialTheme.typography.h3,
-                modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
-            )
-
-            state.address?.let { address ->
-                TextWithIcon(
-                    text = address,
-                    style = MaterialTheme.typography.button2.copy(color = Base600),
-                    leadingIcon = {
-                        Icon(
-                            icon = UiKitR.drawable.ic_marker,
-                            tint = Base600,
-                            size = 18.dp
-                        )
-                    },
-                    modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
-                )
-            }
-
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 24.dp, bottom = 6.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                if (state.isFavouritesAvailable) {
-                    ListSelectorMenu(
-                        model = state,
-                        myListClicked = myListClicked,
-                        favouritesClicked = favouritesClicked
+
+                Avatar(
+                    image = state.avatar?.let {
+                        rememberAsyncImagePainter(
+                            it,
+                            placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
+                            error = painterResource(UiKitR.drawable.ic_person_placeholder)
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                Text(
+                    text = state.name,
+                    style = MaterialTheme.typography.h3,
+                    modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
+                )
+
+                if (!state.address.isNullOrEmpty()) {
+                    TextWithIcon(
+                        text = state.address,
+                        style = MaterialTheme.typography.button2.copy(color = Base600),
+                        leadingIcon = {
+                            Icon(
+                                icon = UiKitR.drawable.ic_marker,
+                                tint = Base600,
+                                size = 18.dp
+                            )
+                        },
+                        modifier = Modifier.padding(bottom = 4.dp, start = 16.dp, end = 16.dp)
                     )
-                } else {
-                    Text(
-                        text = stringResource(R.string.pets),
-                        style = MaterialTheme.typography.h3
-                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 24.dp, bottom = 6.dp)
+                ) {
+                    if (state.isFavouritesAvailable) {
+                        ListSelectorMenu(
+                            model = state,
+                            myListClicked = myListClicked,
+                            favouritesClicked = favouritesClicked
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.pets),
+                            style = MaterialTheme.typography.h3
+                        )
+                    }
                 }
             }
 
@@ -264,6 +288,12 @@ private fun ProfileContent(
                     .padding(end = 16.dp, bottom = 16.dp)
             )
         }
+
+        PullRefreshIndicator(
+            refreshing = false,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -275,6 +305,7 @@ private fun NavCommand.mapToPetListNavCommand(): NavCommand {
         } else {
             PetListNavCommand.PetDisliked(id)
         }
+        is PetListNavCommand -> this
         else -> NavCommand.Empty
     }
 }
@@ -374,7 +405,8 @@ private fun ProfileScreen_Preview() {
             logoutClicked = {},
             addPetClicked = {},
             openPetClicked = {},
-            reloadClicked = {}
+            reloadClicked = {},
+            refresh = {}
         )
     }
 }

@@ -11,7 +11,7 @@ abstract class ViewModelNode(
 ) : Node(buildContext), Destroyable, ViewModelStoreOwner {
     private val store by lazy { ViewModelStore() }
 
-    override fun getViewModelStore(): ViewModelStore = store
+    override val viewModelStore: ViewModelStore = store
 
     override fun destroy() {
         store.clear()

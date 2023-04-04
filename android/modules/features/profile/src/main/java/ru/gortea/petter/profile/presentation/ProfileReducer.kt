@@ -29,12 +29,17 @@ internal class ProfileReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.loadUserStatus(state: DataState<UserModel>) {
         state { copy(userModelStatus = state) }
+        println("xxx: $state")
     }
 
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.LoadUser -> commands(
-                Command.LoadUser(event.id),
+                Command.LoadUser(event.id, forceRemote = false),
+                Command.IsCurrentUser(event.id)
+            )
+            is UiEvent.InvalidateUser -> commands(
+                Command.LoadUser(event.id, forceRemote = true),
                 Command.IsCurrentUser(event.id)
             )
             is UiEvent.EditProfile -> router.navigateTo(ProfileNavTarget.EditProfile)
