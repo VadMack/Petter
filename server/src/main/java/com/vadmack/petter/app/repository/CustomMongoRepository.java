@@ -38,6 +38,8 @@ public abstract class CustomMongoRepository {
         criteria.add(Criteria.where(propertyName.substring(3)).gte(value));
       } else if (propertyName.startsWith("max")) {
         criteria.add(Criteria.where(propertyName.substring(3)).lte(value));
+      } else if (propertyName.startsWith("not")) {
+        criteria.add(Criteria.where(propertyName.substring(3)).ne(value));
       } else {
         criteria.add(Criteria.where(propertyName).is(value));
       } },
