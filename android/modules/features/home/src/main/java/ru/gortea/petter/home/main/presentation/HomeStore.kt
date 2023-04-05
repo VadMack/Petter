@@ -1,4 +1,4 @@
-package ru.gortea.petter.home.presentation
+package ru.gortea.petter.home.main.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore

@@ -14,6 +14,7 @@ import ru.gortea.petter.pet.presentation.state.PetField
 import ru.gortea.petter.pet.presentation.state.getDefaultPresentationModel
 import ru.gortea.petter.pet.presentation.state.toPetPresentationModel
 import ru.gortea.petter.pet.presentation.state.updateField
+import java.io.IOException
 import ru.gortea.petter.pet.presentation.PetCommand as Command
 import ru.gortea.petter.pet.presentation.PetEvent as Event
 import ru.gortea.petter.pet.presentation.PetUiEvent as UiEvent
@@ -56,7 +57,11 @@ internal class PetReducer(
                 it?.toPetPresentationModel(state.editMode) ?: getDefaultPresentationModel()
             }
 
-            copy(petLoadingStatus = dataState)
+            if (dataState is DataState.Fail && dataState.reason is IOException) {
+                this
+            } else {
+                copy(petLoadingStatus = dataState)
+            }
         }
 
         if (event.state is DataState.Content) {

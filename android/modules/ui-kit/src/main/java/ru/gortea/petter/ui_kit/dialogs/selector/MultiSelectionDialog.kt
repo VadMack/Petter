@@ -64,7 +64,6 @@ fun <T> MultiSelectionDialog(
 
             val selected = remember { mutableStateListOf<T>() }
             Column(
-//                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)

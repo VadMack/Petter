@@ -1,10 +1,13 @@
 package ru.gortea.petter.pet.list.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
 import ru.gortea.petter.pet.list.data.model.PetListKey
 
+@Parcelize
 data class PetListKeyModel(
     val favourites: Boolean = false,
     val excludeMe: Boolean = false,
@@ -16,7 +19,7 @@ data class PetListKeyModel(
     val minPrice: Int? = null,
     val maxPrice: Int? = null,
     val pageSize: Int = 30
-)
+) : Parcelable
 
 fun PetListKeyModel.toDataKey(): PetListKey {
     return PetListKey(
@@ -31,4 +34,8 @@ fun PetListKeyModel.toDataKey(): PetListKey {
         maxPrice = maxPrice,
         pageSize = pageSize
     )
+}
+
+fun PetListKeyModel.isEmpty(): Boolean {
+    return listOfNotNull(species, breed, gender, minPrice, maxPrice).isEmpty()
 }

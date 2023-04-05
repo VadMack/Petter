@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pets">Питомцы</string>
+
+    <string name="filters">Фильтры</string>
+    <string name="filter_unknown">Не важно</string>
+    <string name="filter_range_from">От</string>
+    <string name="filter_range_to">До</string>
 </resources>

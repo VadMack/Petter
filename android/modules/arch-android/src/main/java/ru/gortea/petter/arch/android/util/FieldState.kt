@@ -10,6 +10,10 @@ data class FieldState(
     val isVisible: Boolean = true
 )
 
+fun FieldState.textIfNotBlank(): String? {
+    return if (isNotBlank()) text else null
+}
+
 fun FieldState.toTextFieldState(): TextFieldState {
     val transform = if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
     return TextFieldState(

@@ -362,9 +362,9 @@ private fun ListSelectorMenu(
                 text = currentItem,
                 trailingIcon = {
                     if (showMenu.value) {
-                        Icon(icon = UiKitR.drawable.ic_up, size = 24.dp)
+                        Icon(icon = UiKitR.drawable.ic_up)
                     } else {
-                        Icon(icon = UiKitR.drawable.ic_down, size = 24.dp)
+                        Icon(icon = UiKitR.drawable.ic_down)
                     }
                 },
                 style = MaterialTheme.typography.h3,
@@ -388,7 +388,6 @@ private fun ProfileMenu(
         target = { showMenu ->
             ClickableIcon(
                 icon = UiKitR.drawable.ic_popup,
-                size = 32.dp,
                 onClick = { showMenu.value = !showMenu.value }
             )
         },

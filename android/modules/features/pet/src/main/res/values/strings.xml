@@ -30,7 +30,7 @@
     <string name="gender_male">Мальчик</string>
     <string name="gender_female">Девочка</string>
 
-    <string name="species">Категория</string>
+    <string name="species">Вид</string>
     <string name="species_dog">Собаки</string>
     <string name="species_cat">Кошки</string>
 
