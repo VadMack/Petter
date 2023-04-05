@@ -15,5 +15,6 @@ abstract class ViewModelNode(
 
     override fun destroy() {
         store.clear()
+        finish()
     }
 }

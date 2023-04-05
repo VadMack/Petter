@@ -1,6 +1,9 @@
 package ru.gortea.petter.root.navigation.node
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -53,7 +56,15 @@ class ContentRootParentNode(
                     )
                 )
             },
-            bottomBar = { if (showNavBar) BottomNavigationContainer(bottomRouter) }
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = showNavBar,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it }),
+                ) {
+                    BottomNavigationContainer(bottomRouter)
+                }
+            }
         )
     }
 }
