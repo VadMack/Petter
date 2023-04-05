@@ -15,12 +15,12 @@ class PetListApiService(
         pageSize: Int,
         state: PetCardState?,
         ownerId: String?,
-        excludeMe: Boolean?,
         species: Species?,
         breed: String?,
         gender: Gender?,
         minPrice: Int?,
-        maxPrice: Int?
+        maxPrice: Int?,
+        excludeOwnerId: String?
     ): List<PetListItemModel> {
         return if (favourites) {
             api.getFavourites()
@@ -30,12 +30,12 @@ class PetListApiService(
                 pageSize = pageSize,
                 ownerId = ownerId,
                 state = state,
-                excludeMe = excludeMe,
                 species = species,
                 breed = breed,
                 gender = gender,
                 minPrice = minPrice,
-                maxPrice = maxPrice
+                maxPrice = maxPrice,
+                excludeOwnerId = excludeOwnerId
             )
         }
     }

@@ -7,6 +7,7 @@ import ru.gortea.petter.network.createApi
 import ru.gortea.petter.pet.list.data.PetListRepository
 import ru.gortea.petter.pet.list.data.api.PetListApi
 import ru.gortea.petter.pet.list.data.api.PetListApiService
+import ru.gortea.petter.profile.data.local.UserLocalRepository
 
 @Module
 class FeaturePetListDataModule {
@@ -22,7 +23,10 @@ class FeaturePetListDataModule {
     }
 
     @Provides
-    fun providePetListRepository(apiService: PetListApiService): PetListRepository {
-        return PetListRepository(apiService)
+    fun providePetListRepository(
+        apiService: PetListApiService,
+        userLocalRepository: UserLocalRepository
+    ): PetListRepository {
+        return PetListRepository(apiService, userLocalRepository)
     }
 }

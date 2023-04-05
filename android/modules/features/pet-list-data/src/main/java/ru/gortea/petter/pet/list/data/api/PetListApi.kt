@@ -15,14 +15,14 @@ interface PetListApi {
         @Query("size") pageSize: Int,
         @Query("state") state: PetCardState?,
         @Query("ownerId") ownerId: String?,
-        @Query("excludeMe") excludeMe: Boolean?,
         @Query("species") species: Species?,
         @Query("breed") breed: String?,
         @Query("gender") gender: Gender?,
         @Query("minPrice") minPrice: Int?,
-        @Query("maxPrice") maxPrice: Int?
+        @Query("maxPrice") maxPrice: Int?,
+        @Query("notOwnerId") excludeOwnerId: String?
     ): List<PetListItemModel>
 
-    @GET("api/users/favourites")
+    @GET("api/users/favorites")
     suspend fun getFavourites(): List<PetListItemModel>
 }

@@ -9,6 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 import ru.gortea.petter.pet.data.model.PetFullModel
 
 interface PetApi {
@@ -33,5 +34,5 @@ interface PetApi {
     suspend fun deletePhoto(@Path("folder") folder: String, @Path("file") file: String)
 
     @PUT("api/ads/{id}/like")
-    suspend fun changeLikeStatus(@Path("id") id: String)
+    suspend fun changeLikeStatus(@Path("id") id: String, @Query("enable") liked: Boolean)
 }

@@ -6,8 +6,7 @@ class PetLikeRepository(
     private val api: PetApi
 ) {
 
-    suspend fun changeLikeStatus(id: String, like: Boolean) {
-        // TODO Use like
-        api.changeLikeStatus(id)
+    suspend fun changeLikeStatus(id: String, liked: Boolean) {
+        api.changeLikeStatus(id, liked)
     }
 }

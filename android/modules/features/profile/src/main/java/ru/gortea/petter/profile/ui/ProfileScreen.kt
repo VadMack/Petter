@@ -1,6 +1,9 @@
 package ru.gortea.petter.profile.ui
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -291,14 +294,18 @@ private fun ProfileContent(
             }
         }
 
-        if (state.canAddPet) {
+        AnimatedVisibility(
+            visible = state.canAddPet,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 16.dp)
+        ) {
             Fab(
                 text = stringResource(R.string.add),
                 leadingIcon = UiKitR.drawable.ic_plus,
-                onClick = addPetClicked,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp)
+                onClick = addPetClicked
             )
         }
 
