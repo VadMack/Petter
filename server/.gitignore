@@ -139,3 +139,4 @@ fabric.properties
 .idea/sonarlint
 
 /src/main/resources/application-local.yml
+/src/main/resources/firebase-service-account.json
