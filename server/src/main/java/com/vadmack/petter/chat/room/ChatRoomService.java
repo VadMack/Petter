@@ -1,6 +1,8 @@
 package com.vadmack.petter.chat.room;
 
 import com.vadmack.petter.app.utils.AppUtils;
+import com.vadmack.petter.chat.room.dto.ChatRoomCreateDto;
+import com.vadmack.petter.chat.room.dto.ChatRoomGetDto;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +20,7 @@ public class ChatRoomService {
 
   private final ModelMapper modelMapper;
 
-  private ChatRoom getById(@NotNull String id) {
+  public ChatRoom getById(@NotNull String id) {
     return AppUtils.checkFound(findById(id),
             String.format("Chat room with id=%s not found", id));
   }
@@ -27,7 +29,7 @@ public class ChatRoomService {
     return chatRoomRepository.findById(id);
   }
 
-  public @NotNull List<ChatRoomDto> getDtoByUserId(@NotNull String userId) {
+  public @NotNull List<ChatRoomGetDto> getDtoByUserId(@NotNull String userId) {
     return findByUserId(userId).stream().map(this::entityToDto).toList();
   }
 
@@ -38,9 +40,9 @@ public class ChatRoomService {
   /**
    * Finds existed room or creates new ChatRoom object without saving in DB
    */
-  public @NotNull ChatRoom findByParticipantsOrCreate(@NotNull String user1Id, @NotNull String user2Id) {
+  public @NotNull ChatRoomGetDto findByParticipantsOrCreate(@NotNull String user1Id, @NotNull String user2Id) {
     Optional<ChatRoom> optional = findByParticipants(user1Id, user2Id);
-    return optional.orElse((new ChatRoom(user1Id, user2Id)));
+    return entityToDto(optional.orElse((new ChatRoom(user1Id, user2Id))));
   }
 
   private @NotNull Optional<ChatRoom> findByParticipants(@NotNull String user1Id, @NotNull String user2Id) {
@@ -57,8 +59,12 @@ public class ChatRoomService {
     chatRoomRepository.save(chatRoom);
   }
 
-  public ChatRoomDto entityToDto(@NotNull ChatRoom entity) {
-    return modelMapper.map(entity, ChatRoomDto.class);
+  public ChatRoomGetDto entityToDto(@NotNull ChatRoom entity) {
+    return modelMapper.map(entity, ChatRoomGetDto.class);
+  }
+
+  private ChatRoom dtoToEntity(@NotNull ChatRoomCreateDto dto) {
+    return modelMapper.map(dto, ChatRoom.class);
   }
 
   public boolean isParticipant(@NotNull User user, @NotNull String roomId) {

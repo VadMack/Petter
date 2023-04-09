@@ -19,7 +19,7 @@ public class ChatService {
 
   @Transactional
   public @NotNull ChatMessageDto saveMessage(ChatMessageDto msg) {
-    ChatRoom chatRoom = chatRoomService.findByParticipantsOrCreate(msg.getSenderId(), msg.getRecipientId());
+    ChatRoom chatRoom = chatRoomService.getById(msg.getChatRoomId());
     msg.setChatRoomId(chatRoom.getId());
     ChatMessage savedMessage = chatMessageService.createNewMessage(msg);
     chatRoom.setLastMessage(savedMessage);

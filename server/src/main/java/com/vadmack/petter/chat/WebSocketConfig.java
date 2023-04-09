@@ -1,6 +1,8 @@
 package com.vadmack.petter.chat;
 
 import com.vadmack.petter.app.exception.WebSocketAuthException;
+import com.vadmack.petter.chat.room.ChatRoom;
+import com.vadmack.petter.chat.room.ChatRoomService;
 import com.vadmack.petter.security.JwtTokenUtil;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   private final JwtTokenUtil jwtTokenUtil;
   private final UserDetailsService userDetailsService;
+  private final ChatRoomService chatRoomService;
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry
@@ -92,17 +95,30 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
           else
             log.info("Disconnected Sess : " + accessor.getSessionId());
         } else if (StompCommand.SUBSCRIBE.equals(command)) {
-          UsernamePasswordAuthenticationToken principal
-                  = (UsernamePasswordAuthenticationToken) accessor.getUser();
-          if (destination.startsWith("/user") &&
-                  !destination.contains(((User) principal.getPrincipal()).getId())) {
-            throw new WebSocketAuthException("You don't have access to the topic " + destination);
-          }
+          checkAccess(accessor);
+        } else if (StompCommand.SEND.equals(command)) {
+          checkAccess(accessor);
         }
 
         return message;
-      } 
+      }
+
+      private void checkAccess(StompHeaderAccessor accessor) {
+        String destination = accessor.getDestination();
+        if (destination.startsWith("/topic/chat")) {
+          UsernamePasswordAuthenticationToken principal
+                  = (UsernamePasswordAuthenticationToken) accessor.getUser();
+          String chatRoomId = destination.substring("/topic/chat".length() + 1);
+          ChatRoom chatRoom = chatRoomService.getById(chatRoomId);
+          String userId = ((User) principal.getPrincipal()).getId();
+          if (!chatRoom.getUser1().equals(userId) && !chatRoom.getUser2().equals(userId)) {
+            throw new WebSocketAuthException("You don't have access to the topic " + destination);
+          }
+        }
+      }
 
     });
+
+
   }
 }

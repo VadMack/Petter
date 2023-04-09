@@ -2,6 +2,9 @@ package com.vadmack.petter.websocket;
 
 
 import com.vadmack.petter.chat.message.ChatMessageDto;
+import com.vadmack.petter.chat.message.ChatMessageRepository;
+import com.vadmack.petter.chat.room.ChatRoom;
+import com.vadmack.petter.chat.room.ChatRoomRepository;
 import com.vadmack.petter.security.JwtTokenUtil;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.repository.UserRepository;
@@ -46,17 +49,20 @@ class WebSocketsIT {
   private Integer port;
   private static String TOKEN;
   private static User savedUser;
+  private static ChatRoom savedChatRoom;
 
   @BeforeAll
   static void setUp(@Autowired PasswordEncoder passwordEncoder,
                     @Autowired UserRepository userRepository,
-                    @Autowired JwtTokenUtil jwtTokenUtil) {
+                    @Autowired JwtTokenUtil jwtTokenUtil,
+                    @Autowired ChatRoomRepository chatRoomRepository) {
     User user = new User();
     user.setUsername("USERNAME");
     user.setPassword(passwordEncoder.encode("PASSWORD"));
     user.setEnabled(true);
     savedUser = userRepository.save(user);
     TOKEN = jwtTokenUtil.generateAccessToken(savedUser);
+    savedChatRoom = chatRoomRepository.save(new ChatRoom(savedUser.getId(), savedUser.getId()));
   }
 
   @BeforeEach
@@ -87,13 +93,14 @@ class WebSocketsIT {
     client.setMessageConverter(new GsonMessageConverter());
     StompSession session = connect();
 
-    subscribe(session, "/user/" + savedUser.getId() + "/queue/messages", ChatMessageDto.class,
+    subscribe(session, "/topic/chat/" + savedChatRoom.getId(), ChatMessageDto.class,
             payload -> blockingQueue.add((ChatMessageDto) payload));
 
     ChatMessageDto msg = new ChatMessageDto("Hello",
             savedUser.getId(), savedUser.getId());
+    msg.setChatRoomId(savedChatRoom.getId());
 
-    session.send("/app/chat/" + savedUser.getId(), msg);
+    session.send("/app/chat/" + savedChatRoom.getId(), msg);
 
     AtomicReference<ChatMessageDto> received = new AtomicReference<>();
     await()
@@ -111,7 +118,7 @@ class WebSocketsIT {
     client.setMessageConverter(new GsonMessageConverter());
     StompSession session = connect();
 
-    subscribe(session, "/user/" + "not_my_id" + "/queue/messages", ChatMessageDto.class,
+    subscribe(session, "/topic/chat/" + "not_my_topic", ChatMessageDto.class,
             payload -> {});
 
     await()
@@ -144,7 +151,11 @@ class WebSocketsIT {
   }
 
   @AfterAll
-  static void clenUp(@Autowired UserRepository userRepository) {
+  static void clenUp(@Autowired UserRepository userRepository,
+                     @Autowired ChatRoomRepository chatRoomRepository,
+                     @Autowired ChatMessageRepository chatMessageRepository) {
     userRepository.delete(savedUser);
+    chatRoomRepository.delete(savedChatRoom);
+    chatMessageRepository.deleteByChatRoomId(savedChatRoom.getId());
   }
 }
