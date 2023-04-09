@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -12,6 +13,10 @@ android {
 }
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:31.3.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+
     implementation Libs.coil
     implementation Libs.dagger2
     kapt Libs.dagger2Compiler
@@ -48,6 +53,7 @@ dependencies {
     implementation project(":modules:navigation")
     implementation project(":modules:network")
     implementation project(":modules:token-storage")
+    implementation project(":modules:ui-kit")
     implementation project(":modules:theme")
 
     debugImplementation AndroidX.composeUiTooling
