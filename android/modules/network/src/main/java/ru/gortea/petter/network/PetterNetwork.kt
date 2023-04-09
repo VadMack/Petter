@@ -16,7 +16,9 @@ import java.time.LocalDate
 
 object PetterNetwork {
 
-    private val json = Json {
+    const val BASE_URL = "10.0.2.2:8080"
+
+    val json = Json {
         ignoreUnknownKeys = true
         serializersModule = SerializersModule {
             contextual(LocalDate::class, LocalDateSerializer)
@@ -26,7 +28,7 @@ object PetterNetwork {
     fun create(client: OkHttpClient, logoutController: LogoutController): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl("http://$BASE_URL/")
             .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
             .addCallAdapterFactory(ErrorHandlingCallAdapterFactory(logoutController))

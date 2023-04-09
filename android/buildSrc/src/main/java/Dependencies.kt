@@ -2,6 +2,7 @@ object Libs {
 
     private object Versions {
         const val coroutines = "1.6.1"
+        const val coroutinesRx = "1.6.4"
         const val serialization = "1.5.0-RC"
         const val coil = "2.2.2"
         const val compressor = "3.0.1"
@@ -13,9 +14,18 @@ object Libs {
         const val dagger2 = "2.17"
         const val appyx = "1.1.1"
         const val room = "2.5.0"
+        const val stomp = "1.6.6"
+        const val rxJava = "2.2.21"
+        const val rxJavaAndroid = "2.1.1"
     }
 
+
+    const val stomp = "com.github.NaikSoftware:StompProtocolAndroid:${Versions.stomp}"
+    const val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
+    const val rxJavaAndroid = "io.reactivex.rxjava2:rxandroid:${Versions.rxJavaAndroid}"
+
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
+    const val coroutinesRx = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${Versions.coroutinesRx}"
     const val serialization =
         "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serialization}"
 
