@@ -25,6 +25,16 @@ sealed class PagingDataState<out T>(open val content: List<T>) {
     }
 }
 
+inline fun<T, R> PagingDataState<T>.mapContentList(mapper: (List<T>) -> List<R>): PagingDataState<R> {
+    return when(this) {
+        is PagingDataState.Initial -> this
+        is PagingDataState.Paged.Content -> PagingDataState.Paged.Content(mapper(content))
+        is PagingDataState.Paged.Loading -> PagingDataState.Paged.Loading(mapper(content))
+        is PagingDataState.Paged.Refresh -> PagingDataState.Paged.Refresh(mapper(content))
+        is PagingDataState.Paged.Fail -> PagingDataState.Paged.Fail(mapper(content), reason)
+    }
+}
+
 inline fun<T, R> PagingDataState<T>.mapContent(mapper: (T) -> R): PagingDataState<R> {
     return when(this) {
         is PagingDataState.Initial -> this
