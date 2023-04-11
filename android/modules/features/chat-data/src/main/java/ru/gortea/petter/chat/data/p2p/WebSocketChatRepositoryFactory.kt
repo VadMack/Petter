@@ -1,4 +1,4 @@
-package ru.gortea.petter.chat.data
+package ru.gortea.petter.chat.data.p2p
 
 import okhttp3.OkHttpClient
 import ru.gortea.petter.profile.data.local.UserLocalRepository
@@ -10,7 +10,7 @@ class WebSocketChatRepositoryFactory(
     private val userRepository: UserLocalRepository
 ) {
 
-    fun create(userId: String): WebSocketChatRepository {
-        return WebSocketChatRepository(userId, okHttpClient, jwtRepository, userRepository)
+    internal fun create(conversationId: String): WebSocketChatRepository {
+        return WebSocketChatRepository(conversationId, okHttpClient, jwtRepository, userRepository)
     }
 }

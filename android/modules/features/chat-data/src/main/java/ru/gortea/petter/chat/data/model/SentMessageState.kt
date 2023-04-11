@@ -1,6 +1,7 @@
 package ru.gortea.petter.chat.data.model
 
-sealed class SentMessageState(val message: String) {
-    class Success(message: String) : SentMessageState(message)
-    class Fail(message: String, val reason: Throwable) : SentMessageState(message)
+internal sealed class SentMessageState(val message: SentMessage) {
+    class Loading(message: SentMessage) : SentMessageState(message)
+    class Success(message: SentMessage) : SentMessageState(message)
+    class Fail(message: SentMessage, val reason: Throwable) : SentMessageState(message)
 }

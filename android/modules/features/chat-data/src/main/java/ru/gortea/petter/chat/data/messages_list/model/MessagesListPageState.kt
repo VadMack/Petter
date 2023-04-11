@@ -1,11 +1,11 @@
-package ru.gortea.petter.pet.list.data.model
+package ru.gortea.petter.chat.data.messages_list.model
 
 import ru.gortea.petter.data.paging.model.PageState
 
-data class PetListPageState internal constructor(
+internal data class MessagesListPageState(
+    val conversationId: String,
     override val page: Int = 0,
-    override val pageSize: Int = PAGE_SIZE,
-    internal val petListKey: PetListKey = PetListKey()
+    override val pageSize: Int = PAGE_SIZE
 ) : PageState(page, pageSize) {
 
     private companion object {

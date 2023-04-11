@@ -17,5 +17,6 @@ dependencies {
     implementation project(":modules:features:profile-data")
     implementation project(":modules:token-storage")
     implementation project(":modules:network")
-    api project(":modules:data")
+    implementation project(":modules:arch")
+    api project(":modules:data-paging")
 }
