@@ -31,6 +31,7 @@ class SecurityIT {
 
   private final String USERNAME = "user1";
   private final String PASSWORD = "user1";
+  private final String DEVICE_TOKEN = "device_token";
 
   @Autowired
   private MockMvc mvc;
@@ -58,7 +59,7 @@ class SecurityIT {
 
   @Test
   void test() throws Exception {
-    String token = auth(new AuthRequest(USERNAME, PASSWORD));
+    String token = auth(new AuthRequest(USERNAME, PASSWORD, DEVICE_TOKEN));
     getSecuredResource(token);
   }
 

@@ -10,9 +10,6 @@
         <module name="Petter" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Petter" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

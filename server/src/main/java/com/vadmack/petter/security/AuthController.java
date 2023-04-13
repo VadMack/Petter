@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -65,7 +62,7 @@ public class AuthController {
 
   @PostMapping("/auth")
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody AuthRequest request) {
-    LoginResponse loginResponse = authService.login(request.getUsername(), request.getPassword());
+    LoginResponse loginResponse = authService.login(request);
     return ResponseEntity.ok()
             .header(
                     HttpHeaders.AUTHORIZATION,
@@ -83,5 +80,12 @@ public class AuthController {
                     loginResponse.jwtToken()
             )
             .body(loginResponse);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+                                              @Valid @RequestBody LogoutRequest request) {
+    authService.logout(authHeader.split(" ")[1].trim(), request.getDeviceToken());
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

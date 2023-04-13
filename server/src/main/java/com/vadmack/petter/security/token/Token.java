@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -20,5 +20,17 @@ public class Token extends MongoModel {
   @Indexed(unique = true)
   private String value;
   private TokenType type;
-  private LocalDateTime expiration;
+  private Instant expiration;
+
+  public Token(String value, TokenType type, Instant expiration) {
+    this.value = value;
+    this.type = type;
+    this.expiration = expiration;
+  }
+
+  public Token(String userId, String value, TokenType type) {
+    this.userId = userId;
+    this.value = value;
+    this.type = type;
+  }
 }

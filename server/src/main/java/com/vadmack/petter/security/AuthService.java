@@ -4,12 +4,14 @@ import com.vadmack.petter.app.exception.UnauthorizedException;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCode;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCodeService;
 import com.vadmack.petter.security.confirmationcode.ConfirmationCodeType;
+import com.vadmack.petter.security.dto.request.AuthRequest;
 import com.vadmack.petter.security.dto.request.ConfirmationCodeRequest;
 import com.vadmack.petter.security.dto.request.PasswordResetConfirmationRequest;
 import com.vadmack.petter.security.dto.response.LoginResponse;
 import com.vadmack.petter.security.event.OnPasswordResetEvent;
 import com.vadmack.petter.security.event.OnRegistrationCompleteEvent;
 import com.vadmack.petter.security.token.TokenService;
+import com.vadmack.petter.security.token.TokenType;
 import com.vadmack.petter.user.User;
 import com.vadmack.petter.user.UserService;
 import com.vadmack.petter.user.dto.UserCreateDto;
@@ -102,15 +104,17 @@ public class AuthService {
     return userService.entityToDto(user);
   }
 
-  public @NotNull LoginResponse login(@NotNull String username, @NotNull String password) {
+  @Transactional
+  public @NotNull LoginResponse login(@NotNull AuthRequest authRequest) {
     Authentication authenticate;
     try {
-      authenticate = authenticationManager
-              .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+      authenticate = authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
     } catch (AuthenticationException e) {
       throw new UnauthorizedException(e.getMessage());
     }
     User user = (User) authenticate.getPrincipal();
+    tokenService.addDeviceToken(user.getId(), authRequest.getDeviceToken());
 
     UserGetDto userDto = modelMapper.map(user, UserGetDto.class);
     String refreshToken = tokenService.createRefreshToken(user.getId());
@@ -126,6 +130,12 @@ public class AuthService {
     String refreshToken = tokenService.createRefreshToken(userId);
     String jwtToken = jwtTokenUtil.generateAccessToken(user);
     return new LoginResponse(modelMapper.map(user, UserGetDto.class), refreshToken, jwtToken);
+  }
+
+  @Transactional
+  public void logout(String jwt, String deviceToken) {
+    tokenService.addJwtToBlacklist(jwt);
+    tokenService.deleteByTypeAndValue(TokenType.DEVICE_TOKEN, deviceToken);
   }
 
 }

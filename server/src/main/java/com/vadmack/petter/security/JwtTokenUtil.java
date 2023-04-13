@@ -1,9 +1,13 @@
 package com.vadmack.petter.security;
 
+import com.vadmack.petter.app.exception.UnauthorizedException;
+import com.vadmack.petter.security.token.TokenService;
+import com.vadmack.petter.security.token.TokenType;
 import com.vadmack.petter.user.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,7 +18,10 @@ import java.util.Date;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenUtil {
+
+  private final TokenService tokenService;
 
   @Value("${authorization.secret}")
   private String secret;
@@ -37,6 +44,10 @@ public class JwtTokenUtil {
   }
 
   public boolean validate(String token) {
+    if (tokenService.findByTypeAndValue(TokenType.BLACKLIST_JWT, token).isPresent()) {
+      throw new UnauthorizedException("Token is inactive since the logout was committed");
+    }
+
     try {
       Jwts.parserBuilder()
               .setSigningKey(secretKey)

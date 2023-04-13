@@ -28,8 +28,9 @@ public class ChatWebSocketController {
   }
 
   @MessageMapping("/chat/{chatRoomId}")
-  public void sendPrivate(@DestinationVariable String chatRoomId, @Payload ChatMessageDto msg) {
-    ChatMessageDto savedMessage = chatService.saveMessage(msg);
+  public void sendPrivate(@AuthenticationPrincipal User user,
+                          @DestinationVariable String chatRoomId, @Payload ChatMessageDto msg) {
+    ChatMessageDto savedMessage = chatService.saveMessageAndNotify(msg, user.getDisplayName());
     messagingTemplate.convertAndSend("/topic/chat/" + chatRoomId, savedMessage);
   }
 }
