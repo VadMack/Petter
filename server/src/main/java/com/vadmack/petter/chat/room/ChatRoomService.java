@@ -37,12 +37,9 @@ public class ChatRoomService {
     return chatRoomRepository.findByUser1OrUser2(userId, userId);
   }
 
-  /**
-   * Finds existed room or creates new ChatRoom object without saving in DB
-   */
   public @NotNull ChatRoomGetDto findByParticipantsOrCreate(@NotNull String user1Id, @NotNull String user2Id) {
     Optional<ChatRoom> optional = findByParticipants(user1Id, user2Id);
-    return entityToDto(optional.orElse((new ChatRoom(user1Id, user2Id))));
+    return entityToDto(optional.orElseGet(() -> chatRoomRepository.save(new ChatRoom(user1Id, user2Id))));
   }
 
   private @NotNull Optional<ChatRoom> findByParticipants(@NotNull String user1Id, @NotNull String user2Id) {
