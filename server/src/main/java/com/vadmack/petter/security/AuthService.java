@@ -7,6 +7,7 @@ import com.vadmack.petter.security.confirmationcode.ConfirmationCodeType;
 import com.vadmack.petter.security.dto.request.AuthRequest;
 import com.vadmack.petter.security.dto.request.ConfirmationCodeRequest;
 import com.vadmack.petter.security.dto.request.PasswordResetConfirmationRequest;
+import com.vadmack.petter.security.dto.request.RefreshTokenRequest;
 import com.vadmack.petter.security.dto.response.LoginResponse;
 import com.vadmack.petter.security.event.OnPasswordResetEvent;
 import com.vadmack.petter.security.event.OnRegistrationCompleteEvent;
@@ -114,8 +115,7 @@ public class AuthService {
       throw new UnauthorizedException(e.getMessage());
     }
     User user = (User) authenticate.getPrincipal();
-    tokenService.addDeviceToken(user.getId(), authRequest.getDeviceToken());
-
+    tokenService.addOrExtendDeviceToken(user.getId(), authRequest.getDeviceToken());
     UserGetDto userDto = modelMapper.map(user, UserGetDto.class);
     String refreshToken = tokenService.createRefreshToken(user.getId());
     String jwtToken = jwtTokenUtil.generateAccessToken(user);
@@ -123,13 +123,15 @@ public class AuthService {
   }
 
   @Transactional
-  public LoginResponse refreshToken(String tokenValue) {
-    String userId = tokenService.validate(tokenValue);
-    tokenService.deleteByValue(tokenValue);
+  public LoginResponse refreshToken(RefreshTokenRequest request) {
+    String refreshToken = request.getRefreshToken();
+    String userId = tokenService.validate(refreshToken);
+    tokenService.deleteByValue(refreshToken);
     User user = userService.getById(userId);
-    String refreshToken = tokenService.createRefreshToken(userId);
+    tokenService.addOrExtendDeviceToken(user.getId(), request.getDeviceToken());
+    String updatedRefreshToken = tokenService.createRefreshToken(userId);
     String jwtToken = jwtTokenUtil.generateAccessToken(user);
-    return new LoginResponse(modelMapper.map(user, UserGetDto.class), refreshToken, jwtToken);
+    return new LoginResponse(modelMapper.map(user, UserGetDto.class), updatedRefreshToken, jwtToken);
   }
 
   @Transactional

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FirebaseMessagingIT {
 
-  private final static String HARDCODED_DEVICE_TOKEN = "abcdefg890-tzdEBZ1nuKr:APA91bHf2ZrB2WpIJeGt63jnKmcg8wBEui6jxgR2028mtKKhcGXriy_CnVjy1WIaS7z0M3r3TNS-5EAaFB1qsCgPNY8lpfw7IeJ2NBSHuEO0lXna3qDseB8LhRn-4AQMouEBZcBgdN8B";
+  private final static String HARDCODED_DEVICE_TOKEN = "place_for_your_token";
 
   @Autowired
   private FirebaseMessagingService fmService;

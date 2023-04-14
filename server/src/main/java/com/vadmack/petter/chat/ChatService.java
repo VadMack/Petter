@@ -1,5 +1,6 @@
 package com.vadmack.petter.chat;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.vadmack.petter.chat.message.ChatMessage;
 import com.vadmack.petter.chat.message.ChatMessageDto;
 import com.vadmack.petter.chat.message.ChatMessageService;
@@ -9,6 +10,7 @@ import com.vadmack.petter.security.token.Token;
 import com.vadmack.petter.security.token.TokenService;
 import com.vadmack.petter.security.token.TokenType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ChatService {
@@ -38,7 +41,11 @@ public class ChatService {
     deviceTokens.forEach(token -> {
       NotificationDto notification = new NotificationDto(senderName, msg.getContent(),
               token.getValue(), Map.of("userId", senderId, "chatRoomId", chatRoom.getId()));
-      fmService.send(notification);
+      try {
+        fmService.send(notification);
+      } catch (FirebaseMessagingException ex) {
+        log.warn("Firebase notification is not sent: " + ex.getMessage());
+      }
     });
 
     return chatMessageService.entityToDto(savedMessage);

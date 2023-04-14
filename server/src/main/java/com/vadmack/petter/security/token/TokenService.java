@@ -23,8 +23,11 @@ public class TokenService {
     tokenRepository.save(new Token(jwt, TokenType.BLACKLIST_JWT, JWT.decode(jwt).getExpiresAtAsInstant()));
   }
 
-  public void addDeviceToken(@NotNull String userId, String value) {
-    tokenRepository.save(new Token(userId, value, TokenType.DEVICE_TOKEN));
+  public void addOrExtendDeviceToken(@NotNull String userId, String value) {
+    Optional<Token> tokenOptional = findByTypeAndValue(TokenType.DEVICE_TOKEN, value);
+    Token token = tokenOptional.orElseGet(() -> new Token(userId, value, TokenType.DEVICE_TOKEN));
+    token.setExpiration(Instant.now().plus(1, ChronoUnit.DAYS));
+    tokenRepository.save(token);
   }
 
   public @NotNull String createRefreshToken(@NotNull String userId) {
