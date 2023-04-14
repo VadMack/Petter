@@ -1,10 +1,7 @@
 package com.vadmack.petter.security.token;
 
 import com.vadmack.petter.app.model.MongoModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,8 +9,8 @@ import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "tokens")
 public class Token extends MongoModel {
   private String userId;
