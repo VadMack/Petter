@@ -1,7 +1,6 @@
 package com.vadmack.petter.user;
 
 import com.vadmack.petter.ad.AdService;
-import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.exception.ValidationException;
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.file.AttachmentType;
@@ -84,10 +83,6 @@ public class UserService {
     if (userRepository.existsByEmail(email)) {
       throw new ValidationException(String.format("User with email=%s already exists", email));
     }
-  }
-
-  public @NotNull List<AdGetListDto> getFavoriteAds(@NotNull User user) {
-    return adService.getDtoByIdIn(user.getFavoriteAdIds());
   }
 
   public void save(User user) {

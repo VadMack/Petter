@@ -66,6 +66,11 @@ public class AdController implements SecuredRestController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  @GetMapping("/favorites")
+  public ResponseEntity<List<AdGetListDto>> getFavoriteAds(@AuthenticationPrincipal User user) {
+    return ResponseEntity.ok(adService.getDtoByIdIn(user.getFavoriteAdIds()));
+  }
+
   @PreAuthorize("@adService.isOwner(#user, #id)")
   @PostMapping(value = "{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> uploadImage(@AuthenticationPrincipal User user,

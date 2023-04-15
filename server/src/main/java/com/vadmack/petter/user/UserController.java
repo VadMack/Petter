@@ -1,6 +1,5 @@
 package com.vadmack.petter.user;
 
-import com.vadmack.petter.ad.dto.AdGetListDto;
 import com.vadmack.petter.app.annotation.Secured;
 import com.vadmack.petter.user.dto.UserGetDto;
 import com.vadmack.petter.user.dto.UserUpdateDto;
@@ -39,12 +38,6 @@ public class UserController {
                                   @RequestBody UserUpdateDto dto) {
     userService.updateById(dto, user.getId());
     return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  @Secured
-  @GetMapping("/favorites")
-  public ResponseEntity<List<AdGetListDto>> getFavoriteAds(@AuthenticationPrincipal User user) {
-    return ResponseEntity.ok(userService.getFavoriteAds(user));
   }
 
   @Secured
