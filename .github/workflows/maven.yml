@@ -10,12 +10,12 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "Issue_21-CI-Pipeline" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "Issue_21-CI-Pipeline" ]
+    branches: [ "main" ]
 
 jobs:
-  build:
+  server-build-and-test:
 
     runs-on: ubuntu-latest
 
