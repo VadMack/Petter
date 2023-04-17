@@ -30,17 +30,16 @@ public class ChatService {
 
   @Transactional
   public @NotNull ChatMessageDto saveMessageAndNotify(ChatMessageDto msg, String senderName) {
-    String senderId = msg.getSenderId();
     ChatRoom chatRoom = chatRoomService.getById(msg.getChatRoomId());
     msg.setChatRoomId(chatRoom.getId());
     ChatMessage savedMessage = chatMessageService.createNewMessage(msg);
     chatRoom.setLastMessage(savedMessage);
     chatRoomService.save(chatRoom);
 
-    List<Token> deviceTokens = tokenService.getAllByTypeAndUserId(TokenType.DEVICE_TOKEN, senderId);
+    List<Token> deviceTokens = tokenService.getAllByTypeAndUserId(TokenType.DEVICE_TOKEN, msg.getRecipientId());
     deviceTokens.forEach(token -> {
       NotificationDto notification = new NotificationDto(senderName, msg.getContent(),
-              token.getValue(), Map.of("userId", senderId, "chatRoomId", chatRoom.getId()));
+              token.getValue(), Map.of("userId", msg.getSenderId(), "chatRoomId", chatRoom.getId()));
       try {
         fmService.send(notification);
       } catch (FirebaseMessagingException ex) {
