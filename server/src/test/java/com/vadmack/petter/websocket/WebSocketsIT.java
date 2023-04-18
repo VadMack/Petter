@@ -1,6 +1,7 @@
 package com.vadmack.petter.websocket;
 
 
+import com.vadmack.petter.chat.RSAUtils;
 import com.vadmack.petter.chat.message.ChatMessageDto;
 import com.vadmack.petter.chat.message.ChatMessageRepository;
 import com.vadmack.petter.chat.room.ChatRoom;
@@ -96,7 +97,9 @@ class WebSocketsIT {
     subscribe(session, "/topic/chat/" + savedChatRoom.getId(), ChatMessageDto.class,
             payload -> blockingQueue.add((ChatMessageDto) payload));
 
-    ChatMessageDto msg = new ChatMessageDto("Hello",
+    String initialContent = "Hello";
+    String encryptedContent = RSAUtils.encrypt(initialContent, savedChatRoom.getId());
+    ChatMessageDto msg = new ChatMessageDto(encryptedContent,
             savedUser.getId(), savedUser.getId());
     msg.setChatRoomId(savedChatRoom.getId());
 
@@ -110,7 +113,7 @@ class WebSocketsIT {
               return received.get() != null;
             });
 
-    assertEquals(msg.getContent(), received.get().getContent());
+    assertEquals(initialContent, received.get().getContent());
   }
 
   @Test

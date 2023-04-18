@@ -1,10 +1,13 @@
 package com.vadmack.petter.chat.room;
 
 import com.vadmack.petter.app.utils.AppUtils;
+import com.vadmack.petter.chat.RSAUtils;
+import com.vadmack.petter.chat.message.ChatMessageDto;
 import com.vadmack.petter.chat.room.dto.ChatRoomCreateDto;
 import com.vadmack.petter.chat.room.dto.ChatRoomGetDto;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -39,7 +42,11 @@ public class ChatRoomService {
 
   public @NotNull ChatRoomGetDto findByParticipantsOrCreate(@NotNull String user1Id, @NotNull String user2Id) {
     Optional<ChatRoom> optional = findByParticipants(user1Id, user2Id);
-    return entityToDto(optional.orElseGet(() -> chatRoomRepository.save(new ChatRoom(user1Id, user2Id))));
+    ChatRoom room = optional.orElseGet(() -> {
+      String chatRoomId = new ObjectId().toString();
+      return chatRoomRepository.save(new ChatRoom(chatRoomId, user1Id, user2Id, RSAUtils.getPublicKey(chatRoomId)));
+    });
+    return entityToDto(room);
   }
 
   private @NotNull Optional<ChatRoom> findByParticipants(@NotNull String user1Id, @NotNull String user2Id) {
@@ -57,6 +64,9 @@ public class ChatRoomService {
   }
 
   public ChatRoomGetDto entityToDto(@NotNull ChatRoom entity) {
+    ChatRoomGetDto dto = modelMapper.map(entity, ChatRoomGetDto.class);
+    ChatMessageDto lastMessage = dto.getLastMessage();
+    lastMessage.setContent(RSAUtils.decrypt(lastMessage.getContent(), dto.getId()));
     return modelMapper.map(entity, ChatRoomGetDto.class);
   }
 
