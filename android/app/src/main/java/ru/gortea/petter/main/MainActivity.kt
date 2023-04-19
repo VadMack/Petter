@@ -1,7 +1,6 @@
 package ru.gortea.petter.main
 
 import android.Manifest.permission.POST_NOTIFICATIONS
-import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
@@ -30,7 +29,6 @@ import ru.gortea.petter.arch.android.activity.getComponent
 import ru.gortea.petter.arch.android.compose.LocalApplicationContext
 import ru.gortea.petter.main.di.MainActivityComponent
 import ru.gortea.petter.navigation.PetterRootNode
-import ru.gortea.petter.notifications.FirebaseNotifications
 import ru.gortea.petter.theme.PetterAppTheme
 
 class MainActivity : NodeActivity() {
@@ -47,23 +45,16 @@ class MainActivity : NodeActivity() {
         }
     }
 
-    private val notifications = FirebaseNotifications()
+    private val component by lazy { getComponent<MainActivityComponent>() }
 
     private val googleApiAvailability by lazy { GoogleApiAvailability.getInstance() }
 
-    private val imageLoader by lazy {
-        getComponent<MainActivityComponent>().imageLoader
-    }
+    private val imageLoader by lazy { component.imageLoader }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkGoogleServices()
 
-        notifications.createChannel(
-            this,
-            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        )
-        notifications.initialToken()
         askNotificationPermission()
         setupInsets()
         setContent { Content() }
@@ -86,7 +77,11 @@ class MainActivity : NodeActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     NodeHost(integrationPoint = appyxIntegrationPoint) {
-                        PetterRootNode(buildContext = it)
+                        PetterRootNode(
+                            authObservable = component.authObservable,
+                            userRepo = component.currentUserRepository,
+                            buildContext = it
+                        )
                     }
                 }
             }
@@ -94,12 +89,12 @@ class MainActivity : NodeActivity() {
     }
 
     private fun checkGoogleServices() {
-        if (googleApiAvailability.isAvailable(this)) {
+        if (googleApiAvailability.isNotAvailable(this)) {
             googleApiAvailability.makeGooglePlayServicesAvailable(this)
         }
     }
 
-    private fun GoogleApiAvailability.isAvailable(context: Context): Boolean {
+    private fun GoogleApiAvailability.isNotAvailable(context: Context): Boolean {
         return isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS
     }
 
