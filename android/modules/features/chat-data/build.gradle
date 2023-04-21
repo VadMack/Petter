@@ -4,6 +4,12 @@ plugins {
     id 'kotlinx-serialization'
 }
 
+android {
+    buildFeatures {
+        compose false
+    }
+}
+
 dependencies {
     implementation Libs.serialization
     implementation Libs.coroutines
@@ -14,9 +20,10 @@ dependencies {
     implementation Libs.rxJavaAndroid
     implementation Libs.coroutinesRx
 
-    implementation project(":modules:features:profile-data")
     implementation project(":modules:token-storage")
     implementation project(":modules:network")
     implementation project(":modules:arch")
+    api project(":modules:features:chat-data-messages")
+    api project(":modules:features:profile-data")
     api project(":modules:data-paging")
 }

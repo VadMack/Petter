@@ -4,10 +4,10 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import retrofit2.create
 import ru.gortea.petter.data.ContentResolverFileConverter
 import ru.gortea.petter.data.util.ContentFileConverter
-import ru.gortea.petter.network.createApi
-import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 import ru.gortea.petter.profile.data.remote.GetUserRepository
 import ru.gortea.petter.profile.data.remote.UserUpdateRepository
 import ru.gortea.petter.profile.data.remote.api.ProfileApi
@@ -17,7 +17,7 @@ class FeatureProfileDataModule {
 
     @Provides
     fun provideProfileApi(retrofit: Retrofit): ProfileApi {
-        return retrofit.createApi()
+        return retrofit.create()
     }
 
     @Provides
@@ -28,17 +28,17 @@ class FeatureProfileDataModule {
     @Provides
     fun provideUserUpdateRepository(
         api: ProfileApi,
-        userLocalRepository: UserLocalRepository,
+        currentUserRepository: CurrentUserRepository,
         contentFileConverter: ContentFileConverter
     ): UserUpdateRepository {
-        return UserUpdateRepository(api, userLocalRepository, contentFileConverter)
+        return UserUpdateRepository(api, currentUserRepository, contentFileConverter)
     }
 
     @Provides
     fun provideGetUserRepository(
         api: ProfileApi,
-        userLocalRepository: UserLocalRepository
+        currentUserRepository: CurrentUserRepository
     ): GetUserRepository {
-        return GetUserRepository(api, userLocalRepository)
+        return GetUserRepository(api, currentUserRepository)
     }
 }

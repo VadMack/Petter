@@ -12,42 +12,29 @@ import ru.gortea.petter.profile.data.local.CurrentUserRepository
 
 internal class PetterRootTargetController(
     authObservable: AuthObservable,
-    userRepo: CurrentUserRepository,
+    private val userRepo: CurrentUserRepository,
     coroutineScope: CoroutineScope
 ) {
 
-    private val stateFlow = MutableStateFlow<PetterRootTarget>(PetterRootTarget.Content)
-
-    private var authorized = true
-    private var isEmpty = false
+    private val stateFlow = MutableStateFlow<PetterRootTarget>(PetterRootTarget.Authorization)
 
     init {
         coroutineScope.launch {
             launch {
                 authObservable.isAuthorized()
-                    .onEach {
-                        authorized = it
-                        updateTarget()
-                    }
-                    .collect()
-            }
-
-            launch {
-                userRepo.isEmpty()
-                    .onEach {
-                        isEmpty = it
-                        updateTarget()
+                    .onEach { authorized ->
+                        updateTarget(authorized)
                     }
                     .collect()
             }
         }
     }
 
-    private fun updateTarget() {
+    private suspend fun updateTarget(authorized: Boolean) {
         when {
             !authorized -> stateFlow.tryEmit(PetterRootTarget.Authorization)
-            isEmpty -> stateFlow.tryEmit(PetterRootTarget.UserEdit)
-            else -> stateFlow.tryEmit(PetterRootTarget.Authorization)
+            userRepo.isEmpty() -> stateFlow.tryEmit(PetterRootTarget.UserEdit)
+            else -> stateFlow.tryEmit(PetterRootTarget.Content)
         }
     }
 

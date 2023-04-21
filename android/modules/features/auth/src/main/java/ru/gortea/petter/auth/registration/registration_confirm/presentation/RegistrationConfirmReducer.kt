@@ -4,7 +4,6 @@ import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.android.util.FieldState
 import ru.gortea.petter.arch.android.util.invalid
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.RegistrationConfirmModel
 import ru.gortea.petter.auth.data.model.RegistrationEmailModel
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
@@ -44,7 +43,12 @@ internal class RegistrationConfirmReducer(
         }
 
         if (status is DataState.Content) {
-            commands(Command.Authorize(state.toAuthorizationModel()))
+            commands(
+                Command.Authorize(
+                    username = state.username,
+                    pwd = state.password
+                )
+            )
         }
     }
 
@@ -90,13 +94,6 @@ internal class RegistrationConfirmReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.resendCode() {
         commands(Command.ResendCode(RegistrationEmailModel(state.email)))
-    }
-
-    private fun State.toAuthorizationModel(): CredsAuthorizationModel {
-        return CredsAuthorizationModel(
-            username = username,
-            password = password
-        )
     }
 
     private fun State.toRegistrationConfirmModel(): RegistrationConfirmModel {

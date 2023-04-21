@@ -33,7 +33,9 @@ class PetterRootNode(
     init {
         coroutineScope.launch {
             targetController.get()
-                .onEach { router.updateRoot(it) }
+                .onEach {
+                    router.updateRoot(it)
+                }
                 .collect()
         }
     }
@@ -57,7 +59,6 @@ class PetterRootNode(
 
     override fun onChildFinished(child: Node) {
         when (child) {
-            is AuthorizationRootNode -> router.updateRoot(PetterRootTarget.Content)
             is ProfileEditNode -> router.updateRoot(PetterRootTarget.Content)
         }
     }

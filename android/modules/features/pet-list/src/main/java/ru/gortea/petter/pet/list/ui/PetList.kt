@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -126,8 +127,8 @@ private fun PetList(
     modifier: Modifier = Modifier
 ) {
     when (state.dataState) {
-        is Initial.Empty, is Initial.Loading -> LoadingPlaceholder(modifier)
-        is Initial.Fail -> ErrorPlaceholder(reloadPage, modifier)
+        is Initial.Empty, is Initial.Loading -> LoadingPlaceholder(modifier.fillMaxSize())
+        is Initial.Fail -> ErrorPlaceholder(modifier, reloadPage)
         is Paged -> {
             if (pullToRefreshEnabled) {
                 ContentWithPtr(
@@ -431,6 +432,7 @@ private fun AvatarWithAward(avatar: Uri?, hasAwards: Boolean) {
             image = avatar?.let {
                 rememberAsyncImagePainter(
                     it,
+                    contentScale = ContentScale.Crop,
                     placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
                     error = painterResource(UiKitR.drawable.ic_pet_placeholder)
                 )

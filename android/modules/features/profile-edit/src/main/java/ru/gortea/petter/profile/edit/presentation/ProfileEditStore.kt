@@ -20,7 +20,7 @@ internal fun createProfileEditStore(
     finish: () -> Unit
 ): ProfileEditStore {
     val userUpdateRepo = component.userUpdateRepository
-    val localUserRepo = component.userLocalRepository
+    val localUserRepo = component.currentUserRepository
 
     return TeaStore(
         ProfileEditState(),

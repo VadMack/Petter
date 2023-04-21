@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -187,6 +188,7 @@ private fun FillAccountScreenContent(
                 image = state.avatar?.let {
                     rememberAsyncImagePainter(
                         it,
+                        contentScale = ContentScale.Crop,
                         placeholder = painterResource(ru.gortea.petter.ui_kit.R.drawable.ic_person_placeholder),
                         error = painterResource(ru.gortea.petter.ui_kit.R.drawable.ic_person_placeholder)
                     )

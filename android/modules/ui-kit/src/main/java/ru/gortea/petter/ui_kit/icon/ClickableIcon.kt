@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 fun ClickableIcon(
     @DrawableRes icon: Int,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     size: Dp = 24.dp,
     tint: Color? = null
 ) {
@@ -36,6 +37,7 @@ fun ClickableIcon(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
+                enabled = enabled,
                 onClick = onClick
             )
     )

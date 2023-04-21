@@ -12,9 +12,11 @@ import ru.gortea.petter.data.MapSourceRepository
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.token.storage.TokenRepository
 
+
 class AuthorizationRepository(
     private val api: AuthApi,
     private val refreshTokenRepository: TokenRepository,
+    private val deviceTokenRepository: TokenRepository,
     private val loginController: LoginController,
     private val logoutController: LogoutController
 ) : MapSourceRepository<AuthorizedUserModel, UserModel>(
@@ -22,7 +24,12 @@ class AuthorizationRepository(
         if (it is CredsAuthorizationModel) {
             api.auth(it)
         } else {
-            api.auth(TokenAuthorizationModel(refreshTokenRepository.getToken()))
+            api.auth(
+                TokenAuthorizationModel(
+                    refreshToken = refreshTokenRepository.getToken(),
+                    deviceToken = deviceTokenRepository.getToken()
+                )
+            )
         }
     },
     mapper = {

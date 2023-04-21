@@ -12,10 +12,10 @@ import ru.gortea.petter.profile.edit.navigation.ProfileEditNode
 import ru.gortea.petter.profile.navigation.nodes.ProfileNode
 
 class ProfileRootNode(
+    buildContext: BuildContext,
     id: String = "",
     canGoBack: Boolean = true,
-    buildContext: BuildContext,
-    private val changeNavBarVisible: (Boolean) -> Unit
+    private val changeNavBarVisible: (Boolean) -> Unit = {}
 ) : BackStackParentNode<ProfileNavTarget>(
     initialTarget = ProfileNavTarget.Profile(id, canGoBack),
     buildContext = buildContext

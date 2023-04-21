@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -188,8 +189,8 @@ private fun ProfileRoot(
             openPetClicked = openPetClicked,
             refresh = refresh
         )
-        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier)
-        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
+        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(modifier.fillMaxSize())
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked = reloadClicked)
     }
 }
 
@@ -227,6 +228,7 @@ private fun ProfileContent(
                     image = state.avatar?.let {
                         rememberAsyncImagePainter(
                             it,
+                            contentScale = ContentScale.Crop,
                             placeholder = painterResource(UiKitR.drawable.ic_person_placeholder),
                             error = painterResource(UiKitR.drawable.ic_person_placeholder)
                         )

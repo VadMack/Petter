@@ -6,5 +6,6 @@ import ru.gortea.petter.data.model.Arguments
 @Serializable
 data class CredsAuthorizationModel(
     val username: String,
-    val password: String
+    val password: String,
+    val deviceToken: String
 ): Arguments

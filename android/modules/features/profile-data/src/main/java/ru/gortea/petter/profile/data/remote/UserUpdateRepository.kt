@@ -9,14 +9,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import ru.gortea.petter.data.MapSourceRepository
 import ru.gortea.petter.data.util.ContentFileConverter
-import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 import ru.gortea.petter.profile.data.remote.api.ProfileApi
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.profile.data.remote.model.UserUpdateFullModel
 
 class UserUpdateRepository(
     private val api: ProfileApi,
-    private val userLocalRepository: UserLocalRepository,
+    private val currentUserRepository: CurrentUserRepository,
     private val contentFileConverter: ContentFileConverter
 ) : MapSourceRepository<UserModel, Unit>(
     source = {
@@ -29,7 +29,7 @@ class UserUpdateRepository(
             }
             avatarUpdate = async {
                 if (model.avatarModel.filePath == null) {
-                    userLocalRepository.getCurrentUser().avatarPathSegments?.let { (folder, file) ->
+                    currentUserRepository.getCurrentUser().avatarPathSegments?.let { (folder, file) ->
                         api.deletePhoto(folder, file)
                     }
                     return@async
@@ -53,10 +53,10 @@ class UserUpdateRepository(
         }
 
         listOf(userUpdate, avatarUpdate).awaitAll()
-        val id = userLocalRepository.getCurrentUser().id
+        val id = currentUserRepository.getCurrentUser().id
         api.getUserById(id)
     },
     mapper = { user ->
-        userLocalRepository.updateCurrentUser(user)
+        currentUserRepository.updateCurrentUser(user)
     }
 )

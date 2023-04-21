@@ -23,6 +23,6 @@ interface PetListApi {
         @Query("notOwnerId") excludeOwnerId: String?
     ): List<PetListItemModel>
 
-    @GET("api/users/favorites")
+    @GET("api/ads/favorites")
     suspend fun getFavourites(): List<PetListItemModel>
 }
