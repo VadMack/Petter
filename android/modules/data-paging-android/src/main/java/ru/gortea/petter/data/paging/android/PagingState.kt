@@ -8,6 +8,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import ru.gortea.petter.data.paging.model.PagingDataState
+import ru.gortea.petter.data.paging.model.isLoading
 
 @Composable
 fun rememberPagingState(
@@ -23,12 +24,14 @@ fun rememberPagingState(
             val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
             val totalItems = layoutInfo.totalItemsCount
 
+            println("xxx: $totalItems $offset $lastVisibleItem")
+
             lastVisibleItem >= totalItems - offset
         }
     }
 
     LaunchedEffect(key1 = needNextPage, key2 = state) {
-        if (needNextPage) {
+        if (needNextPage && !state.isLoading()) {
             loadNextPage()
         }
     }

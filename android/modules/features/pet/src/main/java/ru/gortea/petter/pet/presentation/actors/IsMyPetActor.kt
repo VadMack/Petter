@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.pet.presentation.PetCommand
 import ru.gortea.petter.pet.presentation.PetEvent
-import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 
 internal class IsMyPetActor(
-    private val profileRepository: UserLocalRepository
+    private val profileRepository: CurrentUserRepository
 ) : Actor<PetCommand, PetEvent> {
 
     override fun process(commands: Flow<PetCommand>): Flow<PetEvent> {

@@ -45,6 +45,15 @@ inline fun<T, R> PagingDataState<T>.mapContent(mapper: (T) -> R): PagingDataStat
     }
 }
 
+fun PagingDataState<*>.isLoading(): Boolean {
+    return when(this) {
+        is PagingDataState.Initial.Loading -> true
+        is PagingDataState.Paged.Loading -> true
+        is PagingDataState.Paged.Refresh -> true
+        else -> false
+    }
+}
+
 fun PagingDataState<*>.isFail(): Boolean {
     return this is PagingDataState.Paged.Fail || this is PagingDataState.Initial.Fail
 }

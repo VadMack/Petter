@@ -23,7 +23,10 @@ open class SourcePagingRepository<S : PageState, T>(
 ) : PagingRepository<S, T> {
 
     private val store = createPagingStore(initialState, invalidatePageMapper, nextPageMapper, source)
-    private val dataFlow = MutableSharedFlow<PagingDataState<T>>(extraBufferCapacity = 3)
+    private val dataFlow = MutableSharedFlow<PagingDataState<T>>(
+        replay = 1,
+        extraBufferCapacity = 3
+    )
 
     init {
         store.attach(coroutineScope)

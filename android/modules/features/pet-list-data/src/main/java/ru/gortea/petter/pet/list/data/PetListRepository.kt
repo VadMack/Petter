@@ -5,11 +5,11 @@ import ru.gortea.petter.pet.list.data.api.PetListApiService
 import ru.gortea.petter.pet.list.data.model.PetListItemModel
 import ru.gortea.petter.pet.list.data.model.PetListKey
 import ru.gortea.petter.pet.list.data.model.PetListPageState
-import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 
 class PetListRepository(
     private val api: PetListApiService,
-    private val userRepository: UserLocalRepository
+    private val userRepository: CurrentUserRepository
 ) : SourcePagingRepository<PetListPageState, PetListItemModel>(
     initialState = PetListPageState(),
     invalidatePageMapper = { key -> key.copy(page = 0) },

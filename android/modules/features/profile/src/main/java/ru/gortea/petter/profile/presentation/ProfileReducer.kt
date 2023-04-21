@@ -29,7 +29,6 @@ internal class ProfileReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.loadUserStatus(state: DataState<UserModel>) {
         state { copy(userModelStatus = state) }
-        println("xxx: $state")
     }
 
     private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {

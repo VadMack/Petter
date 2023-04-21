@@ -39,7 +39,7 @@ internal fun createRegistrationConfirmStore(
             InitAuthorizeActor(authRepo),
             InitRegistrationConfirmActor(repo),
             InitResendCodeActor(repo),
-            AuthorizeActor(authRepo),
+            AuthorizeActor(authRepo, component.deviceTokenRepository),
             RegistrationConfirmValidateActor(),
             RegistrationConfirmActor(repo),
             ResendCodeActor(repo)

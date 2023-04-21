@@ -6,26 +6,29 @@ import android.content.Context
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import ru.gortea.petter.R
+import ru.gortea.petter.token.storage.TokenRepository
 
-class FirebaseNotifications {
-    fun initialToken() {
+class FirebaseNotifications(
+    private val deviceTokenRepository: TokenRepository
+) {
+    fun initialToken(tokenUpdated: () -> Unit = {}) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
             OnCompleteListener { task ->
                 if (!task.isSuccessful) return@OnCompleteListener
 
                 onTokenUpdated(task.result)
+                tokenUpdated()
             }
         )
     }
 
     fun onTokenUpdated(token: String) {
-        // todo send token to server
-        println("xxx: token $token")
+        deviceTokenRepository.updateToken(token)
     }
 
     fun createChannel(context: Context, manager: NotificationManager) {
         val channelId = context.getString(R.string.notification_channel_id)
-        if(manager.getNotificationChannel(channelId) != null) return
+        if (manager.getNotificationChannel(channelId) != null) return
 
         val name = context.getString(R.string.notification_channel_title)
         val descriptionText = context.getString(R.string.notification_channel_description)

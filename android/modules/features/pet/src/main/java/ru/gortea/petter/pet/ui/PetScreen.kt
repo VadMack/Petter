@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,7 +103,9 @@ internal fun PetScreen(
     }
 
     LaunchedEffect(needReload) {
-        store.dispatch(PetUiEvent.LoadPet(id))
+        if (needReload) {
+            store.dispatch(PetUiEvent.LoadPet(id))
+        }
     }
 }
 
@@ -203,7 +206,7 @@ private fun PetScreenRoot(
         is DataState.Empty -> Unit
         is DataState.Content -> {
             if (state.isDeleteLoading) {
-                LoadingPlaceholder(modifier)
+                LoadingPlaceholder(modifier.fillMaxSize())
             } else {
                 PetScreenContent(
                     state = state.modelStatus.content,
@@ -225,8 +228,8 @@ private fun PetScreenRoot(
             reloadClicked = reloadClicked,
             modifier = modifier
         )
-        is DataState.Loading -> LoadingPlaceholder(modifier)
-        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
+        is DataState.Loading -> LoadingPlaceholder(modifier.fillMaxSize())
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked = reloadClicked)
     }
 }
 
@@ -259,6 +262,7 @@ private fun PetScreenContent(
                 image = state.photo?.let {
                     rememberAsyncImagePainter(
                         it,
+                        contentScale = ContentScale.Crop,
                         placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
                         error = painterResource(UiKitR.drawable.ic_pet_placeholder)
                     )

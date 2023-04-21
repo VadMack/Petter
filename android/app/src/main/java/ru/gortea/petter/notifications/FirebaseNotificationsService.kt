@@ -9,7 +9,9 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import ru.gortea.petter.R
+import ru.gortea.petter.arch.android.activity.getComponent
 import ru.gortea.petter.main.MainActivity
+import ru.gortea.petter.notifications.di.NotificationsServiceComponent
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 
@@ -17,15 +19,21 @@ class FirebaseNotificationsService : FirebaseMessagingService() {
 
     private val manager by lazy { getSystemService(NOTIFICATION_SERVICE) as NotificationManager }
 
-    private val notifications = FirebaseNotifications()
+    private val component by lazy { getComponent<NotificationsServiceComponent>() }
+    private val notifications by lazy { FirebaseNotifications(component.tokenRepository) }
+    private val lastMessageRepository by lazy { component.messageRoomRepository }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        sendNotification(message)
+        val userId = message.data["userId"]
+        if (lastMessageRepository.roomCompanionId() != userId) {
+            sendNotification(message)
+        }
     }
 
     private fun sendNotification(remoteMessage: RemoteMessage) {
         val notification = remoteMessage.notification ?: return
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtras(remoteMessage.toIntent())
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -45,8 +53,8 @@ class FirebaseNotificationsService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
 
         notifications.createChannel(this, manager)
-
-        manager.notify(notification.title.hashCode(), notificationBuilder.build())
+        val userId = remoteMessage.data["userId"]
+        manager.notify(userId.hashCode(), notificationBuilder.build())
     }
 
     override fun onNewToken(token: String) {

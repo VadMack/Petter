@@ -6,7 +6,7 @@ import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.data.GetPetRepository
 import ru.gortea.petter.pet.data.PetLikeRepository
 import ru.gortea.petter.pet.data.UpdatePetRepository
-import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 
 interface PetComponent {
     val petLikeRepository: PetLikeRepository
@@ -14,6 +14,6 @@ interface PetComponent {
     val updatePetRepository: UpdatePetRepository
     val deletePetRepository: DeletePetRepository
     val getPetRepository: GetPetRepository
-    val userRepository: UserLocalRepository
+    val userRepository: CurrentUserRepository
     val dateFormatter: DateFormatter
 }
