@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class AdService {
     if (dto.getAddress() == null) {
       ad.setAddress(user.getAddress());
     }
+    ad.setCreationDate(LocalDate.now());
     Ad createdAd = adRepository.save(ad);
     userService.addAd(createdAd.getId(), user.getId());
     return entityToDto(createdAd, user.getFavoriteAdIds());

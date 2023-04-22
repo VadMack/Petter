@@ -5,6 +5,9 @@ import com.vadmack.petter.ad.Gender;
 import com.vadmack.petter.ad.Species;
 import com.vadmack.petter.app.model.ModelFilter;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 public class AdFilterDto implements ModelFilter {
@@ -16,6 +19,8 @@ public class AdFilterDto implements ModelFilter {
 
   private Integer minPrice;
   private Integer maxPrice;
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private LocalDate maxCreationDate;
 
   private String notOwnerId;
 }

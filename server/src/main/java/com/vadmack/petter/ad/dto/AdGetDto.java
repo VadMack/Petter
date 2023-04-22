@@ -31,4 +31,5 @@ public class AdGetDto {
   private AdState state;
   private boolean liked = false;
   private Address address;
+  private LocalDate creationDate;
 }

@@ -26,5 +26,6 @@ public class AdGetListDto {
   private AdState state;
   private boolean liked;
   private Address address;
+  private LocalDate creationDate;
 }
 

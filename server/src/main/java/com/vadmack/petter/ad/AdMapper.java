@@ -30,6 +30,7 @@ public class AdMapper {
               .state(ad.getState())
               .liked(favoriteAdIds.contains(ad.getId()))
               .address(ad.getAddress())
+              .creationDate(ad.getCreationDate())
               .build();
       result.add(dto);
     });

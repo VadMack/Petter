@@ -4,6 +4,7 @@ import com.vadmack.petter.app.model.MongoModel;
 import com.vadmack.petter.app.model.Address;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Document("ads")
 public class Ad extends MongoModel {
   private String name;
+  @Indexed
   private Integer price;
   private Species species;
   private String breed;
@@ -31,4 +33,6 @@ public class Ad extends MongoModel {
   private AdState state;
   private String ownerId;
   private Address address;
+  @Indexed
+  private LocalDate creationDate;
 }
