@@ -3,7 +3,6 @@ package com.vadmack.petter.chat.message;
 import com.vadmack.petter.app.controller.SecuredRestController;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,7 +25,8 @@ public class ChatMessageController implements SecuredRestController {
   @GetMapping
   public ResponseEntity<List<ChatMessageDto>> getByRoomId(@AuthenticationPrincipal User user,
                                                           @RequestParam String chatRoomId,
-                                                          Pageable pageable) {
-    return ResponseEntity.ok(chatMessageService.getDtoByChatRoomId(chatRoomId, pageable));
+                                                          @RequestParam @Min(0) int skip,
+                                                          @RequestParam @Min(0) int limit) {
+    return ResponseEntity.ok(chatMessageService.getDtoByChatRoomId(chatRoomId, skip, limit));
   }
 }

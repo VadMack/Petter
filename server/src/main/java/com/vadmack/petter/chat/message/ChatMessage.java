@@ -2,6 +2,7 @@ package com.vadmack.petter.chat.message;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -15,6 +16,7 @@ public class ChatMessage {
   private String content;
   private String senderId;
   private String recipientId;
+  @Indexed
   private Instant sentTime;
 
   public ChatMessage(String content, String senderId, String recipientId) {

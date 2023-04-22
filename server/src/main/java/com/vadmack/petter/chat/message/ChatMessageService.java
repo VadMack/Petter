@@ -3,7 +3,6 @@ package com.vadmack.petter.chat.message;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -17,8 +16,9 @@ public class ChatMessageService {
 
   private final ModelMapper modelMapper;
 
-  public @NotNull List<ChatMessageDto> getDtoByChatRoomId(@NotNull String chatRoomId, Pageable pageable) {
-    return chatMessageRepository.findByChatRoomId(chatRoomId, pageable).stream().map(this::entityToDto).toList();
+  public @NotNull List<ChatMessageDto> getDtoByChatRoomId(@NotNull String chatRoomId, int skip, int limit) {
+    return chatMessageRepository.findByChatRoomIdOrderBySentTime(chatRoomId, skip, limit)
+            .stream().map(this::entityToDto).toList();
   }
 
   public @NotNull ChatMessage createNewMessage(@NotNull ChatMessageDto dto) {
