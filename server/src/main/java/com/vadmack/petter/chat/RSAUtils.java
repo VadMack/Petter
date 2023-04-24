@@ -44,7 +44,7 @@ public class RSAUtils {
       byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
       return Base64.getEncoder().encodeToString(encryptedMessageBytes);
     } catch (GeneralSecurityException ex) {
-      throw new ServerSideException("An error occurred during message encryption");
+      throw new ServerSideException("An error occurred during message encryption: " + ex);
     }
   }
 
@@ -56,7 +56,7 @@ public class RSAUtils {
       byte[] decryptedMessageBytes = decryptCipher.doFinal(Base64.getDecoder().decode(encodedMessage));
       return new String(decryptedMessageBytes, StandardCharsets.UTF_8);
     } catch (GeneralSecurityException ex) {
-      throw new ServerSideException("An error occurred during message encryption");
+      throw new ServerSideException("An error occurred during message decryption: " + ex);
     }
   }
 }

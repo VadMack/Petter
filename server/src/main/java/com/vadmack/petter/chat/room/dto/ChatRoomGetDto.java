@@ -12,4 +12,5 @@ public class ChatRoomGetDto {
   private String user2;
   private ChatMessageDto lastMessage;
   private String publicKey;
+  private String privateKey;
 }

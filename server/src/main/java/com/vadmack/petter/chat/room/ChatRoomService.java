@@ -12,8 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RequiredArgsConstructor
 @Service
@@ -42,11 +44,15 @@ public class ChatRoomService {
 
   public @NotNull ChatRoomGetDto findByParticipantsOrCreate(@NotNull String user1Id, @NotNull String user2Id) {
     Optional<ChatRoom> optional = findByParticipants(user1Id, user2Id);
+    AtomicReference<String> cri = new AtomicReference<>();
     ChatRoom room = optional.orElseGet(() -> {
       String chatRoomId = new ObjectId().toString();
+      cri.set(chatRoomId);
       return chatRoomRepository.save(new ChatRoom(chatRoomId, user1Id, user2Id, RSAUtils.getPublicKey(chatRoomId)));
     });
-    return entityToDto(room);
+    ChatRoomGetDto dto = entityToDto(room);
+    dto.setPrivateKey(Base64.getEncoder().encodeToString(RSAUtils.getKeyPair(cri.get()).getPrivate().getEncoded()));
+    return dto;
   }
 
   private @NotNull Optional<ChatRoom> findByParticipants(@NotNull String user1Id, @NotNull String user2Id) {
@@ -67,7 +73,7 @@ public class ChatRoomService {
     ChatRoomGetDto dto = modelMapper.map(entity, ChatRoomGetDto.class);
     ChatMessageDto lastMessage = dto.getLastMessage();
     if (lastMessage != null) {
-      lastMessage.setContent(RSAUtils.decrypt(lastMessage.getContent(), dto.getId()));
+      //lastMessage.setContent(RSAUtils.decrypt(lastMessage.getContent(), dto.getId()));
     }
     return modelMapper.map(entity, ChatRoomGetDto.class);
   }
