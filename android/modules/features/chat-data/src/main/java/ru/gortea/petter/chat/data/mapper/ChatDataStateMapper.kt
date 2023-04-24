@@ -30,7 +30,7 @@ internal class ChatDataStateMapper : UiStateMapper<ChatDataState, ChatMessagesSt
             id = UUID.randomUUID().toString(),
             senderId = message.senderId,
             recipientId = message.recipientId,
-            content = message.content,
+            content = message.decodedContent,
             dateTime = message.time,
             state = messageModelState()
         )

@@ -3,6 +3,7 @@ package ru.gortea.petter.chat.data.mvi
 import ru.gortea.chat.data.messages.MessageRoomRepository
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
+import ru.gortea.petter.chat.data.encryption.MessageEncryptor
 import ru.gortea.petter.chat.data.messages_list.MessagesListRepositoryFactory
 import ru.gortea.petter.chat.data.mvi.actors.ChatDataDisconnectSocketActor
 import ru.gortea.petter.chat.data.mvi.actors.ChatDataInitMessagesActor
@@ -16,6 +17,7 @@ internal typealias ChatDataStore = MviStore<ChatDataState, ChatDataEvent, Nothin
 
 internal fun ChatDataStore(
     conversationId: String,
+    encryptionKey: String,
     senderId: String,
     recipientId: String,
     pageSize: Int,
@@ -26,6 +28,7 @@ internal fun ChatDataStore(
     val messagesListRepository = messagesListRepositoryFactory.create(conversationId, pageSize)
     val webSocketChatRepository = webSocketChatRepositoryFactory.create(
         conversationId = conversationId,
+        encryptor = MessageEncryptor(encryptionKey),
         senderId = senderId,
         recipientId = recipientId
     )

@@ -14,6 +14,7 @@ class ChatRepositoryFactory(
 
     fun create(
         conversationId: String,
+        encryptionKey: String,
         senderId: String,
         recipientId: String,
         pageSize: Int,
@@ -21,6 +22,7 @@ class ChatRepositoryFactory(
     ): ChatRepository {
         return ChatRepository(
             conversationId = conversationId,
+            encryptionKey = encryptionKey,
             senderId = senderId,
             recipientId = recipientId,
             pageSize = pageSize,

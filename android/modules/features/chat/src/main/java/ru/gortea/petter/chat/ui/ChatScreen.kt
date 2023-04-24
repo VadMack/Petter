@@ -120,8 +120,13 @@ private fun ChatCreateRoomScreen(
     modifier: Modifier = Modifier
 ) {
     when (state.room) {
-        is DataState.Loading, DataState.Empty -> LoadingPlaceholder()
-        is DataState.Fail -> ErrorPlaceholder(reloadClicked = reloadClicked)
+        is DataState.Loading, DataState.Empty -> LoadingPlaceholder(
+            modifier = modifier.fillMaxSize()
+        )
+        is DataState.Fail -> ErrorPlaceholder(
+            reloadClicked = reloadClicked,
+            modifier = modifier.fillMaxSize()
+        )
         is DataState.Content -> ChatCreateRoomScreenContent(
             room = state.room.content,
             router = router
@@ -138,9 +143,7 @@ private fun ChatCreateRoomScreenContent(
 
     val store by storeHolder("ChatCreateRoomScreenContent${room.id}") {
         ChatStore(
-            conversationId = room.id,
-            currentUser = room.currentUser,
-            companion = room.companion,
+            room = room,
             component = component,
             router = router
         )

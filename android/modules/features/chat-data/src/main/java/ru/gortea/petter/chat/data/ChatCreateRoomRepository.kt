@@ -35,6 +35,11 @@ class ChatCreateRoomRepository(
 
         val user = data.filterIsInstance<UserModel>()[0]
         val chatRoom = data.filterIsInstance<ChatRoomIdModel>()[0]
-        ChatRoomModel(id = chatRoom.id, currentUser = currentUser, companion = user)
+        ChatRoomModel(
+            id = chatRoom.id,
+            currentUser = currentUser,
+            companion = user,
+            encryptionKey = chatRoom.publicKey
+        )
     }
 )

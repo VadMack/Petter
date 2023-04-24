@@ -11,6 +11,7 @@ import kotlinx.coroutines.rx2.await
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import okhttp3.OkHttpClient
+import ru.gortea.petter.chat.data.encryption.MessageEncryptor
 import ru.gortea.petter.chat.data.model.SentMessage
 import ru.gortea.petter.chat.data.model.SentMessageState
 import ru.gortea.petter.chat.data.model.ServerMessage
@@ -24,6 +25,7 @@ import ua.naiksoftware.stomp.dto.LifecycleEvent
 
 internal class WebSocketChatRepository(
     private val conversationId: String,
+    private val encryptor: MessageEncryptor,
     private val recipientId: String,
     private val senderId: String,
     private val okHttpClient: OkHttpClient,
@@ -69,7 +71,8 @@ internal class WebSocketChatRepository(
     fun send(message: String): Flow<SentMessageState> = flow {
         val messageModel = SentMessage(
             chatRoomId = conversationId,
-            content = message,
+            content = encryptor.encrypt(message),
+            decodedContent = message,
             senderId = senderId,
             recipientId = recipientId
         )
