@@ -20,6 +20,7 @@ import ru.gortea.petter.data.paging.model.PagingDataState
 
 class ChatRepository internal constructor(
     conversationId: String,
+    encryptionKey: String,
     senderId: String,
     recipientId: String,
     pageSize: Int,
@@ -31,6 +32,7 @@ class ChatRepository internal constructor(
 
     private val store = ChatDataStore(
         conversationId = conversationId,
+        encryptionKey = encryptionKey,
         senderId = senderId,
         recipientId = recipientId,
         pageSize = pageSize,
@@ -38,6 +40,7 @@ class ChatRepository internal constructor(
         messagesListRepositoryFactory = messagesListRepositoryFactory,
         webSocketChatRepositoryFactory = webSocketChatRepositoryFactory
     )
+
     private val dataFlow = MutableSharedFlow<PagingDataState<MessageModel>>(
         replay = 1,
         extraBufferCapacity = 3

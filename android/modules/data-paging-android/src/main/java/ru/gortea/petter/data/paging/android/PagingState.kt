@@ -24,8 +24,6 @@ fun rememberPagingState(
             val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
             val totalItems = layoutInfo.totalItemsCount
 
-            println("xxx: $totalItems $offset $lastVisibleItem")
-
             lastVisibleItem >= totalItems - offset
         }
     }

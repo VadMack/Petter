@@ -10,5 +10,6 @@ internal class SentMessage(
     val content: String,
     val senderId: String,
     val recipientId: String,
+    val decodedContent: String,
     @Contextual val time: LocalDateTime = LocalDateTime.now()
 )

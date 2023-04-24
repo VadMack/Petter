@@ -2,6 +2,7 @@ package ru.gortea.petter.chat.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
+import ru.gortea.petter.chat.data.model.ChatRoomModel
 import ru.gortea.petter.chat.di.ChatComponent
 import ru.gortea.petter.chat.navigation.ChatNavTarget
 import ru.gortea.petter.chat.presentation.actors.ChatCreateRoomActor
@@ -10,7 +11,6 @@ import ru.gortea.petter.chat.presentation.actors.ChatInitMessagesActor
 import ru.gortea.petter.chat.presentation.actors.ChatLoadPageActor
 import ru.gortea.petter.chat.presentation.actors.ChatSendMessageActor
 import ru.gortea.petter.navigation.PetterRouter
-import ru.gortea.petter.profile.data.remote.model.UserModel
 
 internal typealias ChatStore = MviStore<ChatState, ChatEvent, Nothing>
 
@@ -35,22 +35,26 @@ internal fun ChatCreateRoomStore(
 }
 
 internal fun ChatStore(
-    conversationId: String,
-    currentUser: UserModel,
-    companion: UserModel,
+    room: ChatRoomModel,
     router: PetterRouter<ChatNavTarget>,
     component: ChatComponent
 ): ChatStore {
     val pageSize = 2
     val chatRepository = component.chatRepositoryFactory.create(
-        conversationId = conversationId,
-        senderId = currentUser.id,
-        recipientId = companion.id,
-        pageSize = pageSize
+        conversationId = room.id,
+        senderId = room.currentUser.id,
+        recipientId = room.companion.id,
+        pageSize = pageSize,
+        encryptionKey = room.encryptionKey
     )
 
     return TeaStore(
-        initialState = ChatState.ContentChatState(conversationId, currentUser, companion, pageSize),
+        initialState = ChatState.ContentChatState(
+            room.id,
+            room.currentUser,
+            room.companion,
+            pageSize
+        ),
         reducer = ChatReducer(router),
         actors = listOf(
             ChatInitMessagesActor(chatRepository),
