@@ -66,7 +66,9 @@ public class ChatRoomService {
   public ChatRoomGetDto entityToDto(@NotNull ChatRoom entity) {
     ChatRoomGetDto dto = modelMapper.map(entity, ChatRoomGetDto.class);
     ChatMessageDto lastMessage = dto.getLastMessage();
-    lastMessage.setContent(RSAUtils.decrypt(lastMessage.getContent(), dto.getId()));
+    if (lastMessage != null) {
+      lastMessage.setContent(RSAUtils.decrypt(lastMessage.getContent(), dto.getId()));
+    }
     return modelMapper.map(entity, ChatRoomGetDto.class);
   }
 
