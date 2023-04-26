@@ -44,14 +44,12 @@ public class ChatRoomService {
 
   public @NotNull ChatRoomGetDto findByParticipantsOrCreate(@NotNull String user1Id, @NotNull String user2Id) {
     Optional<ChatRoom> optional = findByParticipants(user1Id, user2Id);
-    AtomicReference<String> cri = new AtomicReference<>();
     ChatRoom room = optional.orElseGet(() -> {
       String chatRoomId = new ObjectId().toString();
-      cri.set(chatRoomId);
       return chatRoomRepository.save(new ChatRoom(chatRoomId, user1Id, user2Id, RSAUtils.getPublicKey(chatRoomId)));
     });
     ChatRoomGetDto dto = entityToDto(room);
-    dto.setPrivateKey(Base64.getEncoder().encodeToString(RSAUtils.getKeyPair(cri.get()).getPrivate().getEncoded()));
+    dto.setPrivateKey(Base64.getEncoder().encodeToString(RSAUtils.getKeyPair(room.getId()).getPrivate().getEncoded()));
     return dto;
   }
 
