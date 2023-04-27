@@ -1,10 +1,12 @@
-package ru.gortea.petter.data.paging.mvi
+package ru.gortea.petter.data.paging.mvi.actors
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.data.paging.model.PageState
+import ru.gortea.petter.data.paging.mvi.PagingCommand
+import ru.gortea.petter.data.paging.mvi.PagingEvent
 
 internal class PagingActor<A: PageState, T>(
     private val source: suspend (A) -> List<T>

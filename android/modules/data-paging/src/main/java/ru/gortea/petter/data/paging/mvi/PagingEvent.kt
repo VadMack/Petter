@@ -1,6 +1,6 @@
 package ru.gortea.petter.data.paging.mvi
 
-import ru.gortea.petter.data.paging.model.PageState
+import ru.gortea.petter.data.paging.model.RequestState
 
 internal sealed interface PagingEvent {
     sealed interface Internal : PagingEvent {
@@ -9,8 +9,8 @@ internal sealed interface PagingEvent {
     }
 
     sealed interface User : PagingEvent {
-        object LoadPage: User
+        class LoadPage(val offset: Int = 0) : User
 
-        class Invalidate<T: PageState>(val args: T, val refresh: Boolean) : User
+        class Invalidate<T : RequestState>(val args: T, val refresh: Boolean) : User
     }
 }

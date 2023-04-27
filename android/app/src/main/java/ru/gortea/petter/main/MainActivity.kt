@@ -25,6 +25,7 @@ import com.bumble.appyx.core.integrationpoint.NodeActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import ru.gortea.petter.R
+import ru.gortea.petter.arch.android.ComponentProvider
 import ru.gortea.petter.arch.android.activity.getComponent
 import ru.gortea.petter.arch.android.compose.LocalApplicationContext
 import ru.gortea.petter.main.di.MainActivityComponent
@@ -80,7 +81,12 @@ class MainActivity : NodeActivity() {
                         PetterRootNode(
                             authObservable = component.authObservable,
                             userRepo = component.currentUserRepository,
-                            buildContext = it
+                            buildContext = it,
+                            componentProvider = object : ComponentProvider {
+                                override fun <T> getComponent(): T {
+                                    return this@MainActivity.getComponent()
+                                }
+                            }
                         )
                     }
                 }

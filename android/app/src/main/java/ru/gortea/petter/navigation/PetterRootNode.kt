@@ -8,6 +8,7 @@ import com.bumble.appyx.core.node.Node
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import ru.gortea.petter.arch.android.ComponentProvider
 import ru.gortea.petter.auth.controller.AuthObservable
 import ru.gortea.petter.auth.navigation.AuthorizationRootNode
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
@@ -19,7 +20,8 @@ import ru.gortea.petter.root.navigation.node.ContentRootParentNode
 class PetterRootNode(
     authObservable: AuthObservable,
     userRepo: CurrentUserRepository,
-    buildContext: BuildContext
+    buildContext: BuildContext,
+    private val componentProvider: ComponentProvider
 ) : BackStackParentNode<PetterRootTarget>(
     initialTarget = PetterRootTarget.Authorization,
     buildContext = buildContext
@@ -33,9 +35,7 @@ class PetterRootNode(
     init {
         coroutineScope.launch {
             targetController.get()
-                .onEach {
-                    router.updateRoot(it)
-                }
+                .onEach { router.updateRoot(it) }
                 .collect()
         }
     }
@@ -50,6 +50,10 @@ class PetterRootNode(
                 router = router
             )
         }
+    }
+
+    override fun <T> Node.provideComponent(): T {
+        return componentProvider.getComponent()
     }
 
     @Composable

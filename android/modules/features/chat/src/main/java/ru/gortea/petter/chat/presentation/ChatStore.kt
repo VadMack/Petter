@@ -39,7 +39,7 @@ internal fun ChatStore(
     router: PetterRouter<ChatNavTarget>,
     component: ChatComponent
 ): ChatStore {
-    val pageSize = 2
+    val pageSize = 30
     val chatRepository = component.chatRepositoryFactory.create(
         conversationId = room.id,
         senderId = room.currentUser.id,

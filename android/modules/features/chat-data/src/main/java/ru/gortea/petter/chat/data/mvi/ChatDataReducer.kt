@@ -86,7 +86,7 @@ internal class ChatDataReducer : Reducer<State, Event, Nothing, Command>() {
 
     private fun MessageBuilder<State, Nothing, Command>.handleUserEvent(event: User) {
         when(event) {
-            is User.LoadPage -> commands(Command.LoadPage)
+            is User.LoadPage -> commands(Command.LoadPage(state.messagesCount))
             is User.SendMessage -> commands(Command.SendMessage(event.message))
             is User.CloseConnection -> commands(Command.CloseConnection)
         }

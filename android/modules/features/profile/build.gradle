@@ -8,7 +8,6 @@ dependencies {
     implementation project(":modules:features:profile-data")
     implementation project(":modules:features:profile-edit")
 
-    implementation project(":modules:features:pet")
     implementation project(":modules:features:pet-list")
 
     implementation project(":modules:features:auth-controller")

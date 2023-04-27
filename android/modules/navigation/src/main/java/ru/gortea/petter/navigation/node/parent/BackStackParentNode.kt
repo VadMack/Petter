@@ -7,6 +7,7 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import ru.gortea.petter.di.ComponentProviderPlugin
 import ru.gortea.petter.navigation.NavTarget
 import ru.gortea.petter.navigation.PetterRouter
 
@@ -18,7 +19,7 @@ abstract class BackStackParentNode<T : NavTarget>(
         initialElement = initialTarget,
         savedStateMap = buildContext.savedStateMap
     )
-) : ParentNode<T>(backStack, buildContext), Destroyable {
+) : ParentNode<T>(backStack, buildContext), Destroyable, ComponentProviderPlugin {
 
     protected val coroutineScope = CoroutineScope(Dispatchers.Default)
 

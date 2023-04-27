@@ -16,7 +16,7 @@ internal class ChatDataLoadPageActor(
 
     override fun process(commands: Flow<ChatDataCommand>): Flow<ChatDataEvent> {
         return commands.filterIsInstance<ChatDataCommand.LoadPage>()
-            .mapLatest { repository.loadPage() }
+            .mapLatest { repository.loadPage(it.offset) }
             .flatMapMerge { emptyFlow() }
     }
 }

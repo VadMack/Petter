@@ -12,4 +12,7 @@ internal data class ChatDataState(
     val sentMessages: List<SentMessageState> = emptyList(),
     val lifecycleEvent: LifecycleEvent = LifecycleEvent(LifecycleEvent.Type.OPENED),
     val connectionClosed: Boolean = false
-)
+) {
+    val messagesCount: Int
+        get() = receivedMessages.size + sentMessages.size + storedMessages.content.size
+}

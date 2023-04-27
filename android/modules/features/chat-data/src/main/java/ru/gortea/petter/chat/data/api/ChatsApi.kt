@@ -12,9 +12,8 @@ interface ChatsApi {
     @GET("api/chat-message")
     suspend fun getMessages(
         @Query("chatRoomId") conversationId: String,
-        @Query("page") page: Int,
-        @Query("size") pageSize: Int,
-        @Query("sort") sort: String = "sentTime,DESC"
+        @Query("skip") offset: Int,
+        @Query("limit") pageSize: Int
     ): List<ServerMessage>
 
     @POST("api/chat-room")

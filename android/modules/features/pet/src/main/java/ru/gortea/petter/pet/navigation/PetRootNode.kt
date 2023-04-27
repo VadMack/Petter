@@ -6,9 +6,9 @@ import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.activeElement
-import ru.gortea.petter.chat.navigation.ChatRootNode
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
+import ru.gortea.petter.pet.di.PetComponent
 import ru.gortea.petter.pet.navigation.nodes.PetEditNode
 import ru.gortea.petter.pet.navigation.nodes.PetNode
  
@@ -22,11 +22,15 @@ class PetRootNode(
     parentRouter = parentRouter
 ) {
 
+    private val nodeProvider by lazy {
+        provideComponent<PetComponent>().petNodeProvider
+    }
+
     override fun resolve(navTarget: PetNavTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
             is PetNavTarget.EditPet -> PetEditNode(buildContext, router, navTarget.id)
             is PetNavTarget.ShowPet -> PetNode(buildContext, router, navTarget.id)
-            is PetNavTarget.OpenChat -> ChatRootNode(buildContext, navTarget.userId)
+            is PetNavTarget.OpenChat -> nodeProvider.chatRootNode(buildContext, navTarget.userId)
         }
     }
 
