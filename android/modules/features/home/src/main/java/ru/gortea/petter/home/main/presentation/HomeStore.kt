@@ -5,7 +5,7 @@ import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.home.navigation.HomeNavTarget
 import ru.gortea.petter.navigation.PetterRouter
 
-internal typealias HomeStore = MviStore<HomeState, HomeUiEvent, Nothing>
+internal typealias HomeStore = MviStore<HomeState, HomeUiEvent>
 
 internal fun createHomeStore(
     router: PetterRouter<HomeNavTarget>

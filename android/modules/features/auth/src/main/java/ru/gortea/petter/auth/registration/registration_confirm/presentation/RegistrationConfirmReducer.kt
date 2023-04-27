@@ -18,9 +18,9 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.Regi
 internal class RegistrationConfirmReducer(
     private val finish: () -> Unit,
     private val router: Router<AuthorizationNavTarget>
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.ConfirmationStatus -> confirmationStatus(event.dataState)
             is Event.ResendCodeStatus -> resendCodeStatus(event.dataState)
@@ -35,7 +35,7 @@ internal class RegistrationConfirmReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.confirmationStatus(status: DataState<Unit>) {
+    private fun MessageBuilder<State, Command>.confirmationStatus(status: DataState<Unit>) {
         state {
             val fieldState = codeState.copy(isValid = status !is DataState.Fail)
 
@@ -52,13 +52,13 @@ internal class RegistrationConfirmReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.resendCodeStatus(
+    private fun MessageBuilder<State, Command>.resendCodeStatus(
         status: DataState<UserModel>
     ) = state {
         copy(resendCodeStatus = status)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.authorizationStatus(
+    private fun MessageBuilder<State, Command>.authorizationStatus(
         status: DataState<UserModel>
     ) {
         state { copy(authStatus = status) }
@@ -69,7 +69,7 @@ internal class RegistrationConfirmReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.codeValidated(isValid: Boolean) {
+    private fun MessageBuilder<State, Command>.codeValidated(isValid: Boolean) {
         if (isValid) {
             codeValid()
         } else {
@@ -77,11 +77,11 @@ internal class RegistrationConfirmReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.codeValid() {
+    private fun MessageBuilder<State, Command>.codeValid() {
         commands(Command.Confirm(state.toRegistrationConfirmModel()))
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.Confirm -> commands(Command.Validate(state.codeState.text))
             is UiEvent.ResendCode -> resendCode()
@@ -92,7 +92,7 @@ internal class RegistrationConfirmReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.resendCode() {
+    private fun MessageBuilder<State, Command>.resendCode() {
         commands(Command.ResendCode(RegistrationEmailModel(state.email)))
     }
 

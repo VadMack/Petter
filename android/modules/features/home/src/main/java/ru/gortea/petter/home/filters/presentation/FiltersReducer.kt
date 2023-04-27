@@ -17,9 +17,9 @@ import ru.gortea.petter.pet.R as PetR
 @Suppress("UNCHECKED_CAST")
 internal class FiltersReducer(
     private val router: PetterRouter<*>
-) : Reducer<State, UiEvent, Nothing, Nothing>() {
+) : Reducer<State, UiEvent, Nothing>() {
 
-    override fun MessageBuilder<State, Nothing, Nothing>.reduce(event: UiEvent) {
+    override fun MessageBuilder<State, Nothing>.reduce(event: UiEvent) {
         when (event) {
             UiEvent.Accept -> {
                 router.sendCommand(HomeNavCommand.AcceptKeyModel(state.toKeyModel()))

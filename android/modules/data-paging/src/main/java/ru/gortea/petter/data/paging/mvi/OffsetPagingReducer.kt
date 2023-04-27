@@ -12,16 +12,16 @@ import ru.gortea.petter.data.paging.mvi.PagingEvent.User
 internal class OffsetPagingReducer<T : OffsetState>(
     private val invalidatePageMapper: (T) -> T,
     private val offsetUpdater: (Int, T) -> T
-) : Reducer<PagingState<T>, PagingEvent, Nothing, PagingCommand>() {
+) : Reducer<PagingState<T>, PagingEvent, PagingCommand>() {
 
-    override fun MessageBuilder<PagingState<T>, Nothing, PagingCommand>.reduce(event: PagingEvent) {
+    override fun MessageBuilder<PagingState<T>, PagingCommand>.reduce(event: PagingEvent) {
         when (event) {
             is Internal -> handleInternalEvent(event)
             is User -> handleUserEvent(event)
         }
     }
 
-    private fun MessageBuilder<PagingState<T>, Nothing, PagingCommand>.handleInternalEvent(event: Internal) {
+    private fun MessageBuilder<PagingState<T>, PagingCommand>.handleInternalEvent(event: Internal) {
         when (event) {
             is Internal.LoadingComplete<*> -> state {
                 val prevList =
@@ -46,7 +46,7 @@ internal class OffsetPagingReducer<T : OffsetState>(
         }
     }
 
-    private fun MessageBuilder<PagingState<T>, Nothing, PagingCommand>.handleUserEvent(event: User) {
+    private fun MessageBuilder<PagingState<T>, PagingCommand>.handleUserEvent(event: User) {
         when (event) {
             is User.Invalidate<*> -> state {
                 val invalidatePage = invalidatePageMapper(event.args as T)

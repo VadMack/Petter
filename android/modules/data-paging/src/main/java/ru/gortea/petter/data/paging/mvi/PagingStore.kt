@@ -7,7 +7,7 @@ import ru.gortea.petter.data.paging.model.PageState
 import ru.gortea.petter.data.paging.mvi.actors.OffsetPagingActor
 import ru.gortea.petter.data.paging.mvi.actors.PagingActor
 
-internal typealias PagingStore<T> = MviStore<PagingState<T>, PagingEvent, Nothing>
+internal typealias PagingStore<T> = MviStore<PagingState<T>, PagingEvent>
 
 internal fun <A: PageState, T> createPagingStore(
     initialState: A,

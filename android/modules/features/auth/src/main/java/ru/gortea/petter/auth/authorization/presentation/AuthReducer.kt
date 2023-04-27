@@ -16,9 +16,9 @@ import ru.gortea.petter.auth.authorization.presentation.AuthUiEvent as UiEvent
 internal class AuthReducer(
     private val router: Router<AuthorizationNavTarget>,
     private val finish: () -> Unit
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.InitApi -> commands(Command.InitAuthorize)
             is Event.AuthorizationStatus -> authorizationStatus(event.state)
@@ -27,7 +27,7 @@ internal class AuthReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.authorizationStatus(state: DataState<UserModel>) {
+    private fun MessageBuilder<State, Command>.authorizationStatus(state: DataState<UserModel>) {
         state { copy(authStatus = state) }
 
         if (state.isContent) {
@@ -35,7 +35,7 @@ internal class AuthReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.validated(event: Event.Validated) = state {
+    private fun MessageBuilder<State, Command>.validated(event: Event.Validated) = state {
         if (event.pwdValid && event.usernameValid) {
             commands(Command.Authorize(username.text, password.text))
         }
@@ -46,7 +46,7 @@ internal class AuthReducer(
         )
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.Authorize -> authorize()
             is UiEvent.Registration -> router.navigateTo(Registration.RegistrationForm)
@@ -55,7 +55,7 @@ internal class AuthReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.authorize() {
+    private fun MessageBuilder<State, Command>.authorize() {
         val validate = Command.Validate(
             username = state.username.text,
             pwd = state.password.text
@@ -63,13 +63,13 @@ internal class AuthReducer(
         commands(validate)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.usernameChanged(text: String) {
+    private fun MessageBuilder<State, Command>.usernameChanged(text: String) {
         state {
             copy(username = username.copy(text = text, isValid = true))
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.passwordChanged(text: String) {
+    private fun MessageBuilder<State, Command>.passwordChanged(text: String) {
         state {
             copy(password = password.copy(text = text, isValid = true))
         }

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import ru.gortea.petter.arch.store.MviStore
 import kotlin.reflect.KProperty
 
-class StoreHolder<out S : MviStore<*, *, *>> constructor(
+class StoreHolder<out S : MviStore<*, *>> constructor(
     val store: S
 ) : ViewModel() {
 
@@ -14,6 +14,6 @@ class StoreHolder<out S : MviStore<*, *, *>> constructor(
     }
 }
 
-operator fun <S : MviStore<*, *, *>> StoreHolder<S>.getValue(
+operator fun <S : MviStore<*, *>> StoreHolder<S>.getValue(
     thisObj: Any?, property: KProperty<*>
 ): S = store

@@ -16,9 +16,9 @@ internal class ProfileReducer(
     private val logoutController: LogoutController,
     private val router: PetterRouter<ProfileNavTarget>,
     private val finish: () -> Unit
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.LoadUserStatus -> loadUserStatus(event.state)
             is Event.IsCurrentUser -> state { copy(isCurrentUser = event.isCurrentUser) }
@@ -27,11 +27,11 @@ internal class ProfileReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.loadUserStatus(state: DataState<UserModel>) {
+    private fun MessageBuilder<State, Command>.loadUserStatus(state: DataState<UserModel>) {
         state { copy(userModelStatus = state) }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.LoadUser -> commands(
                 Command.LoadUser(event.id, forceRemote = false),

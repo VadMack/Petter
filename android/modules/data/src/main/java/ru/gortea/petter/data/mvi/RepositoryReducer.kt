@@ -7,16 +7,16 @@ import ru.gortea.petter.data.mvi.RepositoryCommand as Command
 import ru.gortea.petter.data.mvi.RepositoryEvent as Event
 import ru.gortea.petter.data.mvi.RepositoryState as State
 
-internal class RepositoryReducer : Reducer<State, Event, Nothing, Command>() {
+internal class RepositoryReducer : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.Internal -> handleInternalEvent(event)
             is Event.User -> handleUserEvent(event)
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleInternalEvent(event: Event.Internal) {
+    private fun MessageBuilder<State, Command>.handleInternalEvent(event: Event.Internal) {
         when(event) {
             is Event.Internal.LoadingComplete<*> -> state {
                 copy(dataState = DataState.Content(event.data))
@@ -27,7 +27,7 @@ internal class RepositoryReducer : Reducer<State, Event, Nothing, Command>() {
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUserEvent(event: Event.User) {
+    private fun MessageBuilder<State, Command>.handleUserEvent(event: Event.User) {
         when(event) {
             is Event.User.Invalidate -> {
                 commands(Command.Invalidate(event.args))

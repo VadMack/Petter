@@ -18,9 +18,9 @@ import ru.gortea.petter.chat.presentation.ChatUiEvent as UiEvent
 
 internal class ChatReducer(
     private val router: PetterRouter<ChatNavTarget>
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when(event) {
             is Event.MessagesStatus -> messagesStatus(event.state)
             is Event.InitApi -> commands(Command.InitChatRoomCreation, Command.InitMessages)
@@ -29,7 +29,7 @@ internal class ChatReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.messagesStatus(
+    private fun MessageBuilder<State, Command>.messagesStatus(
         state: PagingDataState<MessageModel>
     ) {
         state {
@@ -41,14 +41,14 @@ internal class ChatReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.roomCreationEvent(event: RoomCreationEvent) {
+    private fun MessageBuilder<State, Command>.roomCreationEvent(event: RoomCreationEvent) {
         when(event) {
             is RoomCreationEvent.CreateChatRoom -> commands(Command.CreateChatRoomId(event.userId))
             is RoomCreationEvent.ChatRoomCreationStatus -> chatRoomCreationStatus(event.state)
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.chatRoomCreationStatus(
+    private fun MessageBuilder<State, Command>.chatRoomCreationStatus(
         state: DataState<ChatRoomModel>
     ) {
         state {
@@ -65,7 +65,7 @@ internal class ChatReducer(
         return copy(room = state)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when(event) {
             is UiEvent.LoadPage -> commands(Command.LoadPage)
             is UiEvent.SendMessage -> sendMessage()
@@ -75,7 +75,7 @@ internal class ChatReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.sendMessage() {
+    private fun MessageBuilder<State, Command>.sendMessage() {
         state {
             when (this) {
                 is State.ContentChatState -> {
@@ -90,7 +90,7 @@ internal class ChatReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.messageFieldChanged(text: String) {
+    private fun MessageBuilder<State, Command>.messageFieldChanged(text: String) {
         state {
             when (this) {
                 is State.ContentChatState -> copy(messageField = messageField.text(text))

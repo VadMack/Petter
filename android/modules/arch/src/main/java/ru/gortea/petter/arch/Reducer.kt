@@ -3,12 +3,12 @@ package ru.gortea.petter.arch
 import ru.gortea.petter.arch.model.Message
 import ru.gortea.petter.arch.model.MessageBuilder
 
-abstract class Reducer<State : Any, in Event : Any, Action : Any, Command : Any> {
+abstract class Reducer<State : Any, in Event : Any, Command : Any> {
 
-    protected abstract fun MessageBuilder<State, Action, Command>.reduce(event: Event)
+    protected abstract fun MessageBuilder<State, Command>.reduce(event: Event)
 
-    internal fun reduce(state: State, event: Event): Message<State, Command, Action> {
-        val messageBuilder = MessageBuilder<State, Action, Command>(state)
+    internal fun reduce(state: State, event: Event): Message<State, Command> {
+        val messageBuilder = MessageBuilder<State, Command>(state)
         messageBuilder.reduce(event)
         return messageBuilder.build()
     }

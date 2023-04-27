@@ -9,9 +9,9 @@ import ru.gortea.petter.home.main.presentation.HomeUiEvent as UiEvent
 
 internal class HomeReducer(
     private val router: PetterRouter<HomeNavTarget>
-) : Reducer<State, UiEvent, Nothing, Nothing>() {
+) : Reducer<State, UiEvent, Nothing>() {
 
-    override fun MessageBuilder<State, Nothing, Nothing>.reduce(event: UiEvent) {
+    override fun MessageBuilder<State, Nothing>.reduce(event: UiEvent) {
         when(event) {
             is UiEvent.OpenPet -> router.navigateTo(HomeNavTarget.OpenPet(event.id))
             is UiEvent.AcceptFilters -> state { copy(keyModel = event.keyModel) }

@@ -26,9 +26,9 @@ internal class ProfileEditReducer(
     private val showModalImageChooser: () -> Unit,
     private val showImagePicker: () -> Unit,
     private val finish: () -> Unit
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.UserUpdateStatus -> userUpdateStatus(event.state)
             is Event.Validated -> validated(event.failedReasons)
@@ -39,7 +39,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.localUser(user: UserModel) {
+    private fun MessageBuilder<State, Command>.localUser(user: UserModel) {
         state {
             copy(
                 avatar = user.avatarPath?.let(Uri::parse),
@@ -52,7 +52,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.userUpdateStatus(state: DataState<Unit>) {
+    private fun MessageBuilder<State, Command>.userUpdateStatus(state: DataState<Unit>) {
         state { copy(userUpdateStatus = state) }
 
         if (state.isContent) {
@@ -61,7 +61,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.validated(
+    private fun MessageBuilder<State, Command>.validated(
         failedReasons: List<ProfileEditFailedReason>
     ) {
         if (failedReasons.isEmpty()) {
@@ -71,7 +71,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.stateValid() {
+    private fun MessageBuilder<State, Command>.stateValid() {
         commands(Command.UpdateUser(state.toUserUpdateFullModel()))
     }
 
@@ -115,7 +115,7 @@ internal class ProfileEditReducer(
         return UserUpdateFullModel(userUpdateModel, avatarModel)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             UiEvent.AvatarClicked -> avatarClicked()
             UiEvent.AvatarDeleteClicked -> state { copy(avatar = null) }
@@ -140,7 +140,7 @@ internal class ProfileEditReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.avatarClicked() {
+    private fun MessageBuilder<State, Command>.avatarClicked() {
         if (state.avatar == null) {
             showImagePicker()
         } else {

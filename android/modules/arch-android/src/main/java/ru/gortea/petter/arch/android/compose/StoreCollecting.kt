@@ -9,7 +9,7 @@ import ru.gortea.petter.arch.store.MviStore
 
 @SuppressLint("ComposableNaming")
 @Composable
-inline fun <State : Any, UiState : Any, Action : Any> MviStore<State, *, Action>.collect(
+inline fun <State : Any, UiState : Any> MviStore<State, *>.collect(
     stateMapper: UiStateMapper<State, UiState>,
     stateRender: @Composable (UiState) -> Unit
 ) {
@@ -19,7 +19,7 @@ inline fun <State : Any, UiState : Any, Action : Any> MviStore<State, *, Action>
 
 @SuppressLint("ComposableNaming")
 @Composable
-inline fun <State : Any, Action : Any> MviStore<State, *, Action>.collect(
+inline fun <State : Any> MviStore<State, *>.collect(
     stateRender: @Composable (State) -> Unit
 ) {
     val state by stateFlow.collectAsState()

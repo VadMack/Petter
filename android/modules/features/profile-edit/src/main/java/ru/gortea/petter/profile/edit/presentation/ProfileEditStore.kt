@@ -10,7 +10,7 @@ import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditUpdateUserAc
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditValidateActor
 import ru.gortea.petter.profile.edit.presentation.validation.ProfileEditValidatorComposite
 
-internal typealias ProfileEditStore = MviStore<ProfileEditState, ProfileEditEvent, Nothing>
+internal typealias ProfileEditStore = MviStore<ProfileEditState, ProfileEditEvent>
 
 internal fun createProfileEditStore(
     component: ProfileEditComponent,

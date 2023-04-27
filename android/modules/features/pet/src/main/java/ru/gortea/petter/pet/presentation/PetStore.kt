@@ -16,7 +16,7 @@ import ru.gortea.petter.pet.presentation.actors.PetUpdateActor
 import ru.gortea.petter.pet.presentation.actors.PetUpdateInitActor
 import ru.gortea.petter.pet.presentation.state.PetState
 
-internal typealias PetStore = MviStore<PetState, PetEvent, Nothing>
+internal typealias PetStore = MviStore<PetState, PetEvent>
 
 internal fun createPetStore(
     petId: String?,

@@ -9,7 +9,7 @@ import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.navigation.Router
 
-internal typealias AuthStore = MviStore<AuthState, AuthEvent, Nothing>
+internal typealias AuthStore = MviStore<AuthState, AuthEvent>
 
 internal fun createAuthStore(
     component: AuthorizationComponent,

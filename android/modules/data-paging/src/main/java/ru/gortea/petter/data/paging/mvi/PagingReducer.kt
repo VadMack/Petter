@@ -15,16 +15,16 @@ import ru.gortea.petter.data.paging.mvi.PagingState as State
 internal class PagingReducer<T : PageState>(
     private val invalidatePageMapper: (T) -> T,
     private val nextPageMapper: (T) -> T
-) : Reducer<State<T>, Event, Nothing, Command>() {
+) : Reducer<State<T>, Event, Command>() {
 
-    override fun MessageBuilder<State<T>, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State<T>, Command>.reduce(event: Event) {
         when (event) {
             is Internal -> handleInternalEvent(event)
             is User -> handleUserEvent(event)
         }
     }
 
-    private fun MessageBuilder<State<T>, Nothing, Command>.handleInternalEvent(event: Internal) {
+    private fun MessageBuilder<State<T>, Command>.handleInternalEvent(event: Internal) {
         when (event) {
             is Internal.LoadingComplete<*> -> state {
                 val prevList = if (dataState is Paged.Refresh) emptyList() else dataState.content
@@ -49,7 +49,7 @@ internal class PagingReducer<T : PageState>(
         }
     }
 
-    private fun MessageBuilder<State<T>, Nothing, Command>.handleUserEvent(event: User) {
+    private fun MessageBuilder<State<T>, Command>.handleUserEvent(event: User) {
         when (event) {
             is User.Invalidate<*> -> state {
                 val invalidatePage = invalidatePageMapper(event.args as T)
