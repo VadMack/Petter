@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Petter</string>
+    <string name="notification_channel_id">MESSAGES_NOTIFICATIONS</string>
+    <string name="notification_channel_title">Входящие сообщения</string>
+    <string name="notification_channel_description">Уведомления о входящих сообщениях в чатах</string>
+    <string name="notifications_rationale_title">Разрешение</string>
+    <string name="notifications_rationale">
+        Для работы уведомлений о новых сообщениях требуется разрешение на показ уведомлений.
+        \nПредоставить разрешение?
+    </string>
+    <string name="yes">Да</string>
+    <string name="no_thanks">Нет, спасибо</string>
+    <string name="need_notifications_permission_toast">
+        Для работы уведомлений о новых сообщениях требуется разрешение на показ уведомлений.
+    </string>
 </resources>

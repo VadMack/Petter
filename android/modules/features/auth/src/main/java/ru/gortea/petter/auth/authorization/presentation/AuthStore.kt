@@ -23,7 +23,7 @@ internal fun createAuthStore(
         reducer = AuthReducer(router, finish),
         actors = listOf(
             AuthorizeInitActor(authRepo),
-            AuthorizeActor(authRepo),
+            AuthorizeActor(authRepo, component.deviceTokenRepository),
             AuthValidateActor()
         ),
         initialEvents = listOf(AuthEvent.InitApi)

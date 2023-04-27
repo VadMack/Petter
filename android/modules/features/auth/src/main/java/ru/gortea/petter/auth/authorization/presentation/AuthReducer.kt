@@ -2,7 +2,6 @@ package ru.gortea.petter.auth.authorization.presentation
 
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
-import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget.Registration
 import ru.gortea.petter.data.model.DataState
@@ -38,12 +37,7 @@ internal class AuthReducer(
 
     private fun MessageBuilder<State, Nothing, Command>.validated(event: Event.Validated) = state {
         if (event.pwdValid && event.usernameValid) {
-            val model = CredsAuthorizationModel(
-                username = username.text,
-                password = password.text
-            )
-
-            commands(Command.Authorize(model))
+            commands(Command.Authorize(username.text, password.text))
         }
 
         copy(

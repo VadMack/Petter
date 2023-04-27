@@ -4,5 +4,5 @@ import ru.gortea.petter.data.model.Arguments
 
 data class GetUserModel(
     val id: String,
-    val forceRemote: Boolean
+    val forceRemote: Boolean = false
 ) : Arguments

@@ -26,7 +26,7 @@ internal fun createPetListStore(
             PetListInvalidateActor(listRepo),
             PetListLikeActor(component.petLikeRepository),
             PetListLoadPageActor(listRepo),
-            PetListUserActor(component.userLocalRepository)
+            PetListUserActor(component.currentUserRepository)
         ),
         initialEvents = listOf(PetListEvent.InitApi)
     )

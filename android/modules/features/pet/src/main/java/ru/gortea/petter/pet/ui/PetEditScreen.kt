@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -193,7 +194,7 @@ private fun PetEditScreenRoot(
 ) {
     when (state.modelStatus) {
         is DataState.Empty -> Unit
-        is DataState.Loading -> LoadingPlaceholder(modifier)
+        is DataState.Loading -> LoadingPlaceholder(modifier.fillMaxSize())
         is DataState.Content -> {
             PetEditScreenContent(
                 state = state.modelStatus.content,
@@ -207,7 +208,7 @@ private fun PetEditScreenRoot(
                 modifier = modifier
             )
         }
-        is DataState.Fail -> ErrorPlaceholder(reloadClicked)
+        is DataState.Fail -> ErrorPlaceholder(reloadClicked = reloadClicked)
     }
 }
 
@@ -234,6 +235,7 @@ private fun PetEditScreenContent(
             image = state.photo?.let {
                 rememberAsyncImagePainter(
                     it,
+                    contentScale = ContentScale.Crop,
                     placeholder = painterResource(UiKitR.drawable.ic_pet_placeholder),
                     error = painterResource(UiKitR.drawable.ic_pet_placeholder)
                 )

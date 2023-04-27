@@ -85,7 +85,7 @@ internal class PetReducer(
             is UiEvent.EditField -> editField(event.field)
             is UiEvent.AddFields -> addFields(event.fields)
             is UiEvent.GoBack -> goBack()
-            is UiEvent.OpenChat -> Unit // todo open chat with owner
+            is UiEvent.OpenChat -> openChat()
             is UiEvent.EditPet -> editPet()
             is UiEvent.HidePet -> hidePet()
             is UiEvent.ShowPet -> showPet()
@@ -96,6 +96,13 @@ internal class PetReducer(
             is UiEvent.AvatarClicked -> avatarClicked()
             is UiEvent.AvatarDeleteClicked -> avatarDeleteClicked()
             is UiEvent.AvatarEditClicked -> showImagePicker()
+        }
+    }
+
+    private fun MessageBuilder<State, Nothing, Command>.openChat() {
+        when(val state = state.petLoadingStatus) {
+            is DataState.Content -> router.navigateTo(PetNavTarget.OpenChat(state.content.model!!.ownerId))
+            else -> Unit
         }
     }
 

@@ -28,7 +28,7 @@ internal class PagingReducer<T : PageState>(
         when (event) {
             is Internal.LoadingComplete<*> -> state {
                 val prevList = if (dataState is Paged.Refresh) emptyList() else dataState.content
-                val lastPage = event.data.size != pageState.pageSize
+                val lastPage = event.data.size < pageState.pageSize
                 copy(
                     pageState = if (lastPage) pageState else nextPageMapper(pageState),
                     lastPage = lastPage,
@@ -62,10 +62,10 @@ internal class PagingReducer<T : PageState>(
             }
             is User.LoadPage -> state {
                 if (lastPage) return@state this
-
                 commands(Command.LoadPage(pageState))
-                val state =
-                    if (dataState is Paged) Paged.Loading(dataState.content) else Initial.Loading
+
+                val state = if (dataState is Paged) Paged.Loading(dataState.content)
+                else Initial.Loading
 
                 copy(dataState = state)
             }

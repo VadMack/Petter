@@ -8,6 +8,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import ru.gortea.petter.data.paging.model.PagingDataState
+import ru.gortea.petter.data.paging.model.isLoading
 
 @Composable
 fun rememberPagingState(
@@ -28,7 +29,7 @@ fun rememberPagingState(
     }
 
     LaunchedEffect(key1 = needNextPage, key2 = state) {
-        if (needNextPage) {
+        if (needNextPage && !state.isLoading()) {
             loadNextPage()
         }
     }

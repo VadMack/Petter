@@ -20,7 +20,7 @@ internal fun createProfileStore(
     val logoutController = component.logoutController
 
     val getUserRepository = component.getUserRepository
-    val userLocalRepository = component.userLocalRepository
+    val userLocalRepository = component.currentUserRepository
 
     return TeaStore(
         ProfileState(),

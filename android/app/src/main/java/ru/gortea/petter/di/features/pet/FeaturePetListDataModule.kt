@@ -3,18 +3,18 @@ package ru.gortea.petter.di.features.pet
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import ru.gortea.petter.network.createApi
+import retrofit2.create
 import ru.gortea.petter.pet.list.data.PetListRepository
 import ru.gortea.petter.pet.list.data.api.PetListApi
 import ru.gortea.petter.pet.list.data.api.PetListApiService
-import ru.gortea.petter.profile.data.local.UserLocalRepository
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 
 @Module
 class FeaturePetListDataModule {
 
     @Provides
     fun providePetListApi(retrofit: Retrofit): PetListApi {
-        return retrofit.createApi()
+        return retrofit.create()
     }
 
     @Provides
@@ -25,8 +25,8 @@ class FeaturePetListDataModule {
     @Provides
     fun providePetListRepository(
         apiService: PetListApiService,
-        userLocalRepository: UserLocalRepository
+        currentUserRepository: CurrentUserRepository
     ): PetListRepository {
-        return PetListRepository(apiService, userLocalRepository)
+        return PetListRepository(apiService, currentUserRepository)
     }
 }

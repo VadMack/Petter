@@ -1,0 +1,29 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlinx-serialization'
+}
+
+android {
+    buildFeatures {
+        compose false
+    }
+}
+
+dependencies {
+    implementation Libs.serialization
+    implementation Libs.coroutines
+    implementation Libs.retrofit
+    implementation Libs.stomp
+
+    implementation Libs.rxJava
+    implementation Libs.rxJavaAndroid
+    implementation Libs.coroutinesRx
+
+    implementation project(":modules:token-storage")
+    implementation project(":modules:network")
+    implementation project(":modules:arch")
+    api project(":modules:features:chat-data-messages")
+    api project(":modules:features:profile-data")
+    api project(":modules:data-paging")
+}

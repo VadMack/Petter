@@ -17,10 +17,10 @@ import ru.gortea.petter.navigation.operation.restoreIfExists
 class PetterRouter<T : NavTarget>(
     private val backStack: BackStack<T>,
     private val parentBackStack: BackStack<*>?,
-    private val commandsController: CommandController? = null
+    private val commandsController: CommandController? = null,
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) : Router<T> {
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     override val commands = MutableStateFlow<NavCommand>(NavCommand.Empty)
 
     init {

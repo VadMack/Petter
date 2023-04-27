@@ -11,25 +11,40 @@ import ru.gortea.petter.auth.controller.LogoutController
 import ru.gortea.petter.network.auth.AuthInterceptor
 import ru.gortea.petter.network.errors.ErrorHandlingCallAdapterFactory
 import ru.gortea.petter.network.serialization.LocalDateSerializer
+import ru.gortea.petter.network.serialization.LocalDateTimeSerializer
 import ru.gortea.petter.token.storage.TokenRepository
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 object PetterNetwork {
 
-    private val json = Json {
+    const val BASE_URL = "10.0.2.2:8080"
+
+    val json = Json {
         ignoreUnknownKeys = true
         serializersModule = SerializersModule {
             contextual(LocalDate::class, LocalDateSerializer)
+            contextual(LocalDateTime::class, LocalDateTimeSerializer)
         }
     }
 
     fun create(client: OkHttpClient, logoutController: LogoutController): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl("http://$BASE_URL/")
             .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
             .addCallAdapterFactory(ErrorHandlingCallAdapterFactory(logoutController))
+            .build()
+    }
+
+    fun create(client: OkHttpClient): Retrofit {
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder()
+            .baseUrl("http://$BASE_URL/")
+            .client(client)
+            .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 
@@ -41,6 +56,7 @@ object PetterNetwork {
         val authInterceptor = AuthInterceptor(tokenRepository)
 
         return OkHttpClient.Builder()
+            .callTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .build()

@@ -10,4 +10,7 @@ sealed class PetNavTarget : NavTarget {
 
     @Parcelize
     internal class EditPet(val id: String?) : PetNavTarget()
+
+    @Parcelize
+    internal class OpenChat(val userId: String) : PetNavTarget()
 }

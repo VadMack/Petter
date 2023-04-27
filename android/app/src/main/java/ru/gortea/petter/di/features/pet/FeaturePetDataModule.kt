@@ -3,8 +3,8 @@ package ru.gortea.petter.di.features.pet
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import retrofit2.create
 import ru.gortea.petter.data.util.ContentFileConverter
-import ru.gortea.petter.network.createApi
 import ru.gortea.petter.pet.data.CreatePetRepository
 import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.data.GetPetRepository
@@ -17,7 +17,7 @@ class FeaturePetDataModule {
 
     @Provides
     fun providePetApi(retrofit: Retrofit): PetApi {
-        return retrofit.createApi()
+        return retrofit.create()
     }
 
     @Provides

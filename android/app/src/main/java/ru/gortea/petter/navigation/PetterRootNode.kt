@@ -1,27 +1,44 @@
 package ru.gortea.petter.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
-import ru.gortea.petter.arch.android.compose.getComponent
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import ru.gortea.petter.arch.android.ComponentProvider
+import ru.gortea.petter.auth.controller.AuthObservable
 import ru.gortea.petter.auth.navigation.AuthorizationRootNode
-import ru.gortea.petter.main.di.MainActivityComponent
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
 import ru.gortea.petter.navigation.target.PetterRootTarget
+import ru.gortea.petter.profile.data.local.CurrentUserRepository
 import ru.gortea.petter.profile.edit.navigation.ProfileEditNode
 import ru.gortea.petter.root.navigation.node.ContentRootParentNode
 
 class PetterRootNode(
-    buildContext: BuildContext
+    authObservable: AuthObservable,
+    userRepo: CurrentUserRepository,
+    buildContext: BuildContext,
+    private val componentProvider: ComponentProvider
 ) : BackStackParentNode<PetterRootTarget>(
     initialTarget = PetterRootTarget.Authorization,
     buildContext = buildContext
 ) {
+    private val targetController = PetterRootTargetController(
+        authObservable,
+        userRepo,
+        coroutineScope
+    )
+
+    init {
+        coroutineScope.launch {
+            targetController.get()
+                .onEach { router.updateRoot(it) }
+                .collect()
+        }
+    }
 
     override fun resolve(navTarget: PetterRootTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
@@ -35,29 +52,17 @@ class PetterRootNode(
         }
     }
 
+    override fun <T> Node.provideComponent(): T {
+        return componentProvider.getComponent()
+    }
+
     @Composable
     override fun View(modifier: Modifier) {
         Children(navModel = backStack)
-
-        val component = getComponent<MainActivityComponent>()
-        val authObservable = remember { component.authObservable }
-        val userLocalRepository = remember { component.userLocalRepository }
-
-        val isAuthorized by authObservable.isAuthorized().collectAsState(false)
-
-        when {
-            isAuthorized -> {
-                val isEmpty by userLocalRepository.isEmpty().collectAsState(false)
-                if (isEmpty) router.updateRoot(PetterRootTarget.UserEdit)
-                else router.updateRoot(PetterRootTarget.Content)
-            }
-            else -> router.updateRoot(PetterRootTarget.Authorization)
-        }
     }
 
     override fun onChildFinished(child: Node) {
         when (child) {
-            is AuthorizationRootNode -> router.updateRoot(PetterRootTarget.Content)
             is ProfileEditNode -> router.updateRoot(PetterRootTarget.Content)
         }
     }

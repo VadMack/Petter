@@ -3,6 +3,7 @@ pluginManagement.apply {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven { setUrl("https://jitpack.io") }
     }
 }
 
@@ -27,3 +28,4 @@ fun File.isModule(): Boolean {
     val isKtsModule = File(this, "build.gradle.kts").exists()
     return isGroovyModule || isKtsModule
 }
+include(":modules:features:chat-data-messages")

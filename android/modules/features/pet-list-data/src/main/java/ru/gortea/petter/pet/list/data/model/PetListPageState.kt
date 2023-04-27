@@ -9,6 +9,6 @@ data class PetListPageState internal constructor(
 ) : PageState(page, pageSize) {
 
     private companion object {
-        private const val PAGE_SIZE = 1
+        private const val PAGE_SIZE = 30
     }
 }
