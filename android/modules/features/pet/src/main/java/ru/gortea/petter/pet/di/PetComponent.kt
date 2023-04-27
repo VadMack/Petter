@@ -6,6 +6,7 @@ import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.data.GetPetRepository
 import ru.gortea.petter.pet.data.PetLikeRepository
 import ru.gortea.petter.pet.data.UpdatePetRepository
+import ru.gortea.petter.pet.navigation.PetExternalNodeProvider
 import ru.gortea.petter.profile.data.local.CurrentUserRepository
 
 interface PetComponent {
@@ -16,4 +17,6 @@ interface PetComponent {
     val getPetRepository: GetPetRepository
     val userRepository: CurrentUserRepository
     val dateFormatter: DateFormatter
+
+    val petNodeProvider: PetExternalNodeProvider
 }

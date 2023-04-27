@@ -6,10 +6,10 @@ import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackFader
+import ru.gortea.petter.home.di.HomeComponent
 import ru.gortea.petter.home.navigation.node.FiltersNode
 import ru.gortea.petter.home.navigation.node.PetListNode
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
-import ru.gortea.petter.pet.navigation.PetRootNode
 
 class HomeRootNode(
     buildContext: BuildContext,
@@ -19,6 +19,10 @@ class HomeRootNode(
     buildContext = buildContext
 ) {
 
+    private val nodeProvider by lazy {
+        provideComponent<HomeComponent>().homeNodeProvider
+    }
+
     override fun resolve(navTarget: HomeNavTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
             is HomeNavTarget.PetList -> {
@@ -27,7 +31,7 @@ class HomeRootNode(
             }
             is HomeNavTarget.OpenPet -> {
                 changeNavBarVisible(false)
-                PetRootNode(buildContext, navTarget.id, router)
+                nodeProvider.petNode(buildContext, navTarget.id, router)
             }
             is HomeNavTarget.Filters -> {
                 changeNavBarVisible(false)
@@ -45,9 +49,6 @@ class HomeRootNode(
     }
 
     override fun onChildFinished(child: Node) {
-        when (child) {
-            is PetRootNode -> changeNavBarVisible(true)
-            is FiltersNode -> changeNavBarVisible(true)
-        }
+        changeNavBarVisible(true)
     }
 }

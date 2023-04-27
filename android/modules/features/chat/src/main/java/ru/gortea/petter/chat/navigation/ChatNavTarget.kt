@@ -8,6 +8,6 @@ sealed class ChatNavTarget : NavTarget {
     @Parcelize
     internal object Chat : ChatNavTarget()
 
-//    @Parcelize
-//    internal object Profile : ChatNavTarget()
+    @Parcelize
+    internal object Profile : ChatNavTarget()
 }

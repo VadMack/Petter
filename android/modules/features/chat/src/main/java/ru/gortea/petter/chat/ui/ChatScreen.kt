@@ -178,6 +178,7 @@ private fun ChatScreen(
                     rememberAsyncImagePainter(
                         model = it,
                         contentScale = ContentScale.Crop,
+                        error = painterResource(UiKitR.drawable.ic_person_placeholder),
                         placeholder = painterResource(UiKitR.drawable.ic_person_placeholder)
                     )
                 },

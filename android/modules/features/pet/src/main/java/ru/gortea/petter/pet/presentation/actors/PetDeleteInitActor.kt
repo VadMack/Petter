@@ -3,7 +3,7 @@ package ru.gortea.petter.pet.presentation.actors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.presentation.PetCommand
@@ -16,6 +16,6 @@ internal class PetDeleteInitActor(
     override fun process(commands: Flow<PetCommand>): Flow<PetEvent> {
         return commands.filterIsInstance<PetCommand.InitPetDelete>()
             .flatMapLatest { repository.get() }
-            .map { PetEvent.DeletePetStatus(it) }
+            .mapLatest { PetEvent.DeletePetStatus(it) }
     }
 }

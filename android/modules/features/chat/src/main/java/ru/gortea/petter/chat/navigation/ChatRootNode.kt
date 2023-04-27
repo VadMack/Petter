@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.composable.Children
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
+import ru.gortea.petter.chat.di.ChatComponent
 import ru.gortea.petter.chat.navigation.nodes.ChatNode
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
 
@@ -16,10 +17,14 @@ class ChatRootNode(
     buildContext = buildContext
 ) {
 
+    private val nodesProvider by lazy {
+        provideComponent<ChatComponent>().chatNodesProvider
+    }
+
     override fun resolve(navTarget: ChatNavTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
             is ChatNavTarget.Chat -> ChatNode(buildContext, userId, router)
-//            is ChatNavTarget.Profile -> ProfileRootNode(buildContext, userId)
+            is ChatNavTarget.Profile -> nodesProvider.profileNode(buildContext, userId)
         }
     }
 

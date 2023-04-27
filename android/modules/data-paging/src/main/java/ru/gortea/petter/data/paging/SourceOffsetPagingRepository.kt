@@ -7,22 +7,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onCompletion
 import ru.gortea.petter.arch.collection.collect
-import ru.gortea.petter.data.paging.model.PageState
+import ru.gortea.petter.data.paging.model.OffsetState
 import ru.gortea.petter.data.paging.model.PagingDataState
 import ru.gortea.petter.data.paging.mvi.PagingEvent
 import ru.gortea.petter.data.paging.mvi.PagingState
 import ru.gortea.petter.data.paging.mvi.createPagingStore
 
 @Suppress("UNCHECKED_CAST")
-open class SourcePagingRepository<S : PageState, T>(
+open class SourceOffsetPagingRepository<S : OffsetState, T>(
     initialState: S,
     invalidatePageMapper: (S) -> S,
-    nextPageMapper: (S) -> S,
+    offsetUpdater: (Int, S) -> S,
     source: suspend (S) -> List<T>,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-) : PagingRepository<S, T> {
+) : OffsetPagingRepository<S, T> {
 
-    private val store = createPagingStore(initialState, invalidatePageMapper, nextPageMapper, source)
+    private val store = createPagingStore(initialState, invalidatePageMapper, offsetUpdater, source)
     private val dataFlow = MutableSharedFlow<PagingDataState<T>>(
         replay = 1,
         extraBufferCapacity = 3
@@ -43,8 +43,8 @@ open class SourcePagingRepository<S : PageState, T>(
         store.dispatch(PagingEvent.User.Invalidate(args, refresh))
     }
 
-    override fun loadPage() {
-        store.dispatch(PagingEvent.User.LoadPage())
+    override fun loadPage(offset: Int) {
+        store.dispatch(PagingEvent.User.LoadPage(offset))
     }
 
     override fun get(): Flow<PagingDataState<T>> {

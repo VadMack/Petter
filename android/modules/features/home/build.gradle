@@ -5,7 +5,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(":modules:features:pet")
     implementation project(":modules:features:pet-list")
 
     implementation project(":modules:arch-android")

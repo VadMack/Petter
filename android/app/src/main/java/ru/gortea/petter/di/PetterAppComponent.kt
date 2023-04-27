@@ -10,13 +10,18 @@ import ru.gortea.petter.di.features.auth.FeatureAuthControllerModule
 import ru.gortea.petter.di.features.auth.FeatureAuthDataModule
 import ru.gortea.petter.di.features.chat.FeatureChatDataMessageModel
 import ru.gortea.petter.di.features.chat.FeatureChatDataModule
+import ru.gortea.petter.di.features.chat.FeatureChatModule
+import ru.gortea.petter.di.features.home.FeatureHomeModule
 import ru.gortea.petter.di.features.pet.FeaturePetDataModule
 import ru.gortea.petter.di.features.pet.FeaturePetListDataModule
+import ru.gortea.petter.di.features.pet.FeaturePetModule
 import ru.gortea.petter.di.features.profile.FeatureProfileDataModule
+import ru.gortea.petter.di.features.profile.FeatureProfileModule
 import ru.gortea.petter.di.formatters.FormattersModule
 import ru.gortea.petter.di.network.NetworkModule
 import ru.gortea.petter.di.storage.StorageModule
 import ru.gortea.petter.di.token.TokenModule
+import ru.gortea.petter.home.di.HomeComponent
 import ru.gortea.petter.main.di.MainActivityComponent
 import ru.gortea.petter.notifications.di.NotificationsServiceComponent
 import ru.gortea.petter.pet.di.PetComponent
@@ -32,11 +37,20 @@ import javax.inject.Singleton
         FeatureAuthDataModule::class,
         FeatureAuthControllerModule::class,
         FeatureAuthControllerBinder::class,
+
+        FeatureHomeModule::class,
+
+        FeatureChatModule::class,
         FeatureChatDataModule::class,
         FeatureChatDataMessageModel::class,
+
+        FeaturePetModule::class,
         FeaturePetDataModule::class,
         FeaturePetListDataModule::class,
+
+        FeatureProfileModule::class,
         FeatureProfileDataModule::class,
+
         FormattersModule::class,
         NetworkModule::class,
         TokenModule::class,
@@ -44,6 +58,7 @@ import javax.inject.Singleton
     ]
 )
 interface PetterAppComponent : AuthorizationComponent,
+    HomeComponent,
     ChatComponent,
     PetComponent,
     PetListComponent,

@@ -3,7 +3,7 @@ package ru.gortea.petter.profile.presentation.actors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.profile.data.remote.GetUserRepository
 import ru.gortea.petter.profile.presentation.ProfileCommand
@@ -16,6 +16,6 @@ internal class ProfileInitLoadUserActor(
     override fun process(commands: Flow<ProfileCommand>): Flow<ProfileEvent> {
         return commands.filterIsInstance<ProfileCommand.InitLoadUser>()
             .flatMapLatest { repository.get() }
-            .map { ProfileEvent.LoadUserStatus(it) }
+            .mapLatest { ProfileEvent.LoadUserStatus(it) }
     }
 }

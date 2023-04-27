@@ -71,7 +71,7 @@ internal class ChatReducer(
             is UiEvent.SendMessage -> sendMessage()
             is UiEvent.MessageFieldChanged -> messageFieldChanged(event.text)
             is UiEvent.Back -> router.pop()
-            is UiEvent.OpenCompanionProfile -> Unit //router.navigateTo(ChatNavTarget.Profile)
+            is UiEvent.OpenCompanionProfile -> router.navigateTo(ChatNavTarget.Profile)
         }
     }
 

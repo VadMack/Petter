@@ -51,6 +51,8 @@ dependencies {
     implementation project(":modules:features:chat")
     implementation project(":modules:features:chat-data")
 
+    implementation project(":modules:features:home")
+
     implementation project(":modules:arch-android")
     implementation project(":modules:formatters")
     implementation project(":modules:navigation")

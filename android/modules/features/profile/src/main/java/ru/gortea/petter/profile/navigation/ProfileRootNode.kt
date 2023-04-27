@@ -7,7 +7,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackFader
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
-import ru.gortea.petter.pet.navigation.PetRootNode
+import ru.gortea.petter.profile.di.ProfileComponent
 import ru.gortea.petter.profile.edit.navigation.ProfileEditNode
 import ru.gortea.petter.profile.navigation.nodes.ProfileNode
 
@@ -20,6 +20,10 @@ class ProfileRootNode(
     initialTarget = ProfileNavTarget.Profile(id, canGoBack),
     buildContext = buildContext
 ) {
+
+    private val nodeProvider by lazy {
+        provideComponent<ProfileComponent>().profileNodesProvider
+    }
 
     override fun resolve(navTarget: ProfileNavTarget, buildContext: BuildContext): Node {
         return when (navTarget) {
@@ -35,12 +39,12 @@ class ProfileRootNode(
 
             is ProfileNavTarget.AddPet -> {
                 changeNavBarVisible(false)
-                PetRootNode(buildContext, null, router)
+                nodeProvider.petNode(buildContext, null, router)
             }
 
             is ProfileNavTarget.OpenPet -> {
                 changeNavBarVisible(false)
-                PetRootNode(buildContext, navTarget.id, router)
+                nodeProvider.petNode(buildContext, navTarget.id, router)
             }
         }
     }
@@ -59,8 +63,8 @@ class ProfileRootNode(
                 changeNavBarVisible(true)
                 router.pop()
             }
-            is PetRootNode -> changeNavBarVisible(true)
             is ProfileNode -> finish()
+            else -> changeNavBarVisible(true)
         }
     }
 }
