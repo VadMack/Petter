@@ -15,8 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @UtilityClass
 public class RSAUtils {
 
-  private static final String ALGORITHM = "RSA";
-  private static final String SECURITY_PROVIDER = "BC";
+  private static final String ALGORITHM = "RSA/ECB/OAEPPadding";
 
   public static KeyPair getKeyPair(String chatRoomId) {
     try {
@@ -24,7 +23,7 @@ public class RSAUtils {
       SecureRandom rnd = SecureRandom.getInstance("SHA1PRNG");
       rnd.setSeed(seed);
       RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4);
-      KeyPairGenerator pairGenerator = KeyPairGenerator.getInstance(ALGORITHM, SECURITY_PROVIDER);
+      KeyPairGenerator pairGenerator = KeyPairGenerator.getInstance("RSA");
       pairGenerator.initialize(spec, rnd);
       return pairGenerator.generateKeyPair();
     } catch (GeneralSecurityException ex) {
@@ -40,7 +39,7 @@ public class RSAUtils {
   public static String encrypt(String msg, String chatRoomId) {
     try {
       KeyPair pair = RSAUtils.getKeyPair(chatRoomId);
-      Cipher encryptCipher = Cipher.getInstance(ALGORITHM, SECURITY_PROVIDER);
+      Cipher encryptCipher = Cipher.getInstance(ALGORITHM);
       encryptCipher.init(Cipher.ENCRYPT_MODE, pair.getPublic());
       byte[] secretMessageBytes = msg.getBytes(StandardCharsets.UTF_8);
       byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
@@ -53,7 +52,7 @@ public class RSAUtils {
   public static String decrypt(String encodedMessage, String chatRoomId) {
     try {
       PrivateKey privateKey = getKeyPair(chatRoomId).getPrivate();
-      Cipher decryptCipher = Cipher.getInstance(ALGORITHM, SECURITY_PROVIDER);
+      Cipher decryptCipher = Cipher.getInstance(ALGORITHM);
       decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
       byte[] decryptedMessageBytes = decryptCipher.doFinal(Base64.getDecoder().decode(encodedMessage));
       return new String(decryptedMessageBytes, StandardCharsets.UTF_8);
