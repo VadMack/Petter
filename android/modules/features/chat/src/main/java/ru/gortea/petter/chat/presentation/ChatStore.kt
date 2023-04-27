@@ -12,7 +12,7 @@ import ru.gortea.petter.chat.presentation.actors.ChatLoadPageActor
 import ru.gortea.petter.chat.presentation.actors.ChatSendMessageActor
 import ru.gortea.petter.navigation.PetterRouter
 
-internal typealias ChatStore = MviStore<ChatState, ChatEvent, Nothing>
+internal typealias ChatStore = MviStore<ChatState, ChatEvent>
 
 internal fun ChatCreateRoomStore(
     userId: String,

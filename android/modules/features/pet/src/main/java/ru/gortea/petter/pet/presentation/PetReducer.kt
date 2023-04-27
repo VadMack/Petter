@@ -24,9 +24,9 @@ internal class PetReducer(
     private val router: PetterRouter<PetNavTarget>,
     private val showModalImageChooser: () -> Unit,
     private val showImagePicker: () -> Unit
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.InitApi -> commands(
                 Command.InitPetLoad,
@@ -42,7 +42,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.deletePetStatus(event: Event.DeletePetStatus) {
+    private fun MessageBuilder<State, Command>.deletePetStatus(event: Event.DeletePetStatus) {
         state { copy(petDeleteStatus = event.state) }
 
         if (event.state.isContent) {
@@ -51,7 +51,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.loadPetStatus(event: Event.LoadPetStatus) {
+    private fun MessageBuilder<State, Command>.loadPetStatus(event: Event.LoadPetStatus) {
         state {
             val dataState = event.state.mapContentSync {
                 it?.toPetPresentationModel(state.editMode) ?: getDefaultPresentationModel()
@@ -69,7 +69,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.updatePetStatus(event: Event.UpdatePetStatus) {
+    private fun MessageBuilder<State, Command>.updatePetStatus(event: Event.UpdatePetStatus) {
         state { copy(petUpdateStatus = event.state) }
 
         if (event.state is DataState.Content) {
@@ -78,7 +78,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.LoadPet -> commands(Command.LoadPet(event.id))
             is UiEvent.UpdatePet -> updatePet()
@@ -99,14 +99,14 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.openChat() {
+    private fun MessageBuilder<State, Command>.openChat() {
         when(val state = state.petLoadingStatus) {
             is DataState.Content -> router.navigateTo(PetNavTarget.OpenChat(state.content.model!!.ownerId))
             else -> Unit
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.likePet() {
+    private fun MessageBuilder<State, Command>.likePet() {
         val dataState = state.petLoadingStatus
         if (dataState is DataState.Content) {
             dataState.content.model?.id?.let {
@@ -118,7 +118,7 @@ internal class PetReducer(
         state { changeLiked(true) }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.dislikePet() {
+    private fun MessageBuilder<State, Command>.dislikePet() {
         val dataState = state.petLoadingStatus
         if (dataState is DataState.Content) {
             dataState.content.model?.id?.let {
@@ -138,7 +138,7 @@ internal class PetReducer(
         return copy(petLoadingStatus = newStatus)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.addFields(fields: List<PetField>) {
+    private fun MessageBuilder<State, Command>.addFields(fields: List<PetField>) {
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync {
@@ -150,14 +150,14 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.deletePet() {
+    private fun MessageBuilder<State, Command>.deletePet() {
         val dataState = state.petLoadingStatus
         if (dataState is DataState.Content) {
             dataState.content.model?.id?.let { commands(Command.DeletePet(it)) }
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.avatarClicked() {
+    private fun MessageBuilder<State, Command>.avatarClicked() {
         val dataState = state.petLoadingStatus
         if (dataState is DataState.Content) {
             if (dataState.content.photo == null) {
@@ -168,7 +168,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.avatarDeleteClicked() {
+    private fun MessageBuilder<State, Command>.avatarDeleteClicked() {
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync { it.copy(photo = null) }
@@ -176,7 +176,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.avatarChanged(photo: Uri) {
+    private fun MessageBuilder<State, Command>.avatarChanged(photo: Uri) {
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync { it.copy(photo = photo) }
@@ -184,7 +184,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.updatePet() {
+    private fun MessageBuilder<State, Command>.updatePet() {
         val status = state.petLoadingStatus
         if (status is DataState.Content) {
             val validated = status.content.fields.map { it.validated() }
@@ -200,7 +200,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.editField(field: PetField) {
+    private fun MessageBuilder<State, Command>.editField(field: PetField) {
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync { it.updateField(field) }
@@ -212,7 +212,7 @@ internal class PetReducer(
         router.pop()
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.editPet() {
+    private fun MessageBuilder<State, Command>.editPet() {
         val status = state.petLoadingStatus
 
         if (status is DataState.Content) {
@@ -220,7 +220,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.hidePet() {
+    private fun MessageBuilder<State, Command>.hidePet() {
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync {
@@ -232,7 +232,7 @@ internal class PetReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.showPet() {
+    private fun MessageBuilder<State, Command>.showPet() {
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync {

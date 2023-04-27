@@ -9,7 +9,7 @@ import ru.gortea.petter.pet.list.presentation.actors.PetListLikeActor
 import ru.gortea.petter.pet.list.presentation.actors.PetListLoadPageActor
 import ru.gortea.petter.pet.list.presentation.actors.PetListUserActor
 
-internal typealias PetListStore = MviStore<PetListState, PetListEvent, Nothing>
+internal typealias PetListStore = MviStore<PetListState, PetListEvent>
 
 internal fun createPetListStore(
     component: PetListComponent,

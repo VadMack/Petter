@@ -1,10 +1,9 @@
 package ru.gortea.petter.arch.model
 
-class MessageBuilder<State : Any, Action : Any, Command : Any>(initialState: State) {
+class MessageBuilder<State : Any, Command : Any>(initialState: State) {
     var state: State = initialState
         private set
     private var commands = listOf<Command>()
-    private var actions = listOf<Action>()
 
     fun state(update: State.() -> State) {
         this.state = state.run(update)
@@ -14,9 +13,5 @@ class MessageBuilder<State : Any, Action : Any, Command : Any>(initialState: Sta
         commands = listOf(*command)
     }
 
-    fun actions(vararg action: Action) {
-        actions = listOf(*action)
-    }
-
-    internal fun build(): Message<State, Command, Action> = Message(state, commands, actions)
+    internal fun build(): Message<State, Command> = Message(state, commands)
 }

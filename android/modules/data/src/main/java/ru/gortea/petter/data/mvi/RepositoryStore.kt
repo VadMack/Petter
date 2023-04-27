@@ -4,7 +4,7 @@ import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.data.model.Arguments
 
-internal typealias RepositoryStore = MviStore<RepositoryState, RepositoryEvent, Nothing>
+internal typealias RepositoryStore = MviStore<RepositoryState, RepositoryEvent>
 
 internal fun<T> RepositoryStore(
     source: suspend (Arguments) -> T

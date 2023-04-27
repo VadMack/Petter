@@ -24,9 +24,9 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.Registr
 
 internal class RegistrationReducer(
     private val router: Router<AuthorizationNavTarget>
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.AccountCreateStatus -> accountCreateStatus(event)
             is Event.Validated -> stateValidated(event)
@@ -35,7 +35,7 @@ internal class RegistrationReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.accountCreateStatus(event: Event.AccountCreateStatus) {
+    private fun MessageBuilder<State, Command>.accountCreateStatus(event: Event.AccountCreateStatus) {
         state {
             when (event.state) {
                 is DataState.Loading, is DataState.Empty -> Unit
@@ -60,7 +60,7 @@ internal class RegistrationReducer(
         )
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.stateValidated(event: Event.Validated) {
+    private fun MessageBuilder<State, Command>.stateValidated(event: Event.Validated) {
         if (event.failedReasons.isEmpty()) {
             stateValid(event.state)
         } else {
@@ -68,7 +68,7 @@ internal class RegistrationReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.stateValid(state: State) {
+    private fun MessageBuilder<State, Command>.stateValid(state: State) {
         commands(Command.CreateAccount(state.toRegistrationModel()))
     }
 
@@ -88,7 +88,7 @@ internal class RegistrationReducer(
         return state
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.CreateAccount -> commands(Command.Validate(state))
             is UiEvent.EmailChanged -> state {

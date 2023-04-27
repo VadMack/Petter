@@ -9,7 +9,7 @@ import ru.gortea.petter.profile.presentation.actors.ProfileCheckCurrentUserActor
 import ru.gortea.petter.profile.presentation.actors.ProfileInitLoadUserActor
 import ru.gortea.petter.profile.presentation.actors.ProfileLoadUserActor
 
-internal typealias ProfileStore = MviStore<ProfileState, ProfileEvent, Nothing>
+internal typealias ProfileStore = MviStore<ProfileState, ProfileEvent>
 
 internal fun createProfileStore(
     id: String,

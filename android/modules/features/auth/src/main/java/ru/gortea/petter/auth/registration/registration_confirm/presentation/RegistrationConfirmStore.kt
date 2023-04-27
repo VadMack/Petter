@@ -13,7 +13,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.acto
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.ResendCodeActor
 import ru.gortea.petter.navigation.Router
 
-internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent, Nothing>
+internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent>
 
 internal fun createRegistrationConfirmStore(
     component: AuthorizationComponent,

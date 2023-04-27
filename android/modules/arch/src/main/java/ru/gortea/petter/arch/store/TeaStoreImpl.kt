@@ -1,15 +1,23 @@
 package ru.gortea.petter.arch.store
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.arch.Reducer
 
-internal class TeaStoreImpl<State : Any, Event : Any, Action : Any, Command : Any>(
+internal class TeaStoreImpl<State : Any, Event : Any, Command : Any>(
     initialState: State,
-    private val reducer: Reducer<State, Event, Action, Command>,
+    private val reducer: Reducer<State, Event, Command>,
     private val actors: List<Actor<Command, Event>> = listOf()
-) : MviStore<State, Event, Action>(initialState) {
+) : MviStore<State, Event>(initialState) {
 
     private val commandsFlow = MutableSharedFlow<Command>(replay = 1)
 
@@ -17,6 +25,7 @@ internal class TeaStoreImpl<State : Any, Event : Any, Action : Any, Command : An
         super.attach(coroutineScope)
         start()
     }
+
     private fun start() {
         startActors()
         startEventsFlow()
@@ -35,7 +44,6 @@ internal class TeaStoreImpl<State : Any, Event : Any, Action : Any, Command : An
                 .map { reducer.reduce(stateFlow.value, it) }
                 .onEach { message -> _stateFlow.emit(message.state) }
                 .onEach { message -> message.commands.forEach { commandsFlow.emit(it) } }
-                .onEach { message -> message.actions.forEach { _actionsChannel.send(it) } }
                 .launchIn(this + Dispatchers.Unconfined)
         }
     }

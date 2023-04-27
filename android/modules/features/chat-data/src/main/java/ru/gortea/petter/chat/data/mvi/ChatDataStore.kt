@@ -13,7 +13,7 @@ import ru.gortea.petter.chat.data.mvi.actors.ChatDataSubscribeLifecycleActor
 import ru.gortea.petter.chat.data.mvi.actors.ChatDataSubscribeMessagesActor
 import ru.gortea.petter.chat.data.p2p.WebSocketChatRepositoryFactory
 
-internal typealias ChatDataStore = MviStore<ChatDataState, ChatDataEvent, Nothing>
+internal typealias ChatDataStore = MviStore<ChatDataState, ChatDataEvent>
 
 internal fun ChatDataStore(
     conversationId: String,

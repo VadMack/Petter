@@ -11,16 +11,16 @@ import ru.gortea.petter.chat.data.mvi.ChatDataCommand as Command
 import ru.gortea.petter.chat.data.mvi.ChatDataEvent as Event
 import ru.gortea.petter.chat.data.mvi.ChatDataState as State
 
-internal class ChatDataReducer : Reducer<State, Event, Nothing, Command>() {
+internal class ChatDataReducer : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Internal -> handleInternalEvent(event)
             is User -> handleUserEvent(event)
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleInternalEvent(event: Internal) {
+    private fun MessageBuilder<State, Command>.handleInternalEvent(event: Internal) {
         when (event) {
             is Internal.InitApi -> commands(
                 Command.InitMessagesLoad,
@@ -49,7 +49,7 @@ internal class ChatDataReducer : Reducer<State, Event, Nothing, Command>() {
         return copy(sentMessages = messages)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.messageReceived(
+    private fun MessageBuilder<State, Command>.messageReceived(
         messageState: ServerMessageState
     ) = state {
         when (messageState) {
@@ -71,7 +71,7 @@ internal class ChatDataReducer : Reducer<State, Event, Nothing, Command>() {
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.chatLifecycle(
+    private fun MessageBuilder<State, Command>.chatLifecycle(
         event: LifecycleEvent
     ) = state {
         var connectionClosed = false
@@ -84,7 +84,7 @@ internal class ChatDataReducer : Reducer<State, Event, Nothing, Command>() {
         copy(lifecycleEvent = event, connectionClosed = connectionClosed)
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUserEvent(event: User) {
+    private fun MessageBuilder<State, Command>.handleUserEvent(event: User) {
         when(event) {
             is User.LoadPage -> commands(Command.LoadPage(state.messagesCount))
             is User.SendMessage -> commands(Command.SendMessage(event.message))

@@ -12,12 +12,12 @@ import ru.gortea.petter.arch.store.MviStore
 import java.util.*
 
 @Composable
-inline fun <reified S : MviStore<*, *, *>> getScreenKey(): String {
+inline fun <reified S : MviStore<*, *>> getScreenKey(): String {
     return rememberSaveable { S::class.toString() + UUID.randomUUID() }
 }
 
 @Composable
-inline fun <reified S : MviStore<*, *, *>> storeHolder(
+inline fun <reified S : MviStore<*, *>> storeHolder(
     key: String = getScreenKey<S>(),
     crossinline factory: () -> S
 ): StoreHolder<S> {

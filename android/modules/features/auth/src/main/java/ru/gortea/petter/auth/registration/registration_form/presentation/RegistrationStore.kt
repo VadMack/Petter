@@ -10,7 +10,7 @@ import ru.gortea.petter.auth.registration.registration_form.presentation.actors.
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.RegistrationValidatorComposite
 import ru.gortea.petter.navigation.Router
 
-internal typealias RegistrationStore = MviStore<RegistrationState, RegistrationEvent, Nothing>
+internal typealias RegistrationStore = MviStore<RegistrationState, RegistrationEvent>
 
 internal fun createRegistrationStore(
     component: AuthorizationComponent,

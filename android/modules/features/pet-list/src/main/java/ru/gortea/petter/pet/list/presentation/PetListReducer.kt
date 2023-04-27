@@ -14,9 +14,9 @@ import ru.gortea.petter.pet.list.presentation.PetListUiEvent as UiEvent
 
 internal class PetListReducer(
     private val openPetCard: (String) -> Unit
-) : Reducer<State, Event, Nothing, Command>() {
+) : Reducer<State, Event, Command>() {
 
-    override fun MessageBuilder<State, Nothing, Command>.reduce(event: Event) {
+    override fun MessageBuilder<State, Command>.reduce(event: Event) {
         when (event) {
             is Event.PetListLoadingStatus -> state { copy(dataState = event.state) }
             is Event.InitApi -> commands(Command.InitPetList, Command.GetCurrentUser)
@@ -25,7 +25,7 @@ internal class PetListReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.handleUiEvent(event: UiEvent) {
+    private fun MessageBuilder<State, Command>.handleUiEvent(event: UiEvent) {
         when (event) {
             is UiEvent.Invalidate -> invalidate(event.key)
             is UiEvent.Refresh -> refresh(event.key)
@@ -37,34 +37,34 @@ internal class PetListReducer(
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.invalidate(key: PetListKeyModel) {
+    private fun MessageBuilder<State, Command>.invalidate(key: PetListKeyModel) {
         val dataKey = key.toDataKey()
         commands(Command.Invalidate(dataKey))
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.refresh(key: PetListKeyModel) {
+    private fun MessageBuilder<State, Command>.refresh(key: PetListKeyModel) {
         val dataKey = key.toDataKey()
         commands(Command.Invalidate(dataKey, refresh = true))
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.loadPage() {
+    private fun MessageBuilder<State, Command>.loadPage() {
         if (state.dataState is PagingDataState.Paged.Content) {
             commands(Command.LoadPage)
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.reloadPage() {
+    private fun MessageBuilder<State, Command>.reloadPage() {
         if (state.dataState.isFail()) {
             commands(Command.LoadPage)
         }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.likePet(id: String) {
+    private fun MessageBuilder<State, Command>.likePet(id: String) {
         commands(Command.ChangeLikeStatus(id, true))
         state { updateLiked(id, true) }
     }
 
-    private fun MessageBuilder<State, Nothing, Command>.dislikePet(id: String) {
+    private fun MessageBuilder<State, Command>.dislikePet(id: String) {
         commands(Command.ChangeLikeStatus(id, false))
         state { updateLiked(id, false) }
     }
