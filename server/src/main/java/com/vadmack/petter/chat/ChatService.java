@@ -50,7 +50,7 @@ public class ChatService {
     });
 
     ChatMessageDto dto = chatMessageService.entityToDto(savedMessage);
-    dto.setContent(msg.getContent());
+    //dto.setContent(msg.getContent());
     return dto;
   }
 }
