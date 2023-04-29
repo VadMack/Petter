@@ -15,6 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class RSAUtils {
 
   private static final String ALGORITHM = "RSA";
+  private static final String ALGORITHM_WITH_PADDING = "RSA/ECB/OAEPPadding";
 
   public static KeyPair getKeyPair(String chatRoomId) {
     try {
@@ -38,7 +39,7 @@ public class RSAUtils {
   public static String encrypt(String msg, String chatRoomId) {
     try {
       KeyPair pair = RSAUtils.getKeyPair(chatRoomId);
-      Cipher encryptCipher = Cipher.getInstance(ALGORITHM);
+      Cipher encryptCipher = Cipher.getInstance(ALGORITHM_WITH_PADDING);
       encryptCipher.init(Cipher.ENCRYPT_MODE, pair.getPublic());
       byte[] secretMessageBytes = msg.getBytes(StandardCharsets.UTF_8);
       byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
@@ -51,12 +52,12 @@ public class RSAUtils {
   public static String decrypt(String encodedMessage, String chatRoomId) {
     try {
       PrivateKey privateKey = getKeyPair(chatRoomId).getPrivate();
-      Cipher decryptCipher = Cipher.getInstance(ALGORITHM);
+      Cipher decryptCipher = Cipher.getInstance(ALGORITHM_WITH_PADDING);
       decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
       byte[] decryptedMessageBytes = decryptCipher.doFinal(Base64.getDecoder().decode(encodedMessage));
       return new String(decryptedMessageBytes, StandardCharsets.UTF_8);
     } catch (GeneralSecurityException ex) {
-      throw new ServerSideException("An error occurred during message encryption");
+      throw new ServerSideException("An error occurred during message decryption");
     }
   }
 }
