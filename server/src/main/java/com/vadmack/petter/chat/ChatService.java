@@ -1,6 +1,7 @@
 package com.vadmack.petter.chat;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.chat.message.ChatMessage;
 import com.vadmack.petter.chat.message.ChatMessageDto;
 import com.vadmack.petter.chat.message.ChatMessageService;
@@ -15,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,22 +36,22 @@ public class ChatService {
     ChatMessage savedMessage = chatMessageService.createNewMessage(msg);
     chatRoom.setLastMessage(savedMessage);
     chatRoomService.save(chatRoom);
+
     String decryptedMsg = RSAUtils.decrypt(msg.getContent(), chatRoom.getId());
+    ChatMessageDto dto = chatMessageService.entityToDto(savedMessage);
+    dto.setContent(decryptedMsg);
 
     // Firebase notification
     List<Token> deviceTokens = tokenService.getAllByTypeAndUserId(TokenType.DEVICE_TOKEN, msg.getRecipientId());
     deviceTokens.forEach(token -> {
       NotificationDto notification = new NotificationDto(senderName, decryptedMsg,
-              token.getValue(), Map.of("userId", msg.getSenderId(), "chatRoomId", chatRoom.getId()));
+              token.getValue(), Collections.singletonMap("model", AppUtils.objectToJSON(dto)));
       try {
         fmService.send(notification);
       } catch (FirebaseMessagingException ex) {
         log.warn("Firebase notification is not sent: " + ex.getMessage());
       }
     });
-
-    ChatMessageDto dto = chatMessageService.entityToDto(savedMessage);
-    dto.setContent(decryptedMsg);
     return dto;
   }
 }
