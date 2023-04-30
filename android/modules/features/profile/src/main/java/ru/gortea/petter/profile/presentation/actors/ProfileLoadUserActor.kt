@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.mapLatest
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.profile.data.remote.GetUserRepository
-import ru.gortea.petter.profile.data.remote.model.GetUserModel
+import ru.gortea.petter.profile.data.remote.model.UserIdModel
 import ru.gortea.petter.profile.presentation.ProfileCommand
 import ru.gortea.petter.profile.presentation.ProfileEvent
 
@@ -17,7 +17,7 @@ internal class ProfileLoadUserActor(
 
     override fun process(commands: Flow<ProfileCommand>): Flow<ProfileEvent> {
         return commands.filterIsInstance<ProfileCommand.LoadUser>()
-            .mapLatest { repository.invalidate(GetUserModel(it.id, it.forceRemote)) }
+            .mapLatest { repository.invalidate(UserIdModel(it.id, it.forceRemote)) }
             .flatMapMerge { emptyFlow() }
     }
 }

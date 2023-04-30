@@ -34,7 +34,7 @@ internal class RepositoryReducer : Reducer<State, Event, Command>() {
                 state {
                     val newState = when(val oldState = state.dataState) {
                         is DataState.Fail -> DataState.Loading.WithError(oldState.reason)
-                        is DataState.Content<*> -> DataState.Loading.WithContent(oldState.content)
+                        is DataState.Content<*> -> oldState.copy(refreshing = true)
                         else -> DataState.Loading()
                     }
 

@@ -1,6 +1,6 @@
 package ru.gortea.petter.chat.presentation
 
-import ru.gortea.chat.data.messages.model.MessageModel
+import ru.gortea.petter.chat.data.messages.model.MessageModel
 import ru.gortea.petter.chat.data.model.ChatRoomModel
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.paging.model.PagingDataState

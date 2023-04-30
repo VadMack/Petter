@@ -11,7 +11,7 @@ import ru.gortea.petter.chat.data.model.InterlocutorsModel
 import ru.gortea.petter.data.SourceRepository
 import ru.gortea.petter.profile.data.local.CurrentUserRepository
 import ru.gortea.petter.profile.data.remote.api.ProfileApi
-import ru.gortea.petter.profile.data.remote.model.GetUserModel
+import ru.gortea.petter.profile.data.remote.model.UserIdModel
 import ru.gortea.petter.profile.data.remote.model.UserModel
 
 class ChatCreateRoomRepository(
@@ -20,7 +20,7 @@ class ChatCreateRoomRepository(
     private val currentUserRepository: CurrentUserRepository
 ) : SourceRepository<ChatRoomModel>(
     source = {
-        val model = it as GetUserModel
+        val model = it as UserIdModel
         val currentUser = currentUserRepository.getCurrentUser()
         val argument = InterlocutorsModel(currentUser.id, model.id)
 

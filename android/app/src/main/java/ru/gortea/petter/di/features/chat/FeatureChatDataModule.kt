@@ -5,10 +5,10 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.create
-import ru.gortea.chat.data.messages.MessageRoomRepository
 import ru.gortea.petter.chat.data.ChatCreateRoomRepository
 import ru.gortea.petter.chat.data.ChatRepositoryFactory
 import ru.gortea.petter.chat.data.api.ChatsApi
+import ru.gortea.petter.chat.data.messages.MessageRoomRepository
 import ru.gortea.petter.chat.data.messages_list.MessagesListRepositoryFactory
 import ru.gortea.petter.chat.data.p2p.WebSocketChatRepositoryFactory
 import ru.gortea.petter.profile.data.local.CurrentUserRepository

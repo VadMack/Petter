@@ -1,7 +1,7 @@
 package ru.gortea.petter.chat.data.mvi
 
+import ru.gortea.petter.chat.data.messages.model.ServerMessage
 import ru.gortea.petter.chat.data.model.SentMessageState
-import ru.gortea.petter.chat.data.model.ServerMessage
 import ru.gortea.petter.chat.data.model.ServerMessageState
 import ru.gortea.petter.data.paging.model.PagingDataState
 import ua.naiksoftware.stomp.dto.LifecycleEvent

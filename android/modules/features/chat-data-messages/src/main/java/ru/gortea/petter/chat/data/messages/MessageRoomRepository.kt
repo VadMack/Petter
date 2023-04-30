@@ -1,7 +1,7 @@
-package ru.gortea.chat.data.messages
+package ru.gortea.petter.chat.data.messages
 
-import kotlinx.coroutines.flow.SharedFlow
-import ru.gortea.chat.data.messages.model.MessageModel
+import kotlinx.coroutines.flow.Flow
+import ru.gortea.petter.chat.data.messages.model.MessageModel
 
 interface MessageRoomRepository {
     fun messageReceived(message: MessageModel)
@@ -9,5 +9,5 @@ interface MessageRoomRepository {
     fun roomWithUserClosed(userId: String)
 
     fun roomCompanionId(): String?
-    fun receivedMessage(): SharedFlow<MessageModel>
+    fun receivedMessage(): Flow<MessageModel>
 }

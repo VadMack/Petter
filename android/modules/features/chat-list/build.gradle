@@ -1,0 +1,16 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+}
+
+dependencies {
+    implementation project(":modules:ui-kit")
+    implementation project(":modules:arch-android")
+    implementation project(":modules:navigation")
+
+    implementation project(":modules:features:chat-list-data")
+
+    implementation Libs.coil
+    implementation Libs.coroutines
+}

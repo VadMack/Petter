@@ -167,20 +167,9 @@ private fun ProfileRoot(
     modifier: Modifier
 ) {
     when (state.userState) {
-        is DataState.Loading.WithContent -> ProfileContent(
-            state = state.userState.content,
-            refreshing = true,
-            command = command,
-            modifier = modifier,
-            myListClicked = myListClicked,
-            favouritesClicked = favouritesClicked,
-            addPetClicked = addPetClicked,
-            openPetClicked = openPetClicked,
-            refresh = refresh
-        )
         is DataState.Content -> ProfileContent(
             state = state.userState.content,
-            refreshing = false,
+            refreshing = state.userState.refreshing,
             command = command,
             modifier = modifier,
             myListClicked = myListClicked,
