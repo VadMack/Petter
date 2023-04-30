@@ -25,8 +25,17 @@ public class TokenService {
 
   public void addOrExtendDeviceToken(@NotNull String userId, String value) {
     Optional<Token> tokenOptional = findByTypeAndValue(TokenType.DEVICE_TOKEN, value);
-    Token token = tokenOptional.orElseGet(() -> new Token(userId, value, TokenType.DEVICE_TOKEN));
-    token.setExpiration(Instant.now().plus(1, ChronoUnit.DAYS));
+    Token token;
+    if (tokenOptional.isPresent()) {
+      token = tokenOptional.get();
+      if (!token.getUserId().equals(userId)) {
+        tokenRepository.delete(token);
+        token = new Token(userId, value, TokenType.DEVICE_TOKEN);
+      }
+    } else {
+      token = new Token(userId, value, TokenType.DEVICE_TOKEN);
+    }
+    token.setExpiration(Instant.now().plus(30, ChronoUnit.DAYS));
     tokenRepository.save(token);
   }
 
