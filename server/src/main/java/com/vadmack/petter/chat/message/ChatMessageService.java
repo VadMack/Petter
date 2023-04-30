@@ -1,5 +1,6 @@
 package com.vadmack.petter.chat.message;
 
+import com.vadmack.petter.chat.RSAUtils;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,9 @@ public class ChatMessageService {
   }
 
   public ChatMessageDto entityToDto(@NotNull ChatMessage entity) {
-    return modelMapper.map(entity, ChatMessageDto.class);
+    ChatMessageDto dto = modelMapper.map(entity, ChatMessageDto.class);
+    dto.setContent(RSAUtils.decrypt(dto.getContent(), dto.getChatRoomId()));
+    return dto;
   }
 
 }

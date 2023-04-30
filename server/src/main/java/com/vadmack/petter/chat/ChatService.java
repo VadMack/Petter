@@ -37,14 +37,13 @@ public class ChatService {
     chatRoom.setLastMessage(savedMessage);
     chatRoomService.save(chatRoom);
 
-    String decryptedMsg = RSAUtils.decrypt(msg.getContent(), chatRoom.getId());
+    // Content will be decrypted
     ChatMessageDto dto = chatMessageService.entityToDto(savedMessage);
-    dto.setContent(decryptedMsg);
 
     // Firebase notification
     List<Token> deviceTokens = tokenService.getAllByTypeAndUserId(TokenType.DEVICE_TOKEN, msg.getRecipientId());
     deviceTokens.forEach(token -> {
-      NotificationDto notification = new NotificationDto(senderName, decryptedMsg,
+      NotificationDto notification = new NotificationDto(senderName, dto.getContent(),
               token.getValue(), Collections.singletonMap("model", AppUtils.objectToJSON(dto)));
       try {
         fmService.send(notification);
