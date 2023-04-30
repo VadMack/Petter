@@ -76,4 +76,8 @@ public class TokenService {
   public void deleteByTypeAndValue(@NotNull TokenType type, @NotNull String value) {
     tokenRepository.deleteByTypeAndValue(type, value);
   }
+
+  public void deleteExpired() {
+    tokenRepository.deleteByExpirationBefore(Instant.now());
+  }
 }
