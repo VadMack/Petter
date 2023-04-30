@@ -2,7 +2,7 @@ package ru.gortea.petter.chat.data
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import ru.gortea.chat.data.messages.MessageRoomRepository
+import ru.gortea.petter.chat.data.messages.MessageRoomRepository
 import ru.gortea.petter.chat.data.messages_list.MessagesListRepositoryFactory
 import ru.gortea.petter.chat.data.p2p.WebSocketChatRepositoryFactory
 

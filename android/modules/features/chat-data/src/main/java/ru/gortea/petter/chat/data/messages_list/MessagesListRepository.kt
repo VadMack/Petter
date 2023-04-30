@@ -1,8 +1,8 @@
 package ru.gortea.petter.chat.data.messages_list
 
 import ru.gortea.petter.chat.data.api.ChatsApi
+import ru.gortea.petter.chat.data.messages.model.ServerMessage
 import ru.gortea.petter.chat.data.messages_list.model.MessagesListPageState
-import ru.gortea.petter.chat.data.model.ServerMessage
 import ru.gortea.petter.data.paging.SourceOffsetPagingRepository
 
 internal class MessagesListRepository(

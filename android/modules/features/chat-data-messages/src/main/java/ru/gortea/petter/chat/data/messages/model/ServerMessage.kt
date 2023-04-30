@@ -1,14 +1,13 @@
-package ru.gortea.petter.chat.data.model
+package ru.gortea.petter.chat.data.messages.model
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import ru.gortea.chat.data.messages.model.MessageModel
-import ru.gortea.chat.data.messages.model.MessageModelState
 import java.time.LocalDateTime
 
 @Serializable
 data class ServerMessage(
     val id: String,
+    val chatRoomId: String,
     val content: String,
     val senderId: String,
     val recipientId: String,
@@ -18,6 +17,7 @@ data class ServerMessage(
 fun ServerMessage.toMessageModel(): MessageModel {
     return MessageModel(
         id = id,
+        roomId = chatRoomId,
         senderId = senderId,
         recipientId = recipientId,
         content = content,

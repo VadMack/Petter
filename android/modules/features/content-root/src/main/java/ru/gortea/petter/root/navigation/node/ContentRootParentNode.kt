@@ -15,6 +15,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSlider
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.gortea.petter.chat.list.navigation.ChatListRootNode
 import ru.gortea.petter.home.navigation.HomeRootNode
 import ru.gortea.petter.navigation.node.parent.BackStackParentNode
 import ru.gortea.petter.profile.navigation.ProfileRootNode
@@ -34,7 +35,7 @@ class ContentRootParentNode(
     override fun resolve(navTarget: Target, buildContext: BuildContext): Node {
         return when (navTarget) {
             is Target.Main -> HomeRootNode(buildContext, showBottomBar::tryEmit)
-            is Target.Chats -> StubNode(buildContext, 2)
+            is Target.Chats -> ChatListRootNode(buildContext, showBottomBar::tryEmit)
             is Target.Profile -> ProfileRootNode(
                 canGoBack = false,
                 buildContext = buildContext,

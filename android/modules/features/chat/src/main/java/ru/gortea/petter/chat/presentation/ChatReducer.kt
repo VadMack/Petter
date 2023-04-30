@@ -1,10 +1,10 @@
 package ru.gortea.petter.chat.presentation
 
-import ru.gortea.chat.data.messages.model.MessageModel
 import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.android.util.isNotBlank
 import ru.gortea.petter.arch.android.util.text
 import ru.gortea.petter.arch.model.MessageBuilder
+import ru.gortea.petter.chat.data.messages.model.MessageModel
 import ru.gortea.petter.chat.data.model.ChatRoomModel
 import ru.gortea.petter.chat.navigation.ChatNavTarget
 import ru.gortea.petter.data.model.DataState

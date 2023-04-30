@@ -210,7 +210,7 @@ private fun PetScreenRoot(
             } else {
                 PetScreenContent(
                     state = state.modelStatus.content,
-                    refreshing = false,
+                    refreshing = state.modelStatus.refreshing,
                     dateFormatter = dateFormatter,
                     editClicked = editClicked,
                     chatClicked = chatClicked,
@@ -219,15 +219,6 @@ private fun PetScreenRoot(
                 )
             }
         }
-        is DataState.Loading.WithContent -> PetScreenContent(
-            state = state.modelStatus.content,
-            refreshing = true,
-            dateFormatter = dateFormatter,
-            editClicked = editClicked,
-            chatClicked = chatClicked,
-            reloadClicked = reloadClicked,
-            modifier = modifier
-        )
         is DataState.Loading -> LoadingPlaceholder(modifier.fillMaxSize())
         is DataState.Fail -> ErrorPlaceholder(reloadClicked = reloadClicked)
     }

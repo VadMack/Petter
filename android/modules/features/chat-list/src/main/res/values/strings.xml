@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty_room">Диалог пуст</string>
+    <string name="chats_title">Сообщения</string>
+    <string name="current_user_message">Вы: </string>
+    <string name="no_chats_placeholder">Здесь появятся ваши диалоги</string>
+</resources>

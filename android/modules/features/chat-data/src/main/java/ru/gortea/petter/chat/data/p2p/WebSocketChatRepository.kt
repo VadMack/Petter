@@ -12,9 +12,9 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import okhttp3.OkHttpClient
 import ru.gortea.petter.chat.data.encryption.MessageEncryptor
+import ru.gortea.petter.chat.data.messages.model.ServerMessage
 import ru.gortea.petter.chat.data.model.SentMessage
 import ru.gortea.petter.chat.data.model.SentMessageState
-import ru.gortea.petter.chat.data.model.ServerMessage
 import ru.gortea.petter.chat.data.model.ServerMessageState
 import ru.gortea.petter.network.PetterNetwork.BASE_URL
 import ru.gortea.petter.network.PetterNetwork.json

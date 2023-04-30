@@ -10,6 +10,7 @@ dependencies {
     implementation AndroidX.composeMaterial
 
     implementation project(":modules:features:home")
+    implementation project(":modules:features:chat-list")
     implementation project(":modules:features:profile")
 
     implementation project(":modules:navigation")

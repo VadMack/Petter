@@ -1,6 +1,5 @@
 package ru.gortea.petter.chat.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -52,13 +50,13 @@ import ru.gortea.petter.data.paging.android.rememberPagingState
 import ru.gortea.petter.data.paging.model.PagingDataState
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.theme.Base100
-import ru.gortea.petter.theme.Base500
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.Primary100
 import ru.gortea.petter.theme.Primary600
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
+import ru.gortea.petter.ui_kit.placeholder.EmptyPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.ErrorPlaceholder
 import ru.gortea.petter.ui_kit.placeholder.LoadingPlaceholder
 import ru.gortea.petter.ui_kit.text_field.TextField
@@ -269,7 +267,10 @@ private fun ChatScreenContent(
     ) {
         if (state.content.isEmpty()) {
             item {
-                EmptyPlaceholder(modifier = Modifier.fillParentMaxSize())
+                EmptyPlaceholder(
+                    text = stringResource(R.string.no_messages_placeholder),
+                    modifier = Modifier.fillParentMaxSize()
+                )
             }
         } else {
             items(state.content, key = { it.id }) { item ->
@@ -359,30 +360,6 @@ private fun Message(
                 style = MaterialTheme.typography.caption.copy(color = dateColor)
             )
         }
-    }
-}
-
-@Composable
-private fun EmptyPlaceholder(
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.fillMaxSize()
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Icon(
-            icon = UiKitR.drawable.ic_paw_outline,
-            tint = Base500,
-            size = 90.dp,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-
-        Text(
-            text = stringResource(R.string.no_messages_placeholder),
-            style = MaterialTheme.typography.body1.copy(Base500),
-            textAlign = TextAlign.Center
-        )
     }
 }
 

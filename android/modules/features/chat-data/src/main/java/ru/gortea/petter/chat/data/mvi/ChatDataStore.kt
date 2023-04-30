@@ -1,9 +1,9 @@
 package ru.gortea.petter.chat.data.mvi
 
-import ru.gortea.chat.data.messages.MessageRoomRepository
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.chat.data.encryption.MessageEncryptor
+import ru.gortea.petter.chat.data.messages.MessageRoomRepository
 import ru.gortea.petter.chat.data.messages_list.MessagesListRepositoryFactory
 import ru.gortea.petter.chat.data.mvi.actors.ChatDataDisconnectSocketActor
 import ru.gortea.petter.chat.data.mvi.actors.ChatDataInitMessagesActor
@@ -37,7 +37,7 @@ internal fun ChatDataStore(
         initialState = ChatDataState(senderId = senderId),
         reducer = ChatDataReducer(),
         actors = listOf(
-            ChatDataSendMessageActor(webSocketChatRepository),
+            ChatDataSendMessageActor(messageRoomRepository, webSocketChatRepository),
             ChatDataSubscribeMessagesActor(recipientId, messageRoomRepository, webSocketChatRepository),
             ChatDataSubscribeLifecycleActor(recipientId, messageRoomRepository, webSocketChatRepository),
             ChatDataDisconnectSocketActor(recipientId, messageRoomRepository, webSocketChatRepository),

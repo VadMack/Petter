@@ -6,7 +6,6 @@ import com.bumble.appyx.core.plugin.Plugin
 interface ComponentProviderPlugin : Plugin {
 
     fun<T> Node.provideComponent(): T {
-        println("xxx: component $parent")
         return if (parent is ComponentProviderPlugin) {
             (parent as ComponentProviderPlugin).run {
                 parent?.provideComponent()

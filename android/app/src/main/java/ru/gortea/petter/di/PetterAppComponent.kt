@@ -5,12 +5,15 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.chat.di.ChatComponent
+import ru.gortea.petter.chat.list.di.ChatListComponent
 import ru.gortea.petter.di.features.auth.FeatureAuthControllerBinder
 import ru.gortea.petter.di.features.auth.FeatureAuthControllerModule
 import ru.gortea.petter.di.features.auth.FeatureAuthDataModule
 import ru.gortea.petter.di.features.chat.FeatureChatDataMessageModel
 import ru.gortea.petter.di.features.chat.FeatureChatDataModule
 import ru.gortea.petter.di.features.chat.FeatureChatModule
+import ru.gortea.petter.di.features.chat_list.FeatureChatListDataModule
+import ru.gortea.petter.di.features.chat_list.FeatureChatListModule
 import ru.gortea.petter.di.features.home.FeatureHomeModule
 import ru.gortea.petter.di.features.pet.FeaturePetDataModule
 import ru.gortea.petter.di.features.pet.FeaturePetListDataModule
@@ -44,6 +47,9 @@ import javax.inject.Singleton
         FeatureChatDataModule::class,
         FeatureChatDataMessageModel::class,
 
+        FeatureChatListModule::class,
+        FeatureChatListDataModule::class,
+
         FeaturePetModule::class,
         FeaturePetDataModule::class,
         FeaturePetListDataModule::class,
@@ -59,6 +65,7 @@ import javax.inject.Singleton
 )
 interface PetterAppComponent : AuthorizationComponent,
     HomeComponent,
+    ChatListComponent,
     ChatComponent,
     PetComponent,
     PetListComponent,
