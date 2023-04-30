@@ -43,7 +43,7 @@ public abstract class CustomMongoRepository {
       } else {
         criteria.add(Criteria.where(propertyName).is(value));
       } },
-            "An error occurred during findByProperties() method");
+            "An error occurred during findByProperties() method", true);
 
     if (!criteria.isEmpty())
       query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
@@ -57,7 +57,7 @@ public abstract class CustomMongoRepository {
     Update update = new Update();
     String entityName = modelClass.getSimpleName();
 
-    handleBean(dto, update::set, String.format("Failed to update %s with id=%s", entityName, id));
+    handleBean(dto, update::set, String.format("Failed to update %s with id=%s", entityName, id), false);
 
     UpdateResult result = mongoTemplate.updateFirst(Query.query(criteria), update, modelClass);
     if (result.getMatchedCount() < 1) {
@@ -65,7 +65,7 @@ public abstract class CustomMongoRepository {
     }
   }
 
-  private void handleBean(Object bean, BiConsumer<String, Object> task, String errorMsg) {
+  private void handleBean(Object bean, BiConsumer<String, Object> task, String errorMsg, boolean ignoreNull) {
     try {
       BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
       for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
@@ -73,7 +73,10 @@ public abstract class CustomMongoRepository {
         Method getter = propertyDesc.getReadMethod();
         Object value = getter.invoke(bean);
 
-        if (value != null && !propertyName.equals("class")) {
+        if (!propertyName.equals("class")) {
+          if (ignoreNull && value == null){
+            continue;
+          }
           task.accept(propertyName, value);
         }
       }

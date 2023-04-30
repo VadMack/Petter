@@ -29,7 +29,7 @@ class AdRepositoryIT {
   private List<Ad> ads;
 
   @BeforeAll
-  private void setup() {
+  void setup() {
     Ad ad1 = new Ad();
     ad1.setSpecies(Species.CAT);
     ad1.setGender(Gender.MALE);
