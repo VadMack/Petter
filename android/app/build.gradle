@@ -17,6 +17,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
+    implementation Libs.serialization
     implementation Libs.coil
     implementation Libs.dagger2
     kapt Libs.dagger2Compiler

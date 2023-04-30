@@ -8,9 +8,13 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.serialization.decodeFromString
 import ru.gortea.petter.R
 import ru.gortea.petter.arch.android.activity.getComponent
+import ru.gortea.petter.chat.data.messages.model.ServerMessage
+import ru.gortea.petter.chat.data.messages.model.toMessageModel
 import ru.gortea.petter.main.MainActivity
+import ru.gortea.petter.network.PetterNetwork.json
 import ru.gortea.petter.notifications.di.NotificationsServiceComponent
 import ru.gortea.petter.ui_kit.R as UiKitR
 
@@ -24,8 +28,10 @@ class FirebaseNotificationsService : FirebaseMessagingService() {
     private val lastMessageRepository by lazy { component.messageRoomRepository }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        val userId = message.data["userId"]
-        if (lastMessageRepository.roomCompanionId() != userId) {
+        val modelJson = message.data["model"] ?: return
+        val model = json.decodeFromString<ServerMessage>(modelJson)
+        lastMessageRepository.messageReceived(model.toMessageModel())
+        if (lastMessageRepository.roomCompanionId() != model.senderId) {
             sendNotification(message)
         }
     }
