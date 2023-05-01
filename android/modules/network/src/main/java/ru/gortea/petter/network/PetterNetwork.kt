@@ -23,6 +23,7 @@ object PetterNetwork {
 
     val json = Json {
         ignoreUnknownKeys = true
+        encodeDefaults = true
         serializersModule = SerializersModule {
             contextual(LocalDate::class, LocalDateSerializer)
             contextual(LocalDateTime::class, LocalDateTimeSerializer)

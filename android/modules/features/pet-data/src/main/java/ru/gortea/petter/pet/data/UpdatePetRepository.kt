@@ -24,6 +24,7 @@ class UpdatePetRepository(
             petUpdate = async {
                 api.updatePet(model.model.id, model.model)
             }
+
             avatarUpdate = async {
                 if (model.photoPath == null) {
                     model.model.photoPathSegments?.let { (folder, file) ->

@@ -21,6 +21,7 @@ internal sealed interface PetUiEvent : PetEvent {
     class LoadPet(val id: String?) : PetUiEvent
     class EditField(val field: PetField) : PetUiEvent
     class AddFields(val fields: List<PetField>) : PetUiEvent
+    class DeleteField(val field: PetField) : PetUiEvent
 
     object AvatarClicked : PetUiEvent
     object AvatarEditClicked : PetUiEvent

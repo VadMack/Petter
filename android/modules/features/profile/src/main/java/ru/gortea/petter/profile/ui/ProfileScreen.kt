@@ -272,14 +272,18 @@ private fun ProfileContent(
                     PetList(
                         listKey = PetListKeyModel(ownerId = state.id),
                         command = command.mapToPetListNavCommand(),
-                        openPetCard = openPetClicked
+                        openPetCard = openPetClicked,
+                        modifier = Modifier.fillMaxWidth()
+                            .weight(1f)
                     )
                 }
                 PetsListState.FAVOURITES -> {
                     PetList(
                         listKey = PetListKeyModel(ownerId = state.id, favourites = true),
                         command = command.mapToPetListNavCommand(),
-                        openPetCard = openPetClicked
+                        openPetCard = openPetClicked,
+                        modifier = Modifier.fillMaxWidth()
+                            .weight(1f)
                     )
                 }
             }
