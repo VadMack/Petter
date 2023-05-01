@@ -43,10 +43,15 @@ internal class RegistrationReducer(
                     event.state.content,
                     password.text
                 )
-                is DataState.Fail -> Unit // todo do something
+                is DataState.Fail -> declineRegistration()
             }
             copy(registrationStatus = event.state)
         }
+    }
+
+    private fun MessageBuilder<State, Command>.declineRegistration() {
+        commands(Command.DeclineRegistration(state.email.text))
+        // todo show error message
     }
 
     private fun navigateToRegistrationConfirm(user: UserModel, pwd: String) {

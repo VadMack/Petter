@@ -5,6 +5,7 @@ import ru.gortea.petter.arch.store.factory.TeaStore
 import ru.gortea.petter.auth.di.AuthorizationComponent
 import ru.gortea.petter.auth.navigation.AuthorizationNavTarget
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationCreateAccountActor
+import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationDeclineActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationInitCreateAccountActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.actors.RegistrationValidateActor
 import ru.gortea.petter.auth.registration.registration_form.presentation.validation.RegistrationValidatorComposite
@@ -23,6 +24,7 @@ internal fun createRegistrationStore(
         RegistrationReducer(router),
         listOf(
             RegistrationValidateActor(RegistrationValidatorComposite()),
+            RegistrationDeclineActor(repo),
             RegistrationCreateAccountActor(repo),
             RegistrationInitCreateAccountActor(repo)
         ),

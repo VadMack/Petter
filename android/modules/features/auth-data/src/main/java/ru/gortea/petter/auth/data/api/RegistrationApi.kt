@@ -15,4 +15,7 @@ interface RegistrationApi {
 
     @POST("api/password-reset/resend-confirmation-code")
     suspend fun resendConfirmCode(@Body model: RegistrationEmailModel): UserModel
+
+    @POST("api/decline-confirmation")
+    suspend fun declineConfirmation(@Body model: RegistrationEmailModel)
 }

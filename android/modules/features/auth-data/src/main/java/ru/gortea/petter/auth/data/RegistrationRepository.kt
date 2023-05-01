@@ -36,7 +36,13 @@ class RegistrationRepository(
         )
     }
 
-    suspend fun initCreateAccount(): Flow<DataState<UserModel>> {
+    suspend fun declineRegistration(email: String) {
+        try {
+            api.declineConfirmation(RegistrationEmailModel(email))
+        } catch (_: Throwable) {}
+    }
+
+    fun initCreateAccount(): Flow<DataState<UserModel>> {
         return registrationSource.get()
     }
 
@@ -44,7 +50,7 @@ class RegistrationRepository(
         registrationSource.invalidate(args)
     }
 
-    suspend fun initRegistrationConfirm(): Flow<DataState<Unit>> {
+    fun initRegistrationConfirm(): Flow<DataState<Unit>> {
         return registrationConfirmSource.get()
     }
 
@@ -52,7 +58,7 @@ class RegistrationRepository(
         registrationConfirmSource.invalidate(args)
     }
 
-    suspend fun initResendConfirmCode(): Flow<DataState<UserModel>> {
+    fun initResendConfirmCode(): Flow<DataState<UserModel>> {
         return resendConfirmCodeSource.get()
     }
 

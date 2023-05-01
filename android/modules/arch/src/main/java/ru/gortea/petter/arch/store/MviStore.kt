@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -32,14 +31,8 @@ abstract class MviStore<State : Any, Event : Any>(initialState: State) : Store<E
 
         _coroutineScope = coroutineScope
     }
-}
 
-internal fun <State : Any, Event : Any> MviStore<State, Event>.renderState(
-    coroutineScope: CoroutineScope,
-    renderer: (State) -> Unit
-) {
-    stateFlow.onEach(renderer)
-        .launchIn(coroutineScope)
+    open fun cancelled() = Unit
 }
 
 internal fun <UiState : Any, State : Any, Event : Any> MviStore<State, Event>.renderState(

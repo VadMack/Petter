@@ -12,6 +12,11 @@ class StoreHolder<out S : MviStore<*, *>> constructor(
     init {
         store.attach(viewModelScope)
     }
+
+    override fun onCleared() {
+        store.cancelled()
+        super.onCleared()
+    }
 }
 
 operator fun <S : MviStore<*, *>> StoreHolder<S>.getValue(
