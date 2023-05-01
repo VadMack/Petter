@@ -9,6 +9,7 @@ import ru.gortea.petter.auth.data.api.AuthApi
 import ru.gortea.petter.auth.data.model.CredsAuthorizationModel
 import ru.gortea.petter.auth.data.model.TokenAuthorizationModel
 import ru.gortea.petter.data.MapSourceRepository
+import ru.gortea.petter.network.errors.PetterNetworkError.RequestError
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.token.storage.TokenRepository
 
@@ -36,6 +37,12 @@ class AuthorizationRepository(
         loginController.login(it)
         it.user
     },
-    onFailed = { logoutController.logout() },
+    onFailed = { reason ->
+        if (reason is RequestError && refreshTokenRepository.getToken().isNotEmpty()) {
+            loginController.offlineLogin()
+        } else {
+            logoutController.logout()
+        }
+    },
     coroutineScope = CoroutineScope(Dispatchers.IO)
 )

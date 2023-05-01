@@ -1,5 +1,6 @@
 package ru.gortea.petter.home.main.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -111,7 +112,7 @@ private fun HomeScreenContent(
         openPetCard = openPet,
         command = command.toPetListNavCommand(),
         pullToRefreshEnabled = true,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     )
 }
 
