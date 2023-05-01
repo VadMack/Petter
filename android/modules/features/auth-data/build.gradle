@@ -9,6 +9,7 @@ dependencies {
     implementation Libs.retrofit
 
     implementation project(":modules:token-storage")
+    implementation project(":modules:network")
     api project(":modules:data")
     api project(":modules:features:auth-controller")
 }

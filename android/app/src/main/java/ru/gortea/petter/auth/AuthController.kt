@@ -32,6 +32,12 @@ class AuthController(
         }
     }
 
+    override fun offlineLogin() {
+        coroutineScope.launch {
+            authorizedFlow.emit(true)
+        }
+    }
+
     override fun logout() {
         coroutineScope.launch {
             logoutRepository.logout()

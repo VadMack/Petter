@@ -48,7 +48,7 @@ class SplashActivity : ComponentActivity() {
     private fun authorizeByToken() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                val repository = getComponent<SplashComponent>().authRepository
+                val repository = component.authRepository
                 repository.invalidate()
                 launch {
                     repository.get()
