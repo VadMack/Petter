@@ -11,6 +11,7 @@ import ru.gortea.petter.auth.registration.registration_confirm.presentation.acto
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.RegistrationConfirmValidateActor
 import ru.gortea.petter.auth.registration.registration_confirm.presentation.actors.ResendCodeActor
+import ru.gortea.petter.auth.registration.registration_confirm.presentation.handlers.RegistrationConfirmCancellationHandler
 import ru.gortea.petter.navigation.Router
 
 internal typealias RegistrationConfirmStore = MviStore<RegistrationConfirmState, RegistrationConfirmEvent>
@@ -46,7 +47,8 @@ internal fun createRegistrationConfirmStore(
         ),
         listOf(
             RegistrationConfirmEvent.InitApi
-        )
+        ),
+        RegistrationConfirmCancellationHandler(repo)
     )
 }
 

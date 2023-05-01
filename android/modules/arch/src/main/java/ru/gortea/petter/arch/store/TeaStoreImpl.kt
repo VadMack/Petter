@@ -16,7 +16,8 @@ import ru.gortea.petter.arch.Reducer
 internal class TeaStoreImpl<State : Any, Event : Any, Command : Any>(
     initialState: State,
     private val reducer: Reducer<State, Event, Command>,
-    private val actors: List<Actor<Command, Event>> = listOf()
+    private val actors: List<Actor<Command, Event>> = listOf(),
+    private val cancellationHandler: CancellationHandler<State>? = null
 ) : MviStore<State, Event>(initialState) {
 
     private val commandsFlow = MutableSharedFlow<Command>(replay = 1)
@@ -24,6 +25,12 @@ internal class TeaStoreImpl<State : Any, Event : Any, Command : Any>(
     override fun attach(coroutineScope: CoroutineScope) {
         super.attach(coroutineScope)
         start()
+    }
+
+    override fun cancelled() {
+        CoroutineScope(Dispatchers.IO).launch {
+            cancellationHandler?.onCancel(stateFlow.value)
+        }
     }
 
     private fun start() {
