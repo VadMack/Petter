@@ -19,7 +19,7 @@ data class PetListItemModel(
     @Contextual val birthDate: LocalDate,
     val hasAchievements: Boolean,
     val imagePaths: List<String>?,
-    val state: PetCardState,
+    val state: PetCardState?,
     val address: AddressModel? = null,
     val liked: Boolean
 ) {

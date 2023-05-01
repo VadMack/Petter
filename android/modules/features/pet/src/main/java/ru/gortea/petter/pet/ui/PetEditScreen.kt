@@ -120,6 +120,7 @@ internal fun PetEditScreen(
             avatarClicked = { store.dispatch(PetUiEvent.AvatarClicked) },
             reloadClicked = { store.dispatch(PetUiEvent.LoadPet(id)) },
             fieldUpdated = { store.dispatch(PetUiEvent.EditField(it)) },
+            fieldDeleted = { store.dispatch(PetUiEvent.DeleteField(it)) },
             fieldsAdded = { store.dispatch(PetUiEvent.AddFields(it)) }
         )
     }
@@ -154,6 +155,7 @@ internal fun PetEditScreen(
     avatarClicked: () -> Unit,
     reloadClicked: () -> Unit,
     fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit,
     fieldsAdded: (List<PetField>) -> Unit
 ) {
     Scaffold(
@@ -173,6 +175,7 @@ internal fun PetEditScreen(
             avatarClicked = avatarClicked,
             reloadClicked = reloadClicked,
             fieldUpdated = fieldUpdated,
+            fieldDeleted = fieldDeleted,
             fieldsAdded = fieldsAdded,
             modifier = Modifier.padding(it)
         )
@@ -188,6 +191,7 @@ private fun PetEditScreenRoot(
     hideClicked: () -> Unit,
     avatarClicked: () -> Unit,
     fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit,
     fieldsAdded: (List<PetField>) -> Unit,
     reloadClicked: () -> Unit,
     modifier: Modifier
@@ -204,6 +208,7 @@ private fun PetEditScreenRoot(
                 hideClicked = hideClicked,
                 avatarClicked = avatarClicked,
                 fieldUpdated = fieldUpdated,
+                fieldDeleted = fieldDeleted,
                 fieldsAdded = fieldsAdded,
                 modifier = modifier
             )
@@ -221,6 +226,7 @@ private fun PetEditScreenContent(
     hideClicked: () -> Unit,
     avatarClicked: () -> Unit,
     fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit,
     fieldsAdded: (List<PetField>) -> Unit,
     modifier: Modifier
 ) {
@@ -277,17 +283,31 @@ private fun PetEditScreenContent(
         ) {
             state.fields.forEach {
                 when (it) {
-                    is PetField.SimplePetField -> PetEditScreenSimpleField(it, fieldUpdated)
-                    is PetField.EnumPetField -> PetEditScreenEnumField(it, fieldUpdated)
-                    is PetField.DatePetField -> PetEditScreenDateField(
-                        it,
-                        dateFormatter,
-                        fieldUpdated
+                    is PetField.SimplePetField -> PetEditScreenSimpleField(
+                        field = it,
+                        fieldUpdated = fieldUpdated,
+                        fieldDeleted = fieldDeleted
                     )
-                    is PetField.ListPetField -> PetEditScreenListField(it, fieldUpdated)
+                    is PetField.EnumPetField -> PetEditScreenEnumField(
+                        field = it,
+                        fieldUpdated = fieldUpdated,
+                        fieldDeleted = fieldDeleted
+                    )
+                    is PetField.DatePetField -> PetEditScreenDateField(
+                        field = it,
+                        dateFormatter = dateFormatter,
+                        fieldUpdated = fieldUpdated,
+                        fieldDeleted = fieldDeleted
+                    )
+                    is PetField.ListPetField -> PetEditScreenListField(
+                        field = it,
+                        fieldUpdated = fieldUpdated,
+                        fieldDeleted = fieldDeleted
+                    )
                     is PetField.AchievementPetField -> PetEditScreenAchievementsField(
-                        it,
-                        fieldUpdated
+                        field = it,
+                        fieldUpdated = fieldUpdated,
+                        fieldDeleted = fieldDeleted
                     )
                 }
             }
@@ -322,11 +342,14 @@ private fun PetEditScreenContent(
 @Composable
 private fun PetEditScreenSimpleField(
     field: PetField.SimplePetField,
-    fieldUpdated: (PetField) -> Unit
+    fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit
 ) {
     PetDescriptionContainer(
         title = stringResource(field.titleRes),
-        isValid = field.valid
+        isValid = field.valid,
+        canDelete = field.canDelete,
+        deleteClicked = { fieldDeleted(field) }
     ) {
         TextField(
             state = field.textField,
@@ -343,11 +366,14 @@ private fun PetEditScreenSimpleField(
 @Composable
 private fun PetEditScreenEnumField(
     field: PetField.EnumPetField,
-    fieldUpdated: (PetField) -> Unit
+    fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit
 ) {
     PetDescriptionContainer(
         title = stringResource(field.titleRes),
-        isValid = field.valid
+        isValid = field.valid,
+        canDelete = field.canDelete,
+        deleteClicked = { fieldDeleted(field) }
     ) {
         Dropdown(
             target = { showMenu ->
@@ -386,11 +412,14 @@ private fun PetEditScreenEnumField(
 private fun PetEditScreenDateField(
     field: PetField.DatePetField,
     dateFormatter: DateFormatter,
-    fieldUpdated: (PetField) -> Unit
+    fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit
 ) {
     PetDescriptionContainer(
         title = stringResource(field.titleRes),
-        isValid = field.valid
+        isValid = field.valid,
+        canDelete = field.canDelete,
+        deleteClicked = { fieldDeleted(field) }
     ) {
         val formatted = remember(field.date) { field.date?.let(dateFormatter::format) }
 
@@ -426,10 +455,16 @@ private fun PetEditScreenDateField(
 }
 
 @Composable
-private fun PetEditScreenListField(field: PetField.ListPetField, fieldUpdated: (PetField) -> Unit) {
+private fun PetEditScreenListField(
+    field: PetField.ListPetField,
+    fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit
+) {
     PetDescriptionContainer(
         title = stringResource(field.titleRes),
-        isValid = field.valid
+        isValid = field.valid,
+        canDelete = field.canDelete,
+        deleteClicked = { fieldDeleted(field) }
     ) {
 
         Column(
@@ -481,11 +516,14 @@ private fun PetEditScreenListField(field: PetField.ListPetField, fieldUpdated: (
 @Composable
 private fun PetEditScreenAchievementsField(
     field: PetField.AchievementPetField,
-    fieldUpdated: (PetField) -> Unit
+    fieldUpdated: (PetField) -> Unit,
+    fieldDeleted: (PetField) -> Unit
 ) {
     PetDescriptionContainer(
         title = stringResource(field.titleRes),
-        isValid = field.valid
+        isValid = field.valid,
+        canDelete = field.canDelete,
+        deleteClicked = { fieldDeleted(field) }
     ) {
 
         Column(
@@ -634,6 +672,7 @@ private fun PetEditScreen_Preview() {
             hideClicked = {},
             avatarClicked = {},
             fieldUpdated = {},
+            fieldDeleted = {},
             fieldsAdded = {},
             reloadClicked = {}
         )

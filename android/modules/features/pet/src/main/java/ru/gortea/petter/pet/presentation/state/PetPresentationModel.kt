@@ -59,9 +59,20 @@ internal fun PetPresentationModel.updateField(field: PetField): PetPresentationM
     return copy(fields = newFields)
 }
 
+internal fun PetPresentationModel.deleteField(field: PetField): PetPresentationModel {
+    val newFields = fields.toMutableList().apply {
+        removeIf { it.titleRes == field.titleRes }
+    }
+    return copy(fields = newFields)
+}
+
 internal fun getDefaultPresentationModel(): PetPresentationModel {
     val fields = listOf(
-        PetField.SimplePetField(R.string.name, PetFieldName.NAME, TextFieldState()),
+        PetField.SimplePetField(
+            R.string.name,
+            PetFieldName.NAME,
+            TextFieldState()
+        ),
         PetField.EnumPetField(
             R.string.gender,
             PetFieldName.GENDER,
@@ -72,8 +83,16 @@ internal fun getDefaultPresentationModel(): PetPresentationModel {
             PetFieldName.SPECIES,
             PetEnum(Species.values().map(Species::toPair))
         ),
-        PetField.SimplePetField(R.string.breed, PetFieldName.BREED, TextFieldState()),
-        PetField.DatePetField(R.string.birth_date, PetFieldName.BIRTH_DATE, null),
+        PetField.SimplePetField(
+            R.string.breed,
+            PetFieldName.BREED,
+            TextFieldState()
+        ),
+        PetField.DatePetField(
+            R.string.birth_date,
+            PetFieldName.BIRTH_DATE,
+            null
+        ),
         PetField.SimplePetField(
             R.string.price,
             PetFieldName.PRICE,
@@ -134,7 +153,8 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
         fields.add(
             PetField.AchievementPetField(
                 R.string.achievements,
-                awards.mapKeys { TextFieldState(it.key) }
+                awards.mapKeys { TextFieldState(it.key) },
+                canDelete = true
             )
         )
     }
@@ -144,7 +164,8 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.SimplePetField(
                 R.string.description,
                 PetFieldName.DESCRIPTION,
-                TextFieldState(description)
+                TextFieldState(description),
+                canDelete = true
             )
         )
     }
@@ -154,7 +175,8 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.SimplePetField(
                 R.string.weight,
                 PetFieldName.WEIGHT,
-                TextFieldState(weight.toString()).number()
+                TextFieldState(weight.toString()).number(),
+                canDelete = true
             )
         )
     }
@@ -164,7 +186,8 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.SimplePetField(
                 R.string.height,
                 PetFieldName.HEIGHT,
-                TextFieldState(height.toString()).number()
+                TextFieldState(height.toString()).number(),
+                canDelete = true
             )
         )
     }
@@ -175,7 +198,8 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
             PetField.ListPetField(
                 R.string.vaccinations,
                 PetFieldName.VACCINATIONS,
-                vaccines.map { TextFieldState(it) }
+                vaccines.map { TextFieldState(it) },
+                canDelete = true
             )
         )
     }
@@ -205,7 +229,8 @@ internal fun PetPresentationModel.toPetFullModel(): PetFullModel {
         price = -1,
         species = Species.CAT,
         breed = "",
-        gender = Gender.MALE, state = PetCardState.OPEN
+        gender = Gender.MALE,
+        state = PetCardState.OPEN
     )
 
     fields.forEach { field ->
@@ -216,6 +241,10 @@ internal fun PetPresentationModel.toPetFullModel(): PetFullModel {
             is PetField.EnumPetField -> fullModel.updateField(field)
             is PetField.ListPetField -> fullModel.updateField(field)
         }
+    }
+
+    getUnusedFields(fields).forEach { field ->
+        fullModel = fullModel.deleteField(field)
     }
 
     return fullModel
@@ -230,20 +259,24 @@ private fun PetFullModel.updateField(field: PetField.SimplePetField): PetFullMod
         PetFieldName.HEIGHT -> copy(height = text.toInt())
         PetFieldName.WEIGHT -> copy(weight = text.toInt())
         PetFieldName.DESCRIPTION -> copy(description = text)
-        else -> this
+        else -> error("Incorrect field type: $field")
     }
 }
 
 private fun PetFullModel.updateField(field: PetField.AchievementPetField): PetFullModel {
-    if (field.map.isEmpty()) return this
-
-    return copy(
-        achievements = field.map.mapKeys { it.key.text.getStringText() }
-    )
+    return when(field.fieldName) {
+        PetFieldName.ACHIEVEMENTS -> copy(
+            achievements = field.map.mapKeys { it.key.text.getStringText() }
+        )
+        else -> error("Incorrect field type: $field")
+    }
 }
 
 private fun PetFullModel.updateField(field: PetField.DatePetField): PetFullModel {
-    return copy(birthDate = field.date)
+    return when(field.fieldName) {
+        PetFieldName.BIRTH_DATE -> copy(birthDate = field.date)
+        else -> error("Incorrect field type: $field")
+    }
 }
 
 private fun PetFullModel.updateField(field: PetField.EnumPetField): PetFullModel {
@@ -251,10 +284,24 @@ private fun PetFullModel.updateField(field: PetField.EnumPetField): PetFullModel
     return when (field.fieldName) {
         PetFieldName.SPECIES -> copy(species = Species.valueOf(text))
         PetFieldName.GENDER -> copy(gender = Gender.valueOf(text))
-        else -> this
+        else -> error("Incorrect field type: $field")
     }
 }
 
 private fun PetFullModel.updateField(field: PetField.ListPetField): PetFullModel {
-    return copy(vaccinations = field.list.map { it.text.getStringText() })
+    return when(field.fieldName) {
+        PetFieldName.VACCINATIONS -> copy(vaccinations = field.list.map { it.text.getStringText() })
+        else -> error("Incorrect field type: $field")
+    }
+}
+
+private fun PetFullModel.deleteField(field: PetField): PetFullModel {
+    return when (field.fieldName) {
+        PetFieldName.ACHIEVEMENTS -> copy(achievements = null)
+        PetFieldName.DESCRIPTION -> copy(description = null)
+        PetFieldName.HEIGHT -> copy(height = null)
+        PetFieldName.WEIGHT -> copy(weight = null)
+        PetFieldName.VACCINATIONS -> copy(vaccinations = null)
+        else -> error("Can not delete field $field")
+    }
 }

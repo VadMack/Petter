@@ -11,6 +11,7 @@ import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.navigation.PetNavTarget
 import ru.gortea.petter.pet.navigation.commands.PetNavCommand
 import ru.gortea.petter.pet.presentation.state.PetField
+import ru.gortea.petter.pet.presentation.state.deleteField
 import ru.gortea.petter.pet.presentation.state.getDefaultPresentationModel
 import ru.gortea.petter.pet.presentation.state.toPetPresentationModel
 import ru.gortea.petter.pet.presentation.state.updateField
@@ -83,6 +84,7 @@ internal class PetReducer(
             is UiEvent.LoadPet -> commands(Command.LoadPet(event.id))
             is UiEvent.UpdatePet -> updatePet()
             is UiEvent.EditField -> editField(event.field)
+            is UiEvent.DeleteField -> deleteField(event.field)
             is UiEvent.AddFields -> addFields(event.fields)
             is UiEvent.GoBack -> goBack()
             is UiEvent.OpenChat -> openChat()
@@ -204,6 +206,14 @@ internal class PetReducer(
         state {
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync { it.updateField(field) }
+            )
+        }
+    }
+
+    private fun MessageBuilder<State, Command>.deleteField(field: PetField) {
+        state {
+            copy(
+                petLoadingStatus = petLoadingStatus.mapContentSync { it.deleteField(field) }
             )
         }
     }

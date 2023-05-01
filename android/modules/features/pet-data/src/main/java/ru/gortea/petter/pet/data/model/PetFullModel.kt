@@ -26,7 +26,7 @@ data class PetFullModel(
     val vaccinations: List<String>? = null,
     val description: String? = null,
     val imagePaths: List<String> = emptyList(),
-    val state: PetCardState,
+    val state: PetCardState? = PetCardState.OPEN,
     val liked: Boolean = false,
     val address: AddressModel? = null
 ) : Arguments {
