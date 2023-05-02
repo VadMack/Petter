@@ -39,7 +39,7 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.BirthDateFormatter
 import ru.gortea.petter.formatters.SimpleDateFormatter
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
@@ -95,7 +95,7 @@ internal fun PetEditScreen(
     var showModal by remember { mutableStateOf(false) }
 
     val component = getComponent<PetComponent>()
-    val dateFormatter = remember { component.dateFormatter }
+    val dateFormatter = remember { component.simpleDateFormatter }
 
     val store by storeHolder {
         createPetStore(
@@ -147,7 +147,7 @@ internal fun PetEditScreen(
 @Composable
 internal fun PetEditScreen(
     state: PetEditUiState,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     backClicked: () -> Unit,
     saveClicked: () -> Unit,
     showClicked: () -> Unit,
@@ -185,7 +185,7 @@ internal fun PetEditScreen(
 @Composable
 private fun PetEditScreenRoot(
     state: PetEditUiState,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     saveClicked: () -> Unit,
     showClicked: () -> Unit,
     hideClicked: () -> Unit,
@@ -220,7 +220,7 @@ private fun PetEditScreenRoot(
 @Composable
 private fun PetEditScreenContent(
     state: PetEditFullUiModel,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     saveClicked: () -> Unit,
     showClicked: () -> Unit,
     hideClicked: () -> Unit,
@@ -411,7 +411,7 @@ private fun PetEditScreenEnumField(
 @Composable
 private fun PetEditScreenDateField(
     field: PetField.DatePetField,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     fieldUpdated: (PetField) -> Unit,
     fieldDeleted: (PetField) -> Unit
 ) {
@@ -427,6 +427,7 @@ private fun PetEditScreenDateField(
 
         if (showDialog) {
             CalendarDialog(
+                defaultDate = field.date ?: LocalDate.now(),
                 dateSelected = {
                     fieldUpdated(field.copy(date = it).validated())
                 },

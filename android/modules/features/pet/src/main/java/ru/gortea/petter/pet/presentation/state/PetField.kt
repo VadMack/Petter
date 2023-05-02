@@ -7,6 +7,7 @@ import ru.gortea.petter.ui_kit.text_field.isEmpty
 import ru.gortea.petter.ui_kit.text_field.isNotEmpty
 import ru.gortea.petter.ui_kit.text_field.isNumber
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit.MONTHS
 
 internal sealed class PetField(
     @StringRes open val titleRes: Int,
@@ -111,7 +112,7 @@ internal sealed class PetField(
     ) : PetField(titleRes, fieldName, valid) {
 
         override fun validated(): PetField {
-            return copy(valid = date != null)
+            return copy(valid = date != null && MONTHS.between(date, LocalDate.now()) >= 1)
         }
 
         override fun deletable(): PetField = copy(canDelete = true)

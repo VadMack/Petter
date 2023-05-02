@@ -35,7 +35,7 @@ import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.BirthDateFormatter
 import ru.gortea.petter.formatters.SimpleDateFormatter
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.pet.R
@@ -112,7 +112,7 @@ internal fun PetScreen(
 @Composable
 internal fun PetScreen(
     state: PetUiState,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     backClicked: () -> Unit,
     deleteClicked: () -> Unit,
     likeClicked: () -> Unit,
@@ -196,7 +196,7 @@ private fun Like(
 @Composable
 private fun PetScreenRoot(
     state: PetUiState,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
     reloadClicked: () -> Unit,
@@ -229,7 +229,7 @@ private fun PetScreenRoot(
 private fun PetScreenContent(
     state: PetFullUiModel,
     refreshing: Boolean,
-    dateFormatter: DateFormatter,
+    dateFormatter: BirthDateFormatter,
     editClicked: () -> Unit,
     chatClicked: () -> Unit,
     reloadClicked: () -> Unit,
@@ -343,7 +343,7 @@ private fun PetScreenEnumField(field: PetField.EnumPetField) {
 }
 
 @Composable
-private fun PetScreenDateField(field: PetField.DatePetField, dateFormatter: DateFormatter) {
+private fun PetScreenDateField(field: PetField.DatePetField, dateFormatter: BirthDateFormatter) {
     PetDescriptionContainer(title = stringResource(field.titleRes)) {
         val formatted = remember(field.date) { dateFormatter.format(field.date!!) }
 

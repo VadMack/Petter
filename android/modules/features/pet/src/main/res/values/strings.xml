@@ -36,6 +36,7 @@
 
     <string name="breed">Порода</string>
     <string name="birth_date">Дата рождения</string>
+    <string name="ages">Возраст</string>
     <string name="price">Цена (руб)</string>
     <string name="achievements">Награды</string>
     <string name="description">Описание</string>

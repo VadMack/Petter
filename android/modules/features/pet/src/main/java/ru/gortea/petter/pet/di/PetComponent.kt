@@ -1,6 +1,7 @@
 package ru.gortea.petter.pet.di
 
-import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.BirthDateFormatter
+import ru.gortea.petter.formatters.SimpleDateFormatter
 import ru.gortea.petter.pet.data.CreatePetRepository
 import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.data.GetPetRepository
@@ -16,7 +17,8 @@ interface PetComponent {
     val deletePetRepository: DeletePetRepository
     val getPetRepository: GetPetRepository
     val userRepository: CurrentUserRepository
-    val dateFormatter: DateFormatter
+    val dateFormatter: BirthDateFormatter
+    val simpleDateFormatter: SimpleDateFormatter
 
     val petNodeProvider: PetExternalNodeProvider
 }

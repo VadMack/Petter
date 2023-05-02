@@ -32,10 +32,11 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun CalendarDialog(
+    defaultDate: LocalDate = LocalDate.now(),
     dateSelected: (LocalDate) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val selDate = remember { mutableStateOf(LocalDate.now()) }
+    val selDate = remember { mutableStateOf(defaultDate) }
 
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties()) {
         Column(
@@ -112,11 +113,7 @@ private fun CalendarDialogView(
         update = { view ->
             view.setOnDateChangeListener { _, year, month, dayOfMonth ->
                 dateSelected(
-                    LocalDate
-                        .now()
-                        .withMonth(month + 1)
-                        .withYear(year)
-                        .withDayOfMonth(dayOfMonth)
+                    LocalDate.of(year, month + 1, dayOfMonth)
                 )
             }
         }
