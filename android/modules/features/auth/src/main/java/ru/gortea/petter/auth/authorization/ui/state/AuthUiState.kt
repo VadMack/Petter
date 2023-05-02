@@ -6,5 +6,6 @@ import ru.gortea.petter.ui_kit.text_field.TextFieldState
 internal data class AuthUiState(
     val username: TextFieldState,
     val password: TextFieldState,
-    val authorizeButton: ButtonState
+    val authorizeButton: ButtonState,
+    val needErrorToast: Boolean
 )

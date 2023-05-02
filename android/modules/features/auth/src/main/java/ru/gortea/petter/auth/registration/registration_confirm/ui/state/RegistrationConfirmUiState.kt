@@ -7,5 +7,6 @@ import ru.gortea.petter.ui_kit.text_field.number
 internal data class RegistrationConfirmUiState(
     val codeState: TextFieldState = TextFieldState().number(),
     val sendCodeButtonState: ButtonState = ButtonState(),
-    val maskedEmail: String = "****"
+    val maskedEmail: String = "****",
+    val needErrorToast: Boolean = false
 )

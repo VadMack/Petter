@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.gortea.petter.arch.android.compose.ToastIfTrue
 import ru.gortea.petter.arch.android.compose.collect
 import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
@@ -83,6 +84,8 @@ private fun RegistrationScreen(
     authorizeClicked: () -> Unit,
     backClicked: () -> Unit
 ) {
+    ToastIfTrue(state.needToastError, R.string.registration_error)
+
     Scaffold(
         topBar = {
             Toolbar(

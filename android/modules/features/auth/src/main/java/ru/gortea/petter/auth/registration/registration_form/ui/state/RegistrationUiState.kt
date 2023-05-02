@@ -9,5 +9,6 @@ internal data class RegistrationUiState(
     val usernameState: TextFieldState = TextFieldState(),
     val passwordState: TextFieldState = TextFieldState().hideText(),
     val passwordConfirmState: TextFieldState = TextFieldState().hideText(),
-    val createAccountState: ButtonState = ButtonState()
+    val createAccountState: ButtonState = ButtonState(),
+    val needToastError: Boolean = false
 )
