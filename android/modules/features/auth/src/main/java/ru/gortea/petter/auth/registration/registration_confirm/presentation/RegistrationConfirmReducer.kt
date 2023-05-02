@@ -65,7 +65,7 @@ internal class RegistrationConfirmReducer(
         when (status) {
             is DataState.Loading, is DataState.Empty -> Unit
             is DataState.Content -> finish()
-            is DataState.Fail -> Unit  /* Todo show error and navigate to auth */
+            is DataState.Fail -> router.updateRoot(AuthorizationNavTarget.Authorization)
         }
     }
 

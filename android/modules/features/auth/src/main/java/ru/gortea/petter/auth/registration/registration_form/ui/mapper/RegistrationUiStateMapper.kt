@@ -5,6 +5,7 @@ import ru.gortea.petter.arch.android.util.toTextFieldState
 import ru.gortea.petter.auth.registration.registration_form.presentation.RegistrationState
 import ru.gortea.petter.auth.registration.registration_form.ui.state.RegistrationUiState
 import ru.gortea.petter.data.model.DataState
+import ru.gortea.petter.data.model.isFail
 import ru.gortea.petter.ui_kit.button.ButtonState
 import ru.gortea.petter.ui_kit.text_field.email
 
@@ -16,7 +17,8 @@ internal class RegistrationUiStateMapper : UiStateMapper<RegistrationState, Regi
             usernameState = state.username.toTextFieldState(),
             passwordState = state.password.toTextFieldState(),
             passwordConfirmState = state.passwordConfirm.toTextFieldState(),
-            createAccountState = state.registrationStatus.toButtonState()
+            createAccountState = state.registrationStatus.toButtonState(),
+            needToastError = state.registrationStatus.isFail
         )
     }
 

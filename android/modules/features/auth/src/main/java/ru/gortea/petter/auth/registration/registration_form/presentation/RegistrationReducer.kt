@@ -39,10 +39,14 @@ internal class RegistrationReducer(
         state {
             when (event.state) {
                 is DataState.Loading, is DataState.Empty -> Unit
-                is DataState.Content -> navigateToRegistrationConfirm(
-                    event.state.content,
-                    password.text
-                )
+                is DataState.Content -> {
+                    if (!event.state.refreshing) {
+                        navigateToRegistrationConfirm(
+                            event.state.content,
+                            password.text
+                        )
+                    }
+                }
                 is DataState.Fail -> declineRegistration()
             }
             copy(registrationStatus = event.state)
@@ -51,10 +55,10 @@ internal class RegistrationReducer(
 
     private fun MessageBuilder<State, Command>.declineRegistration() {
         commands(Command.DeclineRegistration(state.email.text))
-        // todo show error message
     }
 
     private fun navigateToRegistrationConfirm(user: UserModel, pwd: String) {
+        println("xxx: navigate")
         router.navigateTo(
             Registration.RegistrationConfirm(
                 email = user.email,

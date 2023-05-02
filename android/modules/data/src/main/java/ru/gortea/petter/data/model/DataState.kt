@@ -18,6 +18,9 @@ val DataState<*>.isContent: Boolean
 val DataState<*>.isLoading: Boolean
     get() = this is DataState.Loading
 
+val DataState<*>.isFail: Boolean
+    get() = this is DataState.Fail
+
 suspend fun <T, R> DataState<T>.mapContent(mapper: suspend (T) -> R): DataState<R> {
     return when (this) {
         is DataState.Content -> DataState.Content(mapper(content))

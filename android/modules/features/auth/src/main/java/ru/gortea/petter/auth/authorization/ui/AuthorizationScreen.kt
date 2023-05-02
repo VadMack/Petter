@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.gortea.petter.arch.android.compose.ToastIfTrue
 import ru.gortea.petter.arch.android.compose.collect
 import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
@@ -59,7 +60,7 @@ internal fun AuthorizationScreen(
             state = state,
             usernameChanged = { store.dispatch(AuthUiEvent.UsernameChanged(it)) },
             passwordChanged = { store.dispatch(AuthUiEvent.PasswordChanged(it)) },
-            authClick = { store.dispatch(AuthUiEvent.Authorize)},
+            authClick = { store.dispatch(AuthUiEvent.Authorize) },
             registrationClick = { store.dispatch(AuthUiEvent.Registration) }
         )
     }
@@ -73,6 +74,8 @@ private fun AuthorizationScreen(
     authClick: () -> Unit,
     registrationClick: () -> Unit
 ) {
+    ToastIfTrue(state.needErrorToast, R.string.connection_error)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -186,7 +189,8 @@ private fun AuthorizationScreen_Preview() {
         val state = AuthUiState(
             username = TextFieldState(),
             password = TextFieldState().hideText(),
-            authorizeButton = ButtonState()
+            authorizeButton = ButtonState(),
+            needErrorToast = false
         )
 
         AuthorizationScreen(

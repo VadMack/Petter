@@ -6,6 +6,9 @@
     <string name="do_not_have_account">Еще нет аккаунта?</string>
     <string name="registrate">Зарегистрироваться</string>
 
+    <string name="connection_error">Проверьте интернет соедниение</string>
+    <string name="registration_error">Ошибка регистрации</string>
+
     <string name="registration">Регистрация</string>
 
     <string name="email_label">Email</string>
