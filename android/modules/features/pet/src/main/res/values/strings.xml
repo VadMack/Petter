@@ -9,7 +9,8 @@
     <string name="button_save">Сохранить</string>
     <string name="button_hide">Скрыть</string>
     <string name="button_show">Сделать видимым</string>
-    <string name="button_add">Добавить поле</string>
+    <string name="button_add_field">Добавить поле</string>
+    <string name="button_add">Добавить</string>
     <string name="zero_price">По договоренности</string>
 
     <string name="add_fields_title">Добавить поля</string>

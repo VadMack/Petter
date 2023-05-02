@@ -145,7 +145,7 @@ internal class PetReducer(
             copy(
                 petLoadingStatus = petLoadingStatus.mapContentSync {
                     val newList = it.fields.toMutableList()
-                    newList.addAll(fields)
+                    newList.addAll(fields.map(PetField::deletable))
                     it.copy(fields = newList)
                 }
             )
