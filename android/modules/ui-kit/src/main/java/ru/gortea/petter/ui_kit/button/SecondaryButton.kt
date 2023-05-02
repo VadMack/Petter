@@ -20,7 +20,8 @@ fun SecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null
+    trailingIcon: @Composable (() -> Unit)? = null,
+    centerIcon: @Composable (() -> Unit)? = null
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -30,10 +31,14 @@ fun SecondaryButton(
     ) {
         leadingIcon?.invoke()
 
-        Text(
-            text = text.uppercase(),
-            style = MaterialTheme.typography.button
-        )
+        if (text.isEmpty()) {
+            centerIcon?.invoke()
+        } else {
+            Text(
+                text = text.uppercase(),
+                style = MaterialTheme.typography.button
+            )
+        }
 
         trailingIcon?.invoke()
     }

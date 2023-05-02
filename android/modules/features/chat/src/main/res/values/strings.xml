@@ -4,4 +4,7 @@
         Диалог пуст\nНапишите первое сообщение!
     </string>
     <string name="message_placeholder">Напишите сообщение</string>
+
+    <string name="load_page_failed">Не удалось загрузить сообщения</string>
+    <string name="reload">Попробовать снова</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -48,12 +49,14 @@ import ru.gortea.petter.chat.ui.model.MessageUiModel
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.paging.android.rememberPagingState
 import ru.gortea.petter.data.paging.model.PagingDataState
+import ru.gortea.petter.data.paging.model.PagingDataState.Paged
 import ru.gortea.petter.navigation.PetterRouter
 import ru.gortea.petter.theme.Base100
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.theme.Primary100
 import ru.gortea.petter.theme.Primary600
+import ru.gortea.petter.ui_kit.button.TextButton
 import ru.gortea.petter.ui_kit.icon.ClickableIcon
 import ru.gortea.petter.ui_kit.icon.Icon
 import ru.gortea.petter.ui_kit.placeholder.EmptyPlaceholder
@@ -214,7 +217,7 @@ private fun ChatScreen(
                     .weight(1f)
                     .fillMaxWidth()
             )
-            is PagingDataState.Paged -> ChatScreenContent(
+            is Paged -> ChatScreenContent(
                 state = state.messages,
                 offset = state.offset,
                 loadPage = loadPage,
@@ -253,7 +256,7 @@ private fun ChatScreen(
 
 @Composable
 private fun ChatScreenContent(
-    state: PagingDataState.Paged<MessageUiModel>,
+    state: Paged<MessageUiModel>,
     offset: Int,
     loadPage: () -> Unit,
     modifier: Modifier = Modifier
@@ -278,8 +281,12 @@ private fun ChatScreenContent(
                 Spacer(modifier = Modifier.height(4.dp))
             }
 
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
+            when (state) {
+                is Paged.Content, is Paged.Refresh -> item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+                is Paged.Loading -> item { MessagesLoadingItem() }
+                is Paged.Fail -> item { MessagesErrorItem(loadPage) }
             }
         }
     }
@@ -307,6 +314,40 @@ private fun MessageItem(item: MessageUiModel) {
             alignment = Alignment.End,
             background = Primary100,
             dateColor = Primary600
+        )
+    }
+}
+
+@Composable
+private fun MessagesLoadingItem() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+private fun MessagesErrorItem(reloadClicked: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.load_page_failed),
+            style = MaterialTheme.typography.body1.copy(color = Base600)
+        )
+
+        TextButton(
+            text = stringResource(R.string.reload),
+            onClick = reloadClicked
         )
     }
 }
@@ -369,7 +410,7 @@ private fun ChatScreen_Preview() {
     val state = ChatUiState.ContentUiState(
         companionName = "Makar",
         companionAvatar = null,
-        messages = PagingDataState.Paged.Content(
+        messages = Paged.Content(
             listOf(
                 MessageUiModel(
                     id = "",

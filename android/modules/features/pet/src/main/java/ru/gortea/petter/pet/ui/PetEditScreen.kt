@@ -328,7 +328,7 @@ private fun PetEditScreenContent(
 
             if (state.unusedFields.isNotEmpty()) {
                 SecondaryButton(
-                    text = stringResource(R.string.button_add),
+                    text = stringResource(R.string.button_add_field),
                     onClick = { addFieldsDialogShowed = true },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -501,7 +501,14 @@ private fun PetEditScreenListField(
             }
 
             SecondaryButton(
-                text = stringResource(R.string.button_add),
+                text = "",
+                centerIcon = {
+                    Icon(
+                        icon = UiKitR.drawable.ic_plus,
+                        tint = MaterialTheme.colors.primary,
+                        size = 24.dp
+                    )
+                },
                 onClick = {
                     val newList = field.list.toMutableList()
                     newList.add(TextFieldState())
@@ -541,7 +548,8 @@ private fun PetEditScreenAchievementsField(
                         TextField(
                             state = competition,
                             onValueChange = {
-                                val newState = competition.copy(text = TextModel(it), isIncorrect = false)
+                                val newState =
+                                    competition.copy(text = TextModel(it), isIncorrect = false)
                                 val newMap = field.map.toMutableMap()
                                 newMap.remove(competition)
                                 newMap[newState] = level
@@ -596,8 +604,16 @@ private fun PetEditScreenAchievementsField(
                     }
                 }
 
+
             SecondaryButton(
-                text = stringResource(R.string.button_add),
+                text = "",
+                centerIcon = {
+                    Icon(
+                        icon = UiKitR.drawable.ic_plus,
+                        tint = MaterialTheme.colors.primary,
+                        size = 24.dp
+                    )
+                },
                 onClick = {
                     val newMap = field.map.toMutableMap()
                     newMap[TextFieldState()] = AchievementLevel.WINNER
