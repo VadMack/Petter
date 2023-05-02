@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.compose.ui.graphics.Color
 import ru.gortea.petter.arch.UiStateMapper
 import ru.gortea.petter.data.paging.model.mapContent
-import ru.gortea.petter.formatters.DateFormatter
+import ru.gortea.petter.formatters.BirthDateFormatter
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.list.R
@@ -20,7 +20,7 @@ import ru.gortea.petter.ui_kit.TextModel
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 internal class PetListUiStateMapper(
-    private val formatter: DateFormatter
+    private val formatter: BirthDateFormatter
 ) : UiStateMapper<PetListState, PetListUiState> {
 
     override fun map(state: PetListState): PetListUiState {

@@ -3,7 +3,7 @@ package ru.gortea.petter.formatters
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class SimpleDateFormatter : DateFormatter {
+class SimpleDateFormatter : BirthDateFormatter {
 
     private val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 

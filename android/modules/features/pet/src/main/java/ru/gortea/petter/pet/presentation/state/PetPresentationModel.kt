@@ -137,7 +137,11 @@ internal fun PetFullModel.toPetPresentationModel(editMode: Boolean): PetPresenta
     fields.addAll(
         listOf(
             PetField.SimplePetField(R.string.breed, PetFieldName.BREED, TextFieldState(breed)),
-            PetField.DatePetField(R.string.birth_date, PetFieldName.BIRTH_DATE, birthDate),
+            PetField.DatePetField(
+                if (editMode) R.string.birth_date else R.string.ages,
+                PetFieldName.BIRTH_DATE,
+                birthDate
+            ),
             PetField.SimplePetField(
                 R.string.price,
                 PetFieldName.PRICE,
