@@ -1,4 +1,4 @@
-package com.vadmack.petter.file;
+package com.vadmack.petter.file.metadata;
 
 import com.vadmack.petter.ad.Ad;
 import com.vadmack.petter.ad.AdService;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor(onConstructor_ = {@Lazy})
 @Service
-public class  FileMetadataService {
+public class FileMetadataService {
 
   private final FileMetadataRepository fileMetadataRepository;
   private final UserService userService;

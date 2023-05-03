@@ -2,6 +2,10 @@ package com.vadmack.petter.file;
 
 import com.vadmack.petter.app.exception.ServerSideException;
 import com.vadmack.petter.app.exception.ValidationException;
+import com.vadmack.petter.file.metadata.Attachment;
+import com.vadmack.petter.file.metadata.AttachmentType;
+import com.vadmack.petter.file.metadata.FileMetadata;
+import com.vadmack.petter.file.metadata.FileMetadataService;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -44,11 +48,14 @@ public class ImageService {
     }
   }
 
+  /**
+   * For messages attachment will be set later during message sending
+   */
   @Transactional
   public FileMetadata save(@NotNull MultipartFile image,
                            @NotNull String userId,
                            @NotNull AttachmentType attachmentType,
-                           @NotNull String attachmentId) {
+                           String attachmentId) {
     validateContentType(image);
     String generatedFilename = generateFilename(FilenameUtils.getExtension(image.getOriginalFilename()));
     Path relativePath = Paths.get(photoStorage, USERS_PHOTO_STORAGE_FOLDER_NAME, userId, generatedFilename);
@@ -84,10 +91,6 @@ public class ImageService {
 
   private String generateFilename(@NotNull String extension) {
     return UUID.randomUUID() + "." + extension;
-  }
-
-  public boolean isOwner(@NotNull User user, @NotNull String folderName) {
-    return user.getId().equals(folderName);
   }
 
   @Transactional

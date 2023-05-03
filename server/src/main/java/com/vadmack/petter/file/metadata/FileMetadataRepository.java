@@ -1,4 +1,4 @@
-package com.vadmack.petter.file;
+package com.vadmack.petter.file.metadata;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;

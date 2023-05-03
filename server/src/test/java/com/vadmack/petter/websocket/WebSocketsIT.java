@@ -2,7 +2,7 @@ package com.vadmack.petter.websocket;
 
 
 import com.vadmack.petter.chat.RSAUtils;
-import com.vadmack.petter.chat.message.ChatMessageDto;
+import com.vadmack.petter.chat.message.dto.ChatMessageDto;
 import com.vadmack.petter.chat.message.ChatMessageRepository;
 import com.vadmack.petter.chat.room.ChatRoom;
 import com.vadmack.petter.chat.room.ChatRoomRepository;

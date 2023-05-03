@@ -23,6 +23,7 @@ public class ImageController implements SecuredRestController {
 
   private final ImageService imageService;
 
+  @PreAuthorize("@imageControllerPermissionChecker.hasDownloadPermission(#user, #folderName, #fileName)")
   @GetMapping(value ="/" +  USERS_PHOTO_STORAGE_FOLDER_NAME + "/{folderName}/{fileName:.+}",
           produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
   public ResponseEntity<Resource> downloadImage(@AuthenticationPrincipal User user,
@@ -37,7 +38,7 @@ public class ImageController implements SecuredRestController {
             .body(image);
   }
 
-  @PreAuthorize("@imageService.isOwner(#user, #folderName)")
+  @PreAuthorize("@imageControllerPermissionChecker.isOwner(#user, #folderName)")
   @DeleteMapping(value ="/" +  USERS_PHOTO_STORAGE_FOLDER_NAME + "/{folderName}/{fileName:.+}",
           produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
   public ResponseEntity<Resource> deleteImage(@AuthenticationPrincipal User user,

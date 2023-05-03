@@ -1,4 +1,4 @@
-package com.vadmack.petter.chat.message;
+package com.vadmack.petter.chat.message.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,7 @@ public class ChatMessageDto {
   private String senderId;
   private String recipientId;
   private String sentTime;
+  private String imagePath;
 
   public ChatMessageDto(String content, String senderId, String recipientId) {
     this.content = content;

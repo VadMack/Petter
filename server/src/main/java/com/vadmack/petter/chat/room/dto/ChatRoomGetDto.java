@@ -1,6 +1,6 @@
 package com.vadmack.petter.chat.room.dto;
 
-import com.vadmack.petter.chat.message.ChatMessageDto;
+import com.vadmack.petter.chat.message.dto.ChatMessageDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

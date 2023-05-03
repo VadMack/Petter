@@ -18,6 +18,7 @@ public class ChatMessage {
   private String recipientId;
   @Indexed
   private Instant sentTime;
+  private String imagePath;
 
   public ChatMessage(String content, String senderId, String recipientId) {
     this.content = content;

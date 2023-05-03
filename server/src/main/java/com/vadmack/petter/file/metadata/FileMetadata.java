@@ -1,4 +1,4 @@
-package com.vadmack.petter.file;
+package com.vadmack.petter.file.metadata;
 
 import com.vadmack.petter.app.model.MongoModel;
 import lombok.Builder;

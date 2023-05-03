@@ -1,6 +1,6 @@
 package com.vadmack.petter.chat;
 
-import com.vadmack.petter.chat.message.ChatMessageDto;
+import com.vadmack.petter.chat.message.dto.ChatMessageDto;
 import com.vadmack.petter.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

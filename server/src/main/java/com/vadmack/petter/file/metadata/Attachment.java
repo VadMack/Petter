@@ -1,4 +1,4 @@
-package com.vadmack.petter.file;
+package com.vadmack.petter.file.metadata;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

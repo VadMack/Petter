@@ -2,7 +2,7 @@ package com.vadmack.petter.chat.room;
 
 import com.vadmack.petter.app.utils.AppUtils;
 import com.vadmack.petter.chat.RSAUtils;
-import com.vadmack.petter.chat.message.ChatMessageDto;
+import com.vadmack.petter.chat.message.dto.ChatMessageDto;
 import com.vadmack.petter.chat.room.dto.ChatRoomCreateDto;
 import com.vadmack.petter.chat.room.dto.ChatRoomGetDto;
 import com.vadmack.petter.user.User;
@@ -61,6 +61,11 @@ public class ChatRoomService {
 
   public void save(@NotNull ChatRoom chatRoom) {
     chatRoomRepository.save(chatRoom);
+  }
+
+  public boolean isParticipant(@NotNull String chatRoomId, @NotNull String userId) {
+    ChatRoom chatRoom = getById(chatRoomId);
+    return chatRoom.getUser1().equals(userId) || chatRoom.getUser2().equals(userId);
   }
 
   public ChatRoomGetDto entityToDto(@NotNull ChatRoom entity) {

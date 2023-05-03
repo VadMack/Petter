@@ -1,4 +1,4 @@
-package com.vadmack.petter.file.dto;
+package com.vadmack.petter.file.metadata;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

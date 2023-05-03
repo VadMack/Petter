@@ -34,3 +34,6 @@ authorization:
 
 photo-storage:
   path: ./photo-storage
+
+# Every day at 03:00
+token-cleaner-cron: 0 0 3 * * *
