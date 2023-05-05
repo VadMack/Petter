@@ -1,10 +1,14 @@
 package ru.gortea.petter.data.impl
 
+import kotlinx.coroutines.delay
 import ru.gortea.petter.data.MapSourceRepository
 
-class TestableMapRepository(
+internal class TestableMapRepository(
     private val sourceValue: Int
 ) : MapSourceRepository<Int, String>(
-    source = { sourceValue },
+    source = {
+        delay(100)
+        sourceValue
+    },
     mapper = { sourceValue.toString() }
 )

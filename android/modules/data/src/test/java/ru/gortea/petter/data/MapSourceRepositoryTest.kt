@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions.assertInstanceOf
 import ru.gortea.petter.data.impl.TestableMapRepository
 import ru.gortea.petter.data.model.DataState
 
-class MapSourceRepositoryTest : FunSpec({
+internal class MapSourceRepositoryTest : FunSpec({
 
     test("Mapped value") {
         val repository = TestableMapRepository(10)

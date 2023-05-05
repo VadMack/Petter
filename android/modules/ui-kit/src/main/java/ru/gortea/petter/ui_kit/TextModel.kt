@@ -7,14 +7,14 @@ import androidx.compose.ui.res.stringResource
 
 sealed interface TextModel {
 
-    class StringText(private val text: String) : TextModel {
+    data class StringText(private val text: String) : TextModel {
         @Composable
         override fun getText(): String = text
         override fun getText(context: Context): String = text
         override fun getStringText(): String = text
     }
 
-    class ResText(@StringRes private val textRes: Int) : TextModel {
+    data class ResText(@StringRes private val textRes: Int) : TextModel {
         @Composable
         override fun getText(): String = stringResource(textRes)
         override fun getText(context: Context): String = context.getString(textRes)

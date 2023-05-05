@@ -11,7 +11,7 @@ import ru.gortea.petter.data.paging.impl.offset.TestableOffsetPagingRepository
 import ru.gortea.petter.data.paging.impl.offset.model.TestableOffsetState
 import ru.gortea.petter.data.paging.model.PagingDataState
 
-class SourceOffsetPagingRepositoryTest : FunSpec({
+internal class SourceOffsetPagingRepositoryTest : FunSpec({
 
     test("Load 1 page with 30 offset") {
         val repository = TestableOffsetPagingRepository()

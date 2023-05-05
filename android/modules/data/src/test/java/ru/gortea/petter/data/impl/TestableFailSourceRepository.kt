@@ -1,7 +1,11 @@
 package ru.gortea.petter.data.impl
 
+import kotlinx.coroutines.delay
 import ru.gortea.petter.data.SourceRepository
 
-class TestableFailSourceRepository : SourceRepository<Unit>(
-    source = { throw Exception() }
+internal class TestableFailSourceRepository : SourceRepository<Unit>(
+    source = {
+        delay(100)
+        throw Exception()
+    }
 )

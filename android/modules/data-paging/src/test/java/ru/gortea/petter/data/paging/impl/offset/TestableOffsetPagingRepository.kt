@@ -4,7 +4,7 @@ import kotlinx.coroutines.delay
 import ru.gortea.petter.data.paging.SourceOffsetPagingRepository
 import ru.gortea.petter.data.paging.impl.offset.model.TestableOffsetState
 
-class TestableOffsetPagingRepository : SourceOffsetPagingRepository<TestableOffsetState, Int>(
+internal class TestableOffsetPagingRepository : SourceOffsetPagingRepository<TestableOffsetState, Int>(
     initialState = TestableOffsetState(),
     invalidatePageMapper = { it.copy(offset = 0) },
     offsetUpdater = { offset, state -> state.copy(offset = offset) },

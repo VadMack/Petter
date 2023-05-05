@@ -10,7 +10,7 @@ import ru.gortea.petter.data.impl.TestableFailSourceRepository
 import ru.gortea.petter.data.impl.TestableSourceRepository
 import ru.gortea.petter.data.model.DataState
 
-class SourceRepositoryTest : FunSpec({
+internal class SourceRepositoryTest : FunSpec({
 
     test("Success loading") {
         val repository = TestableSourceRepository()

@@ -11,7 +11,7 @@ import ru.gortea.petter.data.paging.impl.page.TestableSourcePagingRepository
 import ru.gortea.petter.data.paging.impl.page.model.TestablePageState
 import ru.gortea.petter.data.paging.model.PagingDataState
 
-class SourcePagingRepositoryTest : FunSpec({
+internal class SourcePagingRepositoryTest : FunSpec({
 
     test("Load 1 page") {
         val repository = TestableSourcePagingRepository()
