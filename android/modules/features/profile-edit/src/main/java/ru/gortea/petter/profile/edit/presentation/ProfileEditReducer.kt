@@ -8,7 +8,7 @@ import ru.gortea.petter.arch.android.util.text
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.model.isContent
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.AddressModel
 import ru.gortea.petter.profile.data.remote.model.AvatarModel
 import ru.gortea.petter.profile.data.remote.model.UserModel
@@ -22,7 +22,7 @@ import ru.gortea.petter.profile.edit.presentation.ProfileEditState as State
 import ru.gortea.petter.profile.edit.presentation.ProfileEditUiEvent as UiEvent
 
 internal class ProfileEditReducer(
-    private val router: PetterRouter<*>,
+    private val router: Router<*>,
     private val showModalImageChooser: () -> Unit,
     private val showImagePicker: () -> Unit,
     private val finish: () -> Unit

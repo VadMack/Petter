@@ -10,13 +10,13 @@ import ru.gortea.petter.chat.presentation.actors.ChatInitCreateRoomActor
 import ru.gortea.petter.chat.presentation.actors.ChatInitMessagesActor
 import ru.gortea.petter.chat.presentation.actors.ChatLoadPageActor
 import ru.gortea.petter.chat.presentation.actors.ChatSendMessageActor
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 
 internal typealias ChatStore = MviStore<ChatState, ChatEvent>
 
 internal fun ChatCreateRoomStore(
     userId: String,
-    router: PetterRouter<ChatNavTarget>,
+    router: Router<ChatNavTarget>,
     component: ChatComponent
 ): ChatStore {
     val repository = component.createRoomRepository
@@ -36,7 +36,7 @@ internal fun ChatCreateRoomStore(
 
 internal fun ChatStore(
     room: ChatRoomModel,
-    router: PetterRouter<ChatNavTarget>,
+    router: Router<ChatNavTarget>,
     component: ChatComponent
 ): ChatStore {
     val pageSize = 30

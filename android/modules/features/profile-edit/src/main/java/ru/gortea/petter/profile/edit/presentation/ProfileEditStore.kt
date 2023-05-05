@@ -2,7 +2,7 @@ package ru.gortea.petter.profile.edit.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.edit.di.ProfileEditComponent
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditGetCurrentUser
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditInitUpdateUserActor
@@ -14,7 +14,7 @@ internal typealias ProfileEditStore = MviStore<ProfileEditState, ProfileEditEven
 
 internal fun createProfileEditStore(
     component: ProfileEditComponent,
-    router: PetterRouter<*>,
+    router: Router<*>,
     showModalImageChooser: () -> Unit,
     showImagePicker: () -> Unit,
     finish: () -> Unit

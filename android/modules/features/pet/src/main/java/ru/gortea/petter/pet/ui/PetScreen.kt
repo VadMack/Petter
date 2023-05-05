@@ -37,7 +37,7 @@ import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.formatters.BirthDateFormatter
 import ru.gortea.petter.formatters.SimpleDateFormatter
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.pet.R
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
@@ -74,7 +74,7 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 @Composable
 internal fun PetScreen(
     id: String,
-    router: PetterRouter<PetNavTarget>,
+    router: Router<PetNavTarget>,
     needReload: Boolean
 ) {
     val component = getComponent<PetComponent>()

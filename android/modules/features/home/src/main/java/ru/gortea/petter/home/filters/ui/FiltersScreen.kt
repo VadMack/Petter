@@ -38,7 +38,7 @@ import ru.gortea.petter.home.filters.presentation.filters.RangeFilter
 import ru.gortea.petter.home.filters.presentation.filters.SimpleFieldFilter
 import ru.gortea.petter.home.filters.ui.mapper.FiltersUiStateMapper
 import ru.gortea.petter.home.filters.ui.state.FiltersUiState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.pet.list.model.PetListKeyModel
 import ru.gortea.petter.theme.Base500
 import ru.gortea.petter.theme.PetterAppTheme
@@ -54,7 +54,7 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
 internal fun FiltersScreen(
-    router: PetterRouter<*>,
+    router: Router<*>,
     keyModel: PetListKeyModel
 ) {
 

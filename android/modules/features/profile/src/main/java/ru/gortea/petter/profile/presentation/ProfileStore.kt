@@ -2,7 +2,7 @@ package ru.gortea.petter.profile.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.di.ProfileComponent
 import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.actors.ProfileCheckCurrentUserActor
@@ -14,7 +14,7 @@ internal typealias ProfileStore = MviStore<ProfileState, ProfileEvent>
 internal fun createProfileStore(
     id: String,
     component: ProfileComponent,
-    router: PetterRouter<ProfileNavTarget>,
+    router: Router<ProfileNavTarget>,
     finish: () -> Unit
 ): ProfileStore {
     val logoutController = component.logoutController

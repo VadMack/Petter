@@ -44,7 +44,7 @@ import ru.gortea.petter.chat.list.ui.state.ChatListUiState
 import ru.gortea.petter.chat.list.ui.state.model.MessageUiModel
 import ru.gortea.petter.chat.list.ui.state.model.RoomUiModel
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
 import ru.gortea.petter.ui_kit.avatar.Avatar
@@ -58,7 +58,7 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
 internal fun ChatListScreen(
-    router: PetterRouter<ChatListNavTarget>
+    router: Router<ChatListNavTarget>
 ) {
     val component = getComponent<ChatListComponent>()
 
