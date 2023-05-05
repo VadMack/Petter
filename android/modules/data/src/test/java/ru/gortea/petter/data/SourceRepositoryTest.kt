@@ -3,8 +3,9 @@ package ru.gortea.petter.data
 import app.cash.turbine.test
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.Assertions.assertTrue
 import ru.gortea.petter.data.impl.TestableFailSourceRepository
 import ru.gortea.petter.data.impl.TestableSourceRepository
 import ru.gortea.petter.data.model.DataState
@@ -14,72 +15,64 @@ class SourceRepositoryTest : FunSpec({
     test("Success loading") {
         val repository = TestableSourceRepository()
 
-        launch {
-            delay(1000)
-            repository.invalidate()
-        }
-
         repository.get().test {
             awaitItem() shouldBe DataState.Empty
-            assert(awaitItem() is DataState.Loading)
-            assert(awaitItem() is DataState.Content)
+
+            repository.invalidate()
+            assertInstanceOf(DataState.Loading::class.java, awaitItem())
+            assertInstanceOf(DataState.Content::class.java, awaitItem())
         }
     }
 
     test("Fail loading") {
         val repository = TestableFailSourceRepository()
 
-        launch {
-            delay(1000)
-            repository.invalidate()
-        }
-
         repository.get().test {
             awaitItem() shouldBe DataState.Empty
-            assert(awaitItem() is DataState.Loading)
-            assert(awaitItem() is DataState.Fail)
+
+            repository.invalidate()
+            assertInstanceOf(DataState.Loading::class.java, awaitItem())
+            assertInstanceOf(DataState.Fail::class.java, awaitItem())
         }
     }
 
     test("Reload after success") {
         val repository = TestableSourceRepository()
 
-        launch {
-            delay(1000)
-            repository.invalidate()
-            delay(1000)
-            repository.invalidate()
-        }
-
         repository.get().test {
             awaitItem() shouldBe DataState.Empty
-            assert(awaitItem() is DataState.Loading)
-            assert(awaitItem() is DataState.Content)
+
+            repository.invalidate()
+            assertInstanceOf(DataState.Loading::class.java, awaitItem())
+            assertInstanceOf(DataState.Content::class.java, awaitItem())
+
+            repository.invalidate()
 
             val item = awaitItem()
-            assert(item is DataState.Content && item.refreshing)
+            assertInstanceOf(DataState.Content::class.java, item)
+            item as DataState.Content
+            assertTrue(item.refreshing)
 
             val completeItem = awaitItem()
-            assert(completeItem is DataState.Content && !completeItem.refreshing)
+            assertInstanceOf(DataState.Content::class.java, completeItem)
+            completeItem as DataState.Content
+            assertFalse(completeItem.refreshing)
         }
     }
 
     test("Reload after fail") {
         val repository = TestableFailSourceRepository()
 
-        launch {
-            delay(1000)
-            repository.invalidate()
-            delay(1000)
-            repository.invalidate()
-        }
-
         repository.get().test {
             awaitItem() shouldBe DataState.Empty
-            assert(awaitItem() is DataState.Loading)
-            assert(awaitItem() is DataState.Fail)
-            assert(awaitItem() is DataState.Loading.WithError)
-            assert(awaitItem() is DataState.Fail)
+
+            repository.invalidate()
+            assertInstanceOf(DataState.Loading::class.java, awaitItem())
+            assertInstanceOf(DataState.Fail::class.java, awaitItem())
+
+            repository.invalidate()
+            assertInstanceOf(DataState.Loading.WithError::class.java, awaitItem())
+            assertInstanceOf(DataState.Fail::class.java, awaitItem())
         }
     }
 

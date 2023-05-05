@@ -5,6 +5,8 @@ import io.kotest.core.spec.style.FunSpec
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import ru.gortea.petter.data.impl.TestableMapRepository
 import ru.gortea.petter.data.model.DataState
 
@@ -14,16 +16,20 @@ class MapSourceRepositoryTest : FunSpec({
         val repository = TestableMapRepository(10)
 
         launch {
-            delay(1000)
-            repository.invalidate()
+            delay(500)
         }
 
         repository.get().test {
-            skipItems(2)
+            skipItems(1)
+            repository.invalidate()
+            skipItems(1)
 
             val item = awaitItem()
-            assert(item is DataState.Content && !item.refreshing)
-            assertEquals((item as DataState.Content).content, "10")
+            assertInstanceOf(DataState.Content::class.java, item)
+
+            item as DataState.Content<String>
+            assertFalse(item.refreshing)
+            assertEquals("10", item.content)
         }
     }
 })
