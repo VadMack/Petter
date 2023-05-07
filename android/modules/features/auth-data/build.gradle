@@ -3,6 +3,10 @@ plugins {
     id 'kotlinx-serialization'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation Libs.serialization
     implementation Libs.coroutines
@@ -12,4 +16,10 @@ dependencies {
     implementation project(":modules:network")
     api project(":modules:data")
     api project(":modules:features:auth-controller")
+
+    testImplementation Libs.koTestJUnit
+    testImplementation Libs.koTestAssertions
+    testImplementation Libs.koTestProperty
+
+    testImplementation Libs.turbine
 }

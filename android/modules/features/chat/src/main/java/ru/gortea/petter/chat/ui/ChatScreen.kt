@@ -50,7 +50,7 @@ import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.paging.android.rememberPagingState
 import ru.gortea.petter.data.paging.model.PagingDataState
 import ru.gortea.petter.data.paging.model.PagingDataState.Paged
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.theme.Base100
 import ru.gortea.petter.theme.Base600
 import ru.gortea.petter.theme.PetterAppTheme
@@ -72,7 +72,7 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 @Composable
 internal fun ChatScreen(
     userId: String,
-    router: PetterRouter<ChatNavTarget>
+    router: Router<ChatNavTarget>
 ) {
     val component = getComponent<ChatComponent>()
 
@@ -93,7 +93,7 @@ internal fun ChatScreen(
 @Composable
 private fun ChatCreateRoomScreen(
     state: ChatUiState.NoRoomUiState,
-    router: PetterRouter<ChatNavTarget>,
+    router: Router<ChatNavTarget>,
     reloadClicked: () -> Unit,
     backClicked: () -> Unit
 ) {
@@ -116,7 +116,7 @@ private fun ChatCreateRoomScreen(
 @Composable
 private fun ChatCreateRoomScreen(
     state: ChatUiState.NoRoomUiState,
-    router: PetterRouter<ChatNavTarget>,
+    router: Router<ChatNavTarget>,
     reloadClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -138,7 +138,7 @@ private fun ChatCreateRoomScreen(
 @Composable
 private fun ChatCreateRoomScreenContent(
     room: ChatRoomModel,
-    router: PetterRouter<ChatNavTarget>
+    router: Router<ChatNavTarget>
 ) {
     val component = getComponent<ChatComponent>()
 

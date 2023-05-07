@@ -13,4 +13,10 @@ dependencies {
 
     implementation Libs.coil
     implementation Libs.coroutines
+
+    testImplementation Libs.koTestJUnit
+    testImplementation Libs.koTestAssertions
+    testImplementation Libs.koTestProperty
+
+    testImplementation Libs.turbine
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "134994924316",
+    "project_id": "petter-2f00d",
+    "storage_bucket": "petter-2f00d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:134994924316:android:771c1ce85fd65607eda0d9",
+        "android_client_info": {
+          "package_name": "ru.gortea.petter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "134994924316-jgdji86o3tp0da5vckad6v6oqsovg8jh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmssj1CpszV0A_9H5NJx-zJ5X4Uzg0hL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "134994924316-jgdji86o3tp0da5vckad6v6oqsovg8jh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

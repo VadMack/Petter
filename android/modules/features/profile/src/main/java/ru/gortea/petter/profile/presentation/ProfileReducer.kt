@@ -4,7 +4,7 @@ import ru.gortea.petter.arch.Reducer
 import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.auth.controller.LogoutController
 import ru.gortea.petter.data.model.DataState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.data.remote.model.UserModel
 import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.ProfileCommand as Command
@@ -14,7 +14,7 @@ import ru.gortea.petter.profile.presentation.ProfileUiEvent as UiEvent
 
 internal class ProfileReducer(
     private val logoutController: LogoutController,
-    private val router: PetterRouter<ProfileNavTarget>,
+    private val router: Router<ProfileNavTarget>,
     private val finish: () -> Unit
 ) : Reducer<State, Event, Command>() {
 

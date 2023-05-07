@@ -17,8 +17,15 @@ object Libs {
         const val stomp = "1.6.6"
         const val rxJava = "2.2.21"
         const val rxJavaAndroid = "2.1.1"
+        const val koTest = "5.6.1"
+        const val turbine = "0.12.3"
     }
 
+    const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
+
+    const val koTestJUnit = "io.kotest:kotest-runner-junit5:${Versions.koTest}"
+    const val koTestAssertions = "io.kotest:kotest-assertions-core:${Versions.koTest}"
+    const val koTestProperty = "io.kotest:kotest-property:${Versions.koTest}"
 
     const val stomp = "com.github.NaikSoftware:StompProtocolAndroid:${Versions.stomp}"
     const val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"

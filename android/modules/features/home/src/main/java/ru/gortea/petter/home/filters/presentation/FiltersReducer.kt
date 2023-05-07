@@ -9,14 +9,14 @@ import ru.gortea.petter.home.filters.presentation.filters.Filter
 import ru.gortea.petter.home.filters.presentation.filters.RangeFilter
 import ru.gortea.petter.home.filters.presentation.filters.SimpleFieldFilter
 import ru.gortea.petter.home.navigation.commands.HomeNavCommand
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.home.filters.presentation.FiltersState as State
 import ru.gortea.petter.home.filters.presentation.FiltersUiEvent as UiEvent
 import ru.gortea.petter.pet.R as PetR
 
 @Suppress("UNCHECKED_CAST")
 internal class FiltersReducer(
-    private val router: PetterRouter<*>
+    private val router: Router<*>
 ) : Reducer<State, UiEvent, Nothing>() {
 
     override fun MessageBuilder<State, Nothing>.reduce(event: UiEvent) {

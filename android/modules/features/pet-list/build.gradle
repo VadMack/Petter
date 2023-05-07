@@ -18,4 +18,10 @@ dependencies {
     implementation project(":modules:features:pet-list-data")
 
     api project(":modules:features:pet-data")
+
+    testImplementation Libs.koTestJUnit
+    testImplementation Libs.koTestAssertions
+    testImplementation Libs.koTestProperty
+
+    testImplementation Libs.turbine
 }

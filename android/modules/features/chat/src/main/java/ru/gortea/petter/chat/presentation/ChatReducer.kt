@@ -9,7 +9,7 @@ import ru.gortea.petter.chat.data.model.ChatRoomModel
 import ru.gortea.petter.chat.navigation.ChatNavTarget
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.paging.model.PagingDataState
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.chat.presentation.ChatCommand as Command
 import ru.gortea.petter.chat.presentation.ChatEvent as Event
 import ru.gortea.petter.chat.presentation.ChatRoomCreationEvent as RoomCreationEvent
@@ -17,7 +17,7 @@ import ru.gortea.petter.chat.presentation.ChatState as State
 import ru.gortea.petter.chat.presentation.ChatUiEvent as UiEvent
 
 internal class ChatReducer(
-    private val router: PetterRouter<ChatNavTarget>
+    private val router: Router<ChatNavTarget>
 ) : Reducer<State, Event, Command>() {
 
     override fun MessageBuilder<State, Command>.reduce(event: Event) {

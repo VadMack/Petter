@@ -2,8 +2,18 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation Libs.coroutines
 
     implementation project(":modules:arch")
+
+    testImplementation Libs.koTestJUnit
+    testImplementation Libs.koTestAssertions
+    testImplementation Libs.koTestProperty
+
+    testImplementation Libs.turbine
 }

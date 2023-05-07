@@ -18,7 +18,7 @@ fun includeModulesInRoot(root: String) {
         if (file.isModule()) {
             val modulePath = file.path.drop(rootFile.path.length)
             val module = ":$root${modulePath.replace("\\", ":")}"
-            include(module)
+            include(module.replace("/", ":"))
         }
     }
 }

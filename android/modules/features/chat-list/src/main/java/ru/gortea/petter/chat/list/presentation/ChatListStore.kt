@@ -7,12 +7,12 @@ import ru.gortea.petter.chat.list.navigation.ChatListNavTarget
 import ru.gortea.petter.chat.list.presentation.actors.ChatListInitLoadActor
 import ru.gortea.petter.chat.list.presentation.actors.ChatListLastMessageActor
 import ru.gortea.petter.chat.list.presentation.actors.ChatListLoadActor
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 
 internal typealias ChatListStore = MviStore<ChatListState, ChatListEvent>
 
 internal fun createChatListStore(
-    router: PetterRouter<ChatListNavTarget>,
+    router: Router<ChatListNavTarget>,
     component: ChatListComponent
 ): ChatListStore {
     val chatsListRepository = component.chatsListRepository

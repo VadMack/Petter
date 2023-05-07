@@ -38,7 +38,7 @@ import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.navigation.NavCommand
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.pet.list.model.PetListKeyModel
 import ru.gortea.petter.pet.list.navigation.commands.PetListNavCommand
 import ru.gortea.petter.pet.list.ui.PetList
@@ -73,7 +73,7 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 internal fun ProfileScreen(
     id: String,
     canGoBack: Boolean,
-    router: PetterRouter<ProfileNavTarget>,
+    router: Router<ProfileNavTarget>,
     finish: () -> Unit
 ) {
     val command by router.commands.collectAsState()

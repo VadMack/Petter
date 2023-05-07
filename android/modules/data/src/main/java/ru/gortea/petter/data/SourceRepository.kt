@@ -20,7 +20,7 @@ open class SourceRepository<T>(
 ) : Repository<T> {
 
     private val store = RepositoryStore(source)
-    private val dataFlow = MutableSharedFlow<DataState<T>>(extraBufferCapacity = 3)
+    private val dataFlow = MutableSharedFlow<DataState<T>>(replay = 1, extraBufferCapacity = 3)
 
     init {
         store.attach(coroutineScope)

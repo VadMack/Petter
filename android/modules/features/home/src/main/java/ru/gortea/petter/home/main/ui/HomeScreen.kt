@@ -21,7 +21,7 @@ import ru.gortea.petter.home.main.presentation.createHomeStore
 import ru.gortea.petter.home.navigation.HomeNavTarget
 import ru.gortea.petter.home.navigation.commands.HomeNavCommand
 import ru.gortea.petter.navigation.NavCommand
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.pet.list.model.PetListKeyModel
 import ru.gortea.petter.pet.list.model.isEmpty
 import ru.gortea.petter.pet.list.navigation.commands.PetListNavCommand
@@ -33,7 +33,7 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 import ru.gortea.petter.ui_kit.R as UiKitR
 
 @Composable
-internal fun HomeScreen(router: PetterRouter<HomeNavTarget>) {
+internal fun HomeScreen(router: Router<HomeNavTarget>) {
     val command by router.commands.collectAsState()
     val store by storeHolder { createHomeStore(router) }
 

@@ -66,16 +66,11 @@ fun BaseExtension.baseConfig() {
 
     buildTypes.apply {
         getByName("release") {
-            buildConfigField("String", "BaseUrl", "http://10.0.2.2:8080/")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "${project.rootDir}/app/proguard-rules.pro"
             )
-        }
-
-        getByName("debug") {
-            buildConfigField("String", "BaseUrl", "\"http://10.0.2.2:8080/\"")
         }
     }
 

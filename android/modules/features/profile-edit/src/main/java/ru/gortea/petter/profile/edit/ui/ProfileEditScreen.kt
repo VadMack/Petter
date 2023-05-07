@@ -33,7 +33,7 @@ import ru.gortea.petter.arch.android.compose.collect
 import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.profile.edit.R
 import ru.gortea.petter.profile.edit.di.ProfileEditComponent
 import ru.gortea.petter.profile.edit.presentation.ProfileEditStore
@@ -55,7 +55,7 @@ import ru.gortea.petter.ui_kit.toolbar.Toolbar
 @Composable
 fun ProfileEditScreen(
     isProfileCreate: Boolean,
-    router: PetterRouter<*>,
+    router: Router<*>,
     finish: () -> Unit
 ) {
     var launcherStore: ProfileEditStore? = null

@@ -9,11 +9,11 @@ import ru.gortea.petter.profile.data.local.entity.UserEntity
 @Dao
 interface UserDao {
     @Query("SELECT * FROM userEntity LIMIT 1")
-    fun get(): UserEntity
+    suspend fun get(): UserEntity
 
     @Upsert
-    fun updateOrInsert(user: UserEntity)
+    suspend fun updateOrInsert(user: UserEntity)
 
     @Delete
-    fun delete(user: UserEntity)
+    suspend fun delete(user: UserEntity)
 }

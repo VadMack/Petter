@@ -58,7 +58,6 @@ internal class RegistrationReducer(
     }
 
     private fun navigateToRegistrationConfirm(user: UserModel, pwd: String) {
-        println("xxx: navigate")
         router.navigateTo(
             Registration.RegistrationConfirm(
                 email = user.email,

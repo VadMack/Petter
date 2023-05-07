@@ -2,7 +2,7 @@ package ru.gortea.petter.pet.presentation
 
 import ru.gortea.petter.arch.store.MviStore
 import ru.gortea.petter.arch.store.factory.TeaStore
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.pet.di.PetComponent
 import ru.gortea.petter.pet.navigation.PetNavTarget
 import ru.gortea.petter.pet.presentation.actors.IsMyPetActor
@@ -22,7 +22,7 @@ internal fun createPetStore(
     petId: String?,
     editMode: Boolean,
     component: PetComponent,
-    router: PetterRouter<PetNavTarget>,
+    router: Router<PetNavTarget>,
     showModalImageChooser: () -> Unit = {},
     showImagePicker: () -> Unit = {}
 ): PetStore {

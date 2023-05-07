@@ -6,7 +6,7 @@ import ru.gortea.petter.arch.model.MessageBuilder
 import ru.gortea.petter.data.model.DataState
 import ru.gortea.petter.data.model.isContent
 import ru.gortea.petter.data.model.mapContentSync
-import ru.gortea.petter.navigation.PetterRouter
+import ru.gortea.petter.navigation.Router
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.navigation.PetNavTarget
 import ru.gortea.petter.pet.navigation.commands.PetNavCommand
@@ -22,7 +22,7 @@ import ru.gortea.petter.pet.presentation.PetUiEvent as UiEvent
 import ru.gortea.petter.pet.presentation.state.PetState as State
 
 internal class PetReducer(
-    private val router: PetterRouter<PetNavTarget>,
+    private val router: Router<PetNavTarget>,
     private val showModalImageChooser: () -> Unit,
     private val showImagePicker: () -> Unit
 ) : Reducer<State, Event, Command>() {
