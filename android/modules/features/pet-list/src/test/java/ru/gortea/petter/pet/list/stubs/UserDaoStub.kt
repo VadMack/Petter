@@ -1,4 +1,4 @@
-package ru.gortea.petter.pet.list.data
+package ru.gortea.petter.pet.list.stubs
 
 import kotlinx.coroutines.delay
 import ru.gortea.petter.profile.data.local.UserDao
