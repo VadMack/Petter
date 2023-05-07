@@ -6,6 +6,7 @@ import io.kotest.core.spec.style.FunSpec
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import org.junit.jupiter.api.Assertions.assertEquals
+import ru.gortea.petter.data.paging.model.isContent
 import ru.gortea.petter.pet.list.di.TestComponent
 import ru.gortea.petter.pet.list.model.PetListKeyModel
 import ru.gortea.petter.pet.list.presentation.PetListUiEvent
@@ -28,7 +29,10 @@ internal class PetListStoreTest : FunSpec({
                 skipItems(1)
                 store.dispatch(PetListUiEvent.Invalidate(PetListKeyModel()))
 
-                skipItems(3)
+                var item = awaitItem()
+                while (!item.dataState.isContent()) {
+                    item = awaitItem()
+                }
 
                 store.dispatch(PetListUiEvent.LikePet("id"))
 
@@ -50,7 +54,10 @@ internal class PetListStoreTest : FunSpec({
                 skipItems(1)
                 store.dispatch(PetListUiEvent.Invalidate(PetListKeyModel(pageSize = 1)))
 
-                skipItems(3)
+                var item = awaitItem()
+                while (!item.dataState.isContent()) {
+                    item = awaitItem()
+                }
 
                 delay(500)
                 store.dispatch(PetListUiEvent.LoadPage)
@@ -69,7 +76,10 @@ internal class PetListStoreTest : FunSpec({
                 skipItems(1)
                 store.dispatch(PetListUiEvent.Invalidate(PetListKeyModel(pageSize = 1)))
 
-                skipItems(3)
+                var item = awaitItem()
+                while (!item.dataState.isContent()) {
+                    item = awaitItem()
+                }
 
                 delay(500)
                 store.dispatch(PetListUiEvent.LoadPage)
