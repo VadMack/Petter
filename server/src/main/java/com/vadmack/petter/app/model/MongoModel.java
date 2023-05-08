@@ -11,7 +11,11 @@ public abstract class MongoModel {
   private ObjectId id;
 
   public String getId() {
-    return id.toString();
+    if (id == null) {
+      return null;
+    } else {
+      return id.toString();
+    }
   }
 
   public void setId(String id) {

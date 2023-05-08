@@ -1,9 +1,6 @@
 package com.vadmack.petter.chat.message;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -77,7 +74,7 @@ class ChatMessageRepositoryIT {
             received.stream().map(ChatMessage::getContent).toList());
   }
 
-  @AfterEach
+  @AfterAll
   void tearDown() {
     chatMessageRepository.deleteAll(messages);
   }

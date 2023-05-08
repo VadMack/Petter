@@ -3,6 +3,9 @@ package com.vadmack.petter.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.vadmack.petter.chat.FirebaseMessagingService;
 import com.vadmack.petter.mail.MailService;
 import com.vadmack.petter.security.dto.request.AuthRequest;
 import com.vadmack.petter.user.User;
@@ -38,6 +41,15 @@ class SecurityIT {
 
   @MockBean
   private MailService mailService;
+
+  @MockBean
+  private FirebaseMessaging firebaseMessaging;
+
+  @MockBean
+  private FirebaseApp firebaseApp;
+
+  @MockBean
+  private FirebaseMessagingService firebaseMessagingService;
 
   @Autowired
   private UserRepository userRepository;
@@ -85,7 +97,7 @@ class SecurityIT {
 
   private void getSecuredResource(String token) throws Exception {
     mvc.perform(
-            MockMvcRequestBuilders.get("/api/users/favorites")
+            MockMvcRequestBuilders.get("/api/ads/favorites")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
