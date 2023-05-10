@@ -21,11 +21,12 @@ internal class FiltersReducer(
 
     override fun MessageBuilder<State, Nothing>.reduce(event: UiEvent) {
         when (event) {
-            UiEvent.Accept -> {
+            is UiEvent.ScreenOpened -> Unit
+            is UiEvent.Accept -> {
                 router.sendCommand(HomeNavCommand.AcceptKeyModel(state.toKeyModel()))
                 router.pop()
             }
-            UiEvent.GoBack -> router.pop()
+            is UiEvent.GoBack -> router.pop()
             is UiEvent.UpdateFilter -> state { updateFilter(event.filter) }
         }
     }

@@ -10,6 +10,7 @@ import ru.gortea.petter.chat.presentation.actors.ChatInitCreateRoomActor
 import ru.gortea.petter.chat.presentation.actors.ChatInitMessagesActor
 import ru.gortea.petter.chat.presentation.actors.ChatLoadPageActor
 import ru.gortea.petter.chat.presentation.actors.ChatSendMessageActor
+import ru.gortea.petter.chat.presentation.handler.ChatAnalyticsHandler
 import ru.gortea.petter.navigation.Router
 
 internal typealias ChatStore = MviStore<ChatState, ChatEvent>
@@ -64,6 +65,7 @@ internal fun ChatStore(
         initialEvents = listOf(
             ChatEvent.InitApi,
             ChatUiEvent.LoadPage
-        )
+        ),
+        analyticsHandler = ChatAnalyticsHandler(component.chatAnalyticsController)
     )
 }

@@ -8,6 +8,7 @@ import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditGetCurrentUs
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditInitUpdateUserActor
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditUpdateUserActor
 import ru.gortea.petter.profile.edit.presentation.actors.ProfileEditValidateActor
+import ru.gortea.petter.profile.edit.presentation.analytics.ProfileEditAnalyticsHandler
 import ru.gortea.petter.profile.edit.presentation.validation.ProfileEditValidatorComposite
 
 internal typealias ProfileEditStore = MviStore<ProfileEditState, ProfileEditEvent>
@@ -23,17 +24,18 @@ internal fun createProfileEditStore(
     val localUserRepo = component.currentUserRepository
 
     return TeaStore(
-        ProfileEditState(),
-        ProfileEditReducer(router, showModalImageChooser, showImagePicker, finish),
-        listOf(
+        initialState = ProfileEditState(),
+        reducer = ProfileEditReducer(router, showModalImageChooser, showImagePicker, finish),
+        actors = listOf(
             ProfileEditInitUpdateUserActor(userUpdateRepo),
             ProfileEditUpdateUserActor(userUpdateRepo),
             ProfileEditValidateActor(ProfileEditValidatorComposite()),
             ProfileEditGetCurrentUser(localUserRepo)
         ),
-        listOf(
+        initialEvents = listOf(
             ProfileEditEvent.InitApi,
             ProfileEditEvent.GetLocalUser
-        )
+        ),
+        analyticsHandler = ProfileEditAnalyticsHandler(component.profileEditAnalyticsController)
     )
 }

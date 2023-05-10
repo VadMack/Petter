@@ -8,6 +8,7 @@ import ru.gortea.petter.profile.navigation.ProfileNavTarget
 import ru.gortea.petter.profile.presentation.actors.ProfileCheckCurrentUserActor
 import ru.gortea.petter.profile.presentation.actors.ProfileInitLoadUserActor
 import ru.gortea.petter.profile.presentation.actors.ProfileLoadUserActor
+import ru.gortea.petter.profile.presentation.analytics.ProfileAnalyticsHandler
 
 internal typealias ProfileStore = MviStore<ProfileState, ProfileEvent>
 
@@ -23,16 +24,17 @@ internal fun createProfileStore(
     val userLocalRepository = component.currentUserRepository
 
     return TeaStore(
-        ProfileState(),
-        ProfileReducer(logoutController, router, finish),
-        listOf(
+        initialState = ProfileState(),
+        reducer = ProfileReducer(logoutController, router, finish),
+        actors = listOf(
             ProfileInitLoadUserActor(getUserRepository),
             ProfileLoadUserActor(getUserRepository),
             ProfileCheckCurrentUserActor(userLocalRepository)
         ),
-        listOf(
+        initialEvents = listOf(
             ProfileEvent.InitApi,
             ProfileUiEvent.LoadUser(id)
-        )
+        ),
+        analyticsHandler = ProfileAnalyticsHandler(component.profileAnalyticsController)
     )
 }
