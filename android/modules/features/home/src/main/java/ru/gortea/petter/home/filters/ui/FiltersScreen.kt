@@ -23,11 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.gortea.petter.arch.android.compose.collect
+import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.arch.android.util.text
 import ru.gortea.petter.arch.android.util.toTextFieldState
 import ru.gortea.petter.home.R
+import ru.gortea.petter.home.di.HomeComponent
 import ru.gortea.petter.home.filters.presentation.FiltersState
 import ru.gortea.petter.home.filters.presentation.FiltersUiEvent
 import ru.gortea.petter.home.filters.presentation.constants.TitleHolder
@@ -57,9 +59,9 @@ internal fun FiltersScreen(
     router: Router<*>,
     keyModel: PetListKeyModel
 ) {
-
+    val component = getComponent<HomeComponent>()
     val store by storeHolder {
-        createFilterStore(router, keyModel)
+        createFilterStore(router, keyModel, component)
     }
 
     store.collect(FiltersUiStateMapper()) { state ->

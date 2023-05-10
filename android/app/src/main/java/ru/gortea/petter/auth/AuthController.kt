@@ -1,5 +1,6 @@
 package ru.gortea.petter.auth
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +19,8 @@ class AuthController(
     private val refreshRepository: TokenRepository,
     private val deviceTokenRepository: TokenRepository,
     private val logoutRepository: LogoutRepository,
-    private val userRepository: CurrentUserRepository
+    private val userRepository: CurrentUserRepository,
+    private val analytics: FirebaseAnalytics
 ) : AuthObservable, LoginController, LogoutController {
     private val authorizedFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
@@ -28,12 +30,14 @@ class AuthController(
         coroutineScope.launch {
             refreshRepository.updateToken(userModel.refreshToken)
             userRepository.updateCurrentUser(userModel.user)
+            analytics.setUserId(userModel.user.id)
             authorizedFlow.emit(true)
         }
     }
 
     override fun offlineLogin() {
         coroutineScope.launch {
+            analytics.setUserId(userRepository.getCurrentUser().id)
             authorizedFlow.emit(true)
         }
     }
@@ -46,6 +50,7 @@ class AuthController(
             jwtRepository.removeToken()
             refreshRepository.removeToken()
             userRepository.deleteCurrentUser()
+            analytics.setUserId(null)
         }
     }
 

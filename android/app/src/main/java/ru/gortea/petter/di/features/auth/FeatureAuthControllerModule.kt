@@ -1,5 +1,6 @@
 package ru.gortea.petter.di.features.auth
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,14 +26,16 @@ class FeatureAuthControllerModule {
         @JwtToken jwtRepository: TokenRepository,
         @DeviceToken deviceTokenRepository: TokenRepository,
         logoutRepository: LogoutRepository,
-        currentUserRepository: CurrentUserRepository
+        currentUserRepository: CurrentUserRepository,
+        analytics: FirebaseAnalytics
     ): AuthController {
         return AuthController(
             jwtRepository = jwtRepository,
             refreshRepository = refreshRepository,
             deviceTokenRepository = deviceTokenRepository,
             logoutRepository = logoutRepository,
-            userRepository = currentUserRepository
+            userRepository = currentUserRepository,
+            analytics = analytics
         )
     }
 }

@@ -12,9 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ru.gortea.petter.arch.android.compose.collect
+import ru.gortea.petter.arch.android.compose.getComponent
 import ru.gortea.petter.arch.android.compose.storeHolder
 import ru.gortea.petter.arch.android.store.getValue
 import ru.gortea.petter.home.R
+import ru.gortea.petter.home.di.HomeComponent
 import ru.gortea.petter.home.main.presentation.HomeState
 import ru.gortea.petter.home.main.presentation.HomeUiEvent
 import ru.gortea.petter.home.main.presentation.createHomeStore
@@ -35,7 +37,9 @@ import ru.gortea.petter.ui_kit.R as UiKitR
 @Composable
 internal fun HomeScreen(router: Router<HomeNavTarget>) {
     val command by router.commands.collectAsState()
-    val store by storeHolder { createHomeStore(router) }
+
+    val component = getComponent<HomeComponent>()
+    val store by storeHolder { createHomeStore(router, component) }
 
     store.collect { state ->
         HomeScreen(

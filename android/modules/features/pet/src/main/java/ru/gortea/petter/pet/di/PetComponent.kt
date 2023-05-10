@@ -2,6 +2,7 @@ package ru.gortea.petter.pet.di
 
 import ru.gortea.petter.formatters.BirthDateFormatter
 import ru.gortea.petter.formatters.SimpleDateFormatter
+import ru.gortea.petter.pet.analytics.PetAnalyticsController
 import ru.gortea.petter.pet.data.CreatePetRepository
 import ru.gortea.petter.pet.data.DeletePetRepository
 import ru.gortea.petter.pet.data.GetPetRepository
@@ -21,4 +22,5 @@ interface PetComponent {
     val simpleDateFormatter: SimpleDateFormatter
 
     val petNodeProvider: PetExternalNodeProvider
+    val petAnalyticsController: PetAnalyticsController
 }

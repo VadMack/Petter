@@ -1,6 +1,7 @@
 package ru.gortea.petter.di
 
 import android.content.Context
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.BindsInstance
 import dagger.Component
 import ru.gortea.petter.auth.di.AuthorizationComponent
@@ -20,6 +21,7 @@ import ru.gortea.petter.di.features.pet.FeaturePetListDataModule
 import ru.gortea.petter.di.features.pet.FeaturePetModule
 import ru.gortea.petter.di.features.profile.FeatureProfileDataModule
 import ru.gortea.petter.di.features.profile.FeatureProfileModule
+import ru.gortea.petter.di.features.profile.edit.FeatureProfileEditModule
 import ru.gortea.petter.di.formatters.FormattersModule
 import ru.gortea.petter.di.network.NetworkModule
 import ru.gortea.petter.di.storage.StorageModule
@@ -56,6 +58,7 @@ import javax.inject.Singleton
 
         FeatureProfileModule::class,
         FeatureProfileDataModule::class,
+        FeatureProfileEditModule::class,
 
         FormattersModule::class,
         NetworkModule::class,
@@ -79,6 +82,9 @@ interface PetterAppComponent : AuthorizationComponent,
     interface Builder {
         @BindsInstance
         fun context(context: Context): Builder
+
+        @BindsInstance
+        fun analytics(analytics: FirebaseAnalytics): Builder
         fun build(): PetterAppComponent
     }
 }

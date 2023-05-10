@@ -12,12 +12,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.gortea.petter.arch.Actor
 import ru.gortea.petter.arch.Reducer
+import ru.gortea.petter.arch.analytics.AnalyticsHandler
 
 internal class TeaStoreImpl<State : Any, Event : Any, Command : Any>(
     initialState: State,
     private val reducer: Reducer<State, Event, Command>,
     private val actors: List<Actor<Command, Event>> = listOf(),
-    private val cancellationHandler: CancellationHandler<State>? = null
+    private val cancellationHandler: CancellationHandler<State>? = null,
+    private val analyticsHandler: AnalyticsHandler<State, Event>? = null
 ) : MviStore<State, Event>(initialState) {
 
     private val commandsFlow = MutableSharedFlow<Command>(replay = 1)
@@ -48,7 +50,11 @@ internal class TeaStoreImpl<State : Any, Event : Any, Command : Any>(
     private fun startEventsFlow() {
         coroutineScope.launch {
             eventsFlow
-                .map { reducer.reduce(stateFlow.value, it) }
+                .map { event ->
+                    val state = stateFlow.value
+                    analyticsHandler?.logEvent(state, event)
+                    reducer.reduce(state, event)
+                }
                 .onEach { message -> _stateFlow.emit(message.state) }
                 .onEach { message -> message.commands.forEach { commandsFlow.emit(it) } }
                 .launchIn(this + Dispatchers.Unconfined)

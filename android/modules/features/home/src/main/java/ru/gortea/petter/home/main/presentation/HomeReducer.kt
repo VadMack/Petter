@@ -13,6 +13,7 @@ internal class HomeReducer(
 
     override fun MessageBuilder<State, Nothing>.reduce(event: UiEvent) {
         when(event) {
+            is UiEvent.HomeOpened -> Unit
             is UiEvent.OpenPet -> router.navigateTo(HomeNavTarget.OpenPet(event.id))
             is UiEvent.AcceptFilters -> state { copy(keyModel = event.keyModel) }
             is UiEvent.OpenFilters -> router.navigateTo(HomeNavTarget.Filters(state.keyModel))

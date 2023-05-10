@@ -7,6 +7,7 @@ import ru.gortea.petter.chat.list.navigation.ChatListNavTarget
 import ru.gortea.petter.chat.list.presentation.actors.ChatListInitLoadActor
 import ru.gortea.petter.chat.list.presentation.actors.ChatListLastMessageActor
 import ru.gortea.petter.chat.list.presentation.actors.ChatListLoadActor
+import ru.gortea.petter.chat.list.presentation.handler.ChatListAnalyticsHandler
 import ru.gortea.petter.navigation.Router
 
 internal typealias ChatListStore = MviStore<ChatListState, ChatListEvent>
@@ -30,6 +31,7 @@ internal fun createChatListStore(
             ChatListEvent.InitApi,
             ChatListEvent.ObserveLastMessage,
             ChatListUiEvent.LoadChats
-        )
+        ),
+        analyticsHandler = ChatListAnalyticsHandler(component.chatListAnalyticsController)
     )
 }

@@ -10,6 +10,7 @@ plugins {
     id("com.android.library") version "7.4.1" apply false
     id("org.jetbrains.kotlin.android") version "1.8.10" apply false
     id("org.jetbrains.kotlin.jvm") version "1.8.10" apply false
+
     kotlin("plugin.serialization") version "1.8.10"
 }
 
@@ -21,6 +22,7 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
         classpath("com.google.gms:google-services:4.3.15")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.5")
     }
 }
 
