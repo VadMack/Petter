@@ -207,7 +207,7 @@ private fun SimpleFieldFilter(filter: SimpleFieldFilter, filterChanged: (Filter)
     FilterContainer(title = stringResource(filter.titleRes)) {
         TextField(
             state = filter.field.toTextFieldState(),
-            placeholder = stringResource(R.string.filter_range_from),
+            placeholder = stringResource(filter.placeholderRes),
             onValueChange = {
                 filterChanged(filter.changeText(it))
             }
