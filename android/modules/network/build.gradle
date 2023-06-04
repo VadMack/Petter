@@ -12,5 +12,6 @@ dependencies {
 
     implementation project(":modules:token-storage")
     implementation project(":modules:features:auth-controller")
+    implementation project(":modules:network-url")
     api project(":modules:network-errors")
 }

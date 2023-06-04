@@ -12,5 +12,7 @@ dependencies {
 
     kapt Libs.roomCompiler
 
+    implementation project(":modules:network-url")
+
     api project(":modules:data")
 }

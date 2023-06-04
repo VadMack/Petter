@@ -12,14 +12,13 @@ import ru.gortea.petter.network.auth.AuthInterceptor
 import ru.gortea.petter.network.errors.ErrorHandlingCallAdapterFactory
 import ru.gortea.petter.network.serialization.LocalDateSerializer
 import ru.gortea.petter.network.serialization.LocalDateTimeSerializer
+import ru.gortea.petter.network.url.BASE_URL
 import ru.gortea.petter.token.storage.TokenRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 
 object PetterNetwork {
-
-    const val BASE_URL = "10.0.2.2:8080"
 
     val json = Json {
         ignoreUnknownKeys = true
@@ -31,22 +30,21 @@ object PetterNetwork {
     }
 
     fun create(client: OkHttpClient, logoutController: LogoutController): Retrofit {
-        val contentType = "application/json".toMediaType()
-        return Retrofit.Builder()
-            .baseUrl("http://$BASE_URL/")
-            .client(client)
-            .addConverterFactory(json.asConverterFactory(contentType))
+        return setupBuilder(client)
             .addCallAdapterFactory(ErrorHandlingCallAdapterFactory(logoutController))
             .build()
     }
 
     fun create(client: OkHttpClient): Retrofit {
+        return setupBuilder(client).build()
+    }
+
+    private fun setupBuilder(client: OkHttpClient): Retrofit.Builder {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl("http://$BASE_URL/")
             .client(client)
             .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
     }
 
     fun createClient(tokenRepository: TokenRepository): OkHttpClient {

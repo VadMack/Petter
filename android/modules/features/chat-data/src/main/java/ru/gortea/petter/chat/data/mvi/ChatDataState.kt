@@ -14,5 +14,5 @@ internal data class ChatDataState(
     val connectionClosed: Boolean = false
 ) {
     val messagesCount: Int
-        get() = receivedMessages.size + sentMessages.size + storedMessages.content.size
+        get() = receivedMessages.size + storedMessages.content.size
 }

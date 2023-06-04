@@ -3,6 +3,7 @@ package ru.gortea.petter.pet.data.model
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import ru.gortea.petter.data.model.Arguments
+import ru.gortea.petter.network.url.BASE_URL
 import ru.gortea.petter.pet.data.model.constants.AchievementLevel
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
@@ -32,7 +33,7 @@ data class PetFullModel(
 ) : Arguments {
 
     val photoPath: String?
-        get() = imagePaths.firstOrNull()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = imagePaths.firstOrNull()?.let { avatar -> "http://${BASE_URL}/api/files/${avatar}" }
 
     val photoPathSegments: List<String>?
         get() = imagePaths.firstOrNull()?.split("/")
