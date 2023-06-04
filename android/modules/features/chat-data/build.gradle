@@ -22,6 +22,7 @@ dependencies {
 
     implementation project(":modules:token-storage")
     implementation project(":modules:network")
+    implementation project(":modules:network-url")
     implementation project(":modules:arch")
     api project(":modules:features:chat-data-messages")
     api project(":modules:features:profile-data")

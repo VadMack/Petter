@@ -9,6 +9,7 @@ dependencies {
     implementation Libs.retrofit
 
     implementation project(":modules:features:profile-data")
+    implementation project(":modules:network-url")
 
     api project(":modules:data")
 }

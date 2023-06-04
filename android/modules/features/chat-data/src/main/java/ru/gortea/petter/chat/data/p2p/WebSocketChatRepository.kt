@@ -16,8 +16,8 @@ import ru.gortea.petter.chat.data.messages.model.ServerMessage
 import ru.gortea.petter.chat.data.model.SentMessage
 import ru.gortea.petter.chat.data.model.SentMessageState
 import ru.gortea.petter.chat.data.model.ServerMessageState
-import ru.gortea.petter.network.PetterNetwork.BASE_URL
 import ru.gortea.petter.network.PetterNetwork.json
+import ru.gortea.petter.network.url.BASE_URL
 import ru.gortea.petter.token.storage.TokenRepository
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient

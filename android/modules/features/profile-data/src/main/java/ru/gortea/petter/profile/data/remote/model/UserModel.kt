@@ -2,6 +2,7 @@ package ru.gortea.petter.profile.data.remote.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.gortea.petter.network.url.BASE_URL
 
 @Serializable
 data class UserModel(
@@ -14,7 +15,7 @@ data class UserModel(
     @SerialName("avatarPath") val avatarPathShort: String?
 ) {
     val avatarPath: String?
-        get() = avatarPathShort?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = avatarPathShort?.let { avatar -> "http://${BASE_URL}/api/files/${avatar}" }
 
     val avatarPathSegments: List<String>?
         get() = avatarPathShort?.split("/")

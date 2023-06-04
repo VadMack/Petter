@@ -2,6 +2,7 @@ package ru.gortea.petter.pet.list.data.model
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import ru.gortea.petter.network.url.BASE_URL
 import ru.gortea.petter.pet.data.model.constants.Gender
 import ru.gortea.petter.pet.data.model.constants.PetCardState
 import ru.gortea.petter.pet.data.model.constants.Species
@@ -24,5 +25,5 @@ data class PetListItemModel(
     val liked: Boolean
 ) {
     val photoPath: String?
-        get() = imagePaths?.firstOrNull()?.let { avatar -> "http://10.0.2.2:8080/api/files/${avatar}" }
+        get() = imagePaths?.firstOrNull()?.let { avatar -> "http://${BASE_URL}/api/files/${avatar}" }
 }
